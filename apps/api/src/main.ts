@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { trimTrailingSlash } from "hono/trailing-slash";
 
 const api = new Hono();
 
@@ -10,6 +11,7 @@ api.use(
         ? origin
         : "https://vendel.dk",
   }),
+  trimTrailingSlash(),
 );
 
 api.get("/", (c) => c.text("Vendel.dk"));
