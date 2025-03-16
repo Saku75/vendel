@@ -1,0 +1,47 @@
+@import "./fonts.css";
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", sans-serif;
+  --font-heading: "Playwrite DK Loopet Variable", cursive;
+
+  --grid-template-rows-layout: auto 1fr auto;
+  --grid-template-columns-layout: auto 1fr auto;
+}
+
+@layer base {
+  html {
+    &[data-theme="light"] {
+      scrollbar-color: oklch(0.709 0.01 56.259) oklch(0.923 0.003 48.717);
+      color: light;
+    }
+
+    &[data-theme="dark"] {
+      scrollbar-color: oklch(0.444 0.011 73.639) oklch(0.268 0.007 34.298);
+      color: dark;
+    }
+  }
+
+  body {
+    @apply bg-stone-100 text-stone-950 dark:bg-stone-900 dark:text-stone-50;
+
+    > div#app {
+      @apply grid min-h-svh grid-rows-layout;
+
+      > * {
+        @apply col-start-1;
+      }
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+  }
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

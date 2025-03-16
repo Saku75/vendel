@@ -1,0 +1,40 @@
+{
+  "name": "@vendel/web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev --host",
+    "build": "vite build",
+    "preview": "pnpm run build && wrangler dev",
+    "deploy": "pnpm run build && wrangler deploy --minify",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "cf-typegen": "wrangler types --env-interface WorkerEnv src/worker-env.d.ts",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "wrangler types --env-interface WorkerEnv src/worker-env.d.ts"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.0.2"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.2.7",
+    "@fontsource-variable/inter": "^5.2.5",
+    "@fontsource-variable/playwrite-dk-loopet": "^5.2.5",
+    "@lucide/svelte": "^0.482.0",
+    "@sveltejs/adapter-cloudflare-workers": "^2.9.0",
+    "@sveltejs/kit": "^2.19.2",
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@tailwindcss/vite": "^4.0.14",
+    "@vendel/eslint-config": "workspace:*",
+    "eslint-plugin-svelte": "^3.1.0",
+    "svelte": "^5.23.0",
+    "svelte-check": "^4.1.5",
+    "tailwindcss": "^4.0.14",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1",
+    "vite": "^6.2.2",
+    "wrangler": "^4.0.0"
+  }
+}

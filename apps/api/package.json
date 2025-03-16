@@ -1,0 +1,33 @@
+{
+  "name": "@vendel/api",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @vendel/api --parallel \"/^dev:.*/\"",
+    "dev:tsc": "tsc -w",
+    "dev:wrangler": "wrangler dev",
+    "build": "tsc",
+    "deploy": "wrangler deploy --minify",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "cf-typegen": "wrangler types --env-interface WorkerEnv src/worker-env.d.ts"
+  },
+  "dependencies": {
+    "hono": "^4.7.4"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.2.7",
+    "@vendel/eslint-config": "workspace:*",
+    "typescript": "^5.8.2",
+    "wrangler": "^4.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/main.d.ts",
+        "default": "./dist/main.js"
+      }
+    }
+  }
+}
