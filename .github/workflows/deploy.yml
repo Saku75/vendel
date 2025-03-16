@@ -16,6 +16,17 @@ jobs:
         uses: wyvox/action-setup-pnpm@v3
         with:
           node-version: 22
+      - name: Apply database migrations
+        run: |
+          cd apps/api
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            pnpm db:apply vendel-prod --remote
+          else
+            pnpm db:apply vendel-dev --remote
+          fi
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
+          CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN}}
       - name: Deploy to environment
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then

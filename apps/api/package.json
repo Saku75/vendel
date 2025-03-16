@@ -11,14 +11,19 @@
     "deploy": "wrangler deploy --minify",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "cf-typegen": "wrangler types --env-interface WorkerEnv src/worker-env.d.ts"
+    "cf-typegen": "wrangler types --env-interface WorkerEnv src/worker-env.d.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:apply": "wrangler d1 migrations apply"
   },
   "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
+    "drizzle-orm": "^0.40.0",
     "hono": "^4.7.4"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",
     "@vendel/eslint-config": "workspace:*",
+    "drizzle-kit": "^0.30.5",
     "typescript": "^5.8.2",
     "wrangler": "^4.0.0"
   },
