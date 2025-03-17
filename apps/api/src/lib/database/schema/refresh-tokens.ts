@@ -1,41 +1,41 @@
 import { createId } from "@paralleldrive/cuid2";
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-import { refreshTokenFamilies } from "./refresh-token-families";
+import { refreshTokenFamiliesSchema } from "./refresh-token-families";
 
-const refreshTokens = sqliteTable("refresh_tokens", {
+const refreshTokensSchema = sqliteTable("refresh_tokens", {
   // Internal ID
-  id: text("id", { length: 24 })
+  id: text({ length: 24 })
     .notNull()
     .primaryKey()
     .$default(() => createId()),
 
   // Refresh Token Family ID
-  refreshTokenFamilyId: text("refresh_token_family_id", { length: 24 })
+  refreshTokenFamilyId: text({ length: 24 })
     .notNull()
-    .references(() => refreshTokenFamilies.id, {
+    .references(() => refreshTokenFamiliesSchema.id, {
       onUpdate: "cascade",
       onDelete: "cascade",
     }),
 
   // Content
-  expires: int("expires", { mode: "timestamp" })
+  expires: int({ mode: "timestamp" })
     .notNull()
     .$default(() => {
       const date = new Date();
       date.setMonth(date.getMonth() + 1);
       return date;
     }),
-  used: int("used", { mode: "boolean" }).notNull().default(false),
+  used: int({ mode: "boolean" }).notNull().default(false),
 
   // Timestamps
-  createdAt: int("created_at", { mode: "timestamp" })
+  createdAt: int({ mode: "timestamp" })
     .notNull()
     .$default(() => new Date()),
-  updatedAt: int("updated_at", { mode: "timestamp" })
+  updatedAt: int({ mode: "timestamp" })
     .notNull()
     .$default(() => new Date())
     .$onUpdate(() => new Date()),
 });
 
-export { refreshTokens };
+export { refreshTokensSchema };

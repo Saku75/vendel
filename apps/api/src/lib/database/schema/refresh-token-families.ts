@@ -1,31 +1,34 @@
 import { createId } from "@paralleldrive/cuid2";
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-import { users } from "./users";
+import { usersSchema } from "./users";
 
-const refreshTokenFamilies = sqliteTable("refresh_token_families", {
+const refreshTokenFamiliesSchema = sqliteTable("refresh_token_families", {
   // Internal ID
-  id: text("id", { length: 24 })
+  id: text({ length: 24 })
     .notNull()
     .primaryKey()
     .$default(() => createId()),
 
   // User ID
-  userId: text("user_id", { length: 24 })
+  userId: text({ length: 24 })
     .notNull()
-    .references(() => users.id, { onUpdate: "cascade", onDelete: "cascade" }),
+    .references(() => usersSchema.id, {
+      onUpdate: "cascade",
+      onDelete: "cascade",
+    }),
 
   // Content
-  invalidated: int("invalidated", { mode: "boolean" }).notNull().default(false),
+  invalidated: int({ mode: "boolean" }).notNull().default(false),
 
   // Timestamps
-  createdAt: int("created_at", { mode: "timestamp" })
+  createdAt: int({ mode: "timestamp" })
     .notNull()
     .$default(() => new Date()),
-  updatedAt: int("updated_at", { mode: "timestamp" })
+  updatedAt: int({ mode: "timestamp" })
     .notNull()
     .$default(() => new Date())
     .$onUpdate(() => new Date()),
 });
 
-export { refreshTokenFamilies };
+export { refreshTokenFamiliesSchema };
