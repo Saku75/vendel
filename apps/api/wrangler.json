@@ -20,7 +20,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "vendel-dev",
+      "database_name": "vendel",
       "database_id": "48a4af03-4abd-4864-bd08-8dc73fc4e416",
       "migrations_dir": "src/lib/database/migrations"
     }
@@ -31,7 +31,7 @@
       "d1_databases": [
         {
           "binding": "DB",
-          "database_name": "vendel-dev",
+          "database_name": "vendel",
           "database_id": "48a4af03-4abd-4864-bd08-8dc73fc4e416",
           "migrations_dir": "src/lib/database/migrations"
         }
@@ -56,7 +56,7 @@
       "d1_databases": [
         {
           "binding": "DB",
-          "database_name": "vendel-prod",
+          "database_name": "vendel",
           "database_id": "efb5ea0c-2bec-4c98-b7d6-c7456ccbf723",
           "migrations_dir": "src/lib/database/migrations"
         }

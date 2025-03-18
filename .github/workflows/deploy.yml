@@ -20,9 +20,9 @@ jobs:
         run: |
           cd apps/api
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            pnpm db:apply vendel-prod --remote
+            pnpm db:apply vendel -e prod --remote
           else
-            pnpm db:apply vendel-dev --remote
+            pnpm db:apply vendel -e dev --remote
           fi
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}

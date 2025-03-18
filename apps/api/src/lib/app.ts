@@ -6,7 +6,11 @@ type AppEnv = {
 };
 
 function app(config?: HonoOptions<AppEnv>) {
-  return new Hono<AppEnv>(config);
+  const app = new Hono<AppEnv>(config);
+
+  app.notFound((c) => c.json({ message: "Not found" }, 404));
+
+  return app;
 }
 
 export { app };

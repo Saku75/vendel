@@ -1,25 +1,8 @@
-import { contextStorage } from "hono/context-storage";
-import { cors } from "hono/cors";
-import { csrf } from "hono/csrf";
-import { trimTrailingSlash } from "hono/trailing-slash";
+import { showRoutes } from "hono/dev";
 
 import { app } from "$lib/app";
 
-const api = app();
-
-api.use(
-  cors({
-    origin: (origin) =>
-      /((.*\.)?vendel\.dk|localhost(:\d{1,5}?))$/.test(origin)
-        ? origin
-        : "https://vendel.dk",
-  }),
-  csrf(),
-  trimTrailingSlash(),
-  contextStorage(),
-);
-
-api.get("/", (c) => c.text("Vendel.dk"));
+import { routes } from "./routes";
 
 export default {
   async fetch(request: Request, env: WorkerEnv, context: ExecutionContext) {
@@ -29,10 +12,14 @@ export default {
       url.host,
     )
       ? "/api"
-      : "";
+      : "/";
 
-    const server = app().basePath(pathPrefix).route("/", api);
+    const server = app();
 
-    return await server.fetch(request);
+    server.route(pathPrefix, routes);
+
+    showRoutes(server);
+
+    return await server.fetch(request, env, context);
   },
 };
