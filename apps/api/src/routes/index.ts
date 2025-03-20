@@ -4,7 +4,9 @@ import { trimTrailingSlash } from "hono/trailing-slash";
 
 import { app } from "$lib/app";
 
-import { v1Routes } from "./v1";
+import { categoriesRoutes } from "./categories";
+import { usersRoutes } from "./users";
+import { wishlistsRoutes } from "./wishlists";
 
 const routes = app();
 
@@ -19,6 +21,8 @@ routes.use(
   contextStorage(),
 );
 
-routes.route("/v1", v1Routes);
+routes.route("/categories", categoriesRoutes);
+routes.route("/users", usersRoutes);
+routes.route("/wishlists", wishlistsRoutes);
 
 export { routes };
