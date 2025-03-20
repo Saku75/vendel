@@ -30,9 +30,9 @@ const wishesSchema = sqliteTable(
       }),
     title: text({ length: 100 }).notNull(),
     brand: text({ length: 50 }),
-    description: text(),
+    description: text({ length: 500 }),
     price: real(),
-    link: text(),
+    link: text({ length: 2083 }),
 
     // Timestamps
     createdAt: int({ mode: "timestamp" })
