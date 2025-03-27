@@ -1,5 +1,5 @@
 {
-  "name": "@vendel/eslint-config",
+  "name": "@vendel/token",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -7,15 +7,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@eslint/js": "^9.22.0",
-    "@types/eslint": "^9.6.1",
-    "eslint": "^9.22.0",
-    "eslint-config-prettier": "^10.1.1",
-    "globals": "^16.0.0",
-    "typescript-eslint": "^8.27.0"
+    "@noble/ciphers": "^1.2.1",
+    "@noble/hashes": "^1.7.1"
   },
   "devDependencies": {
-    "@types/eslint-config-prettier": "^6.11.3",
+    "@vendel/eslint-config": "workspace:*",
     "typescript": "^5.8.2"
   },
   "exports": {

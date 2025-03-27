@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@noble/ciphers": "^1.2.1",
-    "@noble/hashes": "^1.7.1",
     "@paralleldrive/cuid2": "^2.2.2",
+    "@vendel/token": "workspace:*",
     "drizzle-orm": "^0.41.0",
     "hono": "^4.7.5",
     "zod": "^3.24.2"
@@ -28,7 +28,7 @@
     "@vendel/eslint-config": "workspace:*",
     "drizzle-kit": "^0.30.5",
     "typescript": "^5.8.2",
-    "wrangler": "^4.3.0"
+    "wrangler": "^4.5.0"
   },
   "exports": {
     ".": {

@@ -1,4 +1,5 @@
-import { bytesToHex, randomBytes } from "@noble/hashes/utils";
+import { bytesToHex } from "@noble/ciphers/utils";
+import { randomBytes } from "@noble/ciphers/webcrypto";
 import { eq } from "drizzle-orm";
 
 import { app } from "$lib/app";
