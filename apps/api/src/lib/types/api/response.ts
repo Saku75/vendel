@@ -2,12 +2,8 @@ import { ZodError } from "zod";
 
 import { GenericObject } from "$lib/types/generic.object";
 
-import { ApiPage } from "./page";
-
 type ApiListResponse<TData extends GenericObject> = {
   data: TData;
-
-  page?: ApiPage;
 };
 
 type ApiGetResponse<TData extends GenericObject> = {

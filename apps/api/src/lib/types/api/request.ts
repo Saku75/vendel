@@ -1,22 +1,12 @@
 import { GenericObject } from "$lib/types/generic.object";
 
-import { ApiPage } from "./page";
-
-type ApiListRequest<TFilters extends GenericObject = never> = {
-  filters?: TFilters;
-
-  page?: ApiPage;
-};
+type ApiListRequest = {};
 
 type ApiGetRequest = {};
 
-type ApiPostRequest<TData extends GenericObject = never> = {
-  data: TData;
-};
+type ApiPostRequest<TData extends GenericObject = never> = TData;
 
-type ApiPutRequest<TData extends GenericObject = never> = {
-  data: TData;
-};
+type ApiPutRequest<TData extends GenericObject = never> = TData;
 
 type ApiDeleteRequest = {};
 
