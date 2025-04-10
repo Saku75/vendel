@@ -20,15 +20,15 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "@vendel/token": "workspace:*",
     "drizzle-orm": "^0.41.0",
-    "hono": "^4.7.5",
+    "hono": "^4.7.6",
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.7",
+    "@eslint/compat": "^1.2.8",
     "@vendel/eslint-config": "workspace:*",
-    "drizzle-kit": "^0.30.5",
-    "typescript": "^5.8.2",
-    "wrangler": "^4.5.0"
+    "drizzle-kit": "^0.30.6",
+    "typescript": "^5.8.3",
+    "wrangler": "^4.9.1"
   },
   "exports": {
     ".": {
