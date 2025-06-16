@@ -1,0 +1,28 @@
+import { contextStorage } from "hono/context-storage";
+import { cors } from "hono/cors";
+import { trimTrailingSlash } from "hono/trailing-slash";
+
+import { app } from "$lib/app";
+
+import { routes } from "./routes";
+
+export default {
+  async fetch(request, env, context) {
+    const server = app();
+
+    server.use(
+      contextStorage(),
+      trimTrailingSlash(),
+      cors({
+        origin: env.CORS_ORIGINS.split(","),
+      }),
+    );
+
+    server.route(
+      new URL(request.url).origin === env.API_ORIGIN ? "/" : "/api",
+      routes,
+    );
+
+    return await server.fetch(request, env, context);
+  },
+} satisfies ExportedHandler<CloudflareBindings>;

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext"],
+
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+
+    "types": ["./src/worker-env.d.ts"],
+
+    "paths": {
+      "$lib/*": ["./src/lib/*"],
+      "$routes/*": ["./src/routes/*"]
+    }
+  }
+}
