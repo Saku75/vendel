@@ -1,0 +1,32 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Local env files
+.env
+.env.*
+.dev.vars
+!.env.example
+!.env.test
+
+# Turbo
+.turbo
+
+# Build Outputs
+.cloudflare
+.svelte-kit
+.wrangler
+build
+dist
+
+# Logs
+logs/
+*.log
+
+# Misc
+.DS_Store
+Thumbs.db
+*.pem
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
