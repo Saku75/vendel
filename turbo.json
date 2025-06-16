@@ -3,16 +3,31 @@
   "ui": "tui",
   "tasks": {
     "dev": {
-      "cache": false,
-      "persistent": true
+      "dependsOn": ["^build", "cf-typegen"],
+      "persistent": true,
+      "cache": false
     },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
 
+    "cf-typegen": {
+      "inputs": ["wrangler.json"],
+      "outputs": ["src/worker-env.d.ts"]
+    },
+
     "lint": {
-      "dependsOn": ["^build", "^lint"]
+      "dependsOn": ["^build", "cf-typegen", "^lint"]
+    },
+
+    "test": {
+      "dependsOn": ["^build", "cf-typegen"],
+      "persistent": true,
+      "cache": false
+    },
+    "test:ci": {
+      "dependsOn": ["^build", "cf-typegen"]
     }
   }
 }

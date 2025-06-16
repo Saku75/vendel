@@ -4,7 +4,10 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
+    "cf-typegen": "turbo run cf-typegen",
     "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:ci": "turbo run test:ci",
     "format": "prettier --write ."
   },
   "devDependencies": {

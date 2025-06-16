@@ -1,16 +1,21 @@
 import { contextStorage } from "hono/context-storage";
 import { cors } from "hono/cors";
+import { showRoutes } from "hono/dev";
+import { logger } from "hono/logger";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
-import { app } from "$lib/app";
+import { app } from "$lib/utils/app";
 
 import { routes } from "./routes";
+
+showRoutes(routes);
 
 export default {
   async fetch(request, env, context) {
     const server = app();
 
     server.use(
+      logger(),
       contextStorage(),
       trimTrailingSlash(),
       cors({

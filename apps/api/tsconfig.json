@@ -10,7 +10,11 @@
     "skipLibCheck": true,
     "moduleResolution": "bundler",
 
-    "types": ["./src/worker-env.d.ts"],
+    "types": [
+      "@cloudflare/vitest-pool-workers",
+      "./src/worker-env.d.ts",
+      "./src/worker-env.test.d.ts"
+    ],
 
     "paths": {
       "$lib/*": ["./src/lib/*"],
