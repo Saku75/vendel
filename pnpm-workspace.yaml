@@ -2,6 +2,10 @@ packages:
   - apps/*
   - packages/*
 
+catalog:
+  wrangler: ^4.20.1
+  typescript: ^5.8.3
+
 onlyBuiltDependencies:
   - esbuild
   - workerd
