@@ -4,15 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    typescript:
-      specifier: ^5.8.3
-      version: 5.8.3
-    wrangler:
-      specifier: ^4.20.1
-      version: 4.20.1
-
 importers:
 
   .:
@@ -36,7 +27,7 @@ importers:
         specifier: ^2.5.4
         version: 2.5.4
       wrangler:
-        specifier: 'catalog:'
+        specifier: ^4.20.1
         version: 4.20.1
 
   apps/api:
@@ -61,7 +52,7 @@ importers:
         specifier: ^9.29.0
         version: 9.29.0(jiti@2.4.2)
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
       vite-tsconfig-paths:
         specifier: ^5.1.4
@@ -70,7 +61,7 @@ importers:
         specifier: ^3.2.3
         version: 3.2.3(@types/node@24.0.3)(jiti@2.4.2)
       wrangler:
-        specifier: 'catalog:'
+        specifier: ^4.20.1
         version: 4.20.1
 
   packages/eslint:
@@ -81,9 +72,6 @@ importers:
       '@eslint/js':
         specifier: ^9.29.0
         version: 9.29.0
-      '@repo/typescript':
-        specifier: workspace:*
-        version: link:../typescript
       eslint:
         specifier: ^9.29.0
         version: 9.29.0(jiti@2.4.2)
@@ -100,8 +88,11 @@ importers:
         specifier: ^8.34.0
         version: 8.34.0(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
     devDependencies:
+      '@repo/typescript':
+        specifier: workspace:*
+        version: link:../typescript
       typescript:
-        specifier: 'catalog:'
+        specifier: ^5.8.3
         version: 5.8.3
 
   packages/typescript: {}
