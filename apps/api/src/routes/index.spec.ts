@@ -7,6 +7,6 @@ it("should return API welcome message", async () => {
 
   expect(await response.json()).toEqual({
     status: 200,
-    message: "This is the Vendel.dk API",
+    message: "Vendel.dk API",
   });
 });

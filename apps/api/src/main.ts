@@ -16,11 +16,11 @@ export default {
 
     server.use(
       logger(),
-      contextStorage(),
-      trimTrailingSlash(),
       cors({
         origin: env.CORS_ORIGINS.split(","),
       }),
+      contextStorage(),
+      trimTrailingSlash(),
     );
 
     server.route(
