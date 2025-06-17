@@ -1,14 +1,7 @@
 {
+  "extends": ["@repo/typescript/configs/base.json"],
   "compilerOptions": {
     "noEmit": true,
-
-    "target": "ESNext",
-    "module": "ESNext",
-    "lib": ["ESNext"],
-
-    "strict": true,
-    "skipLibCheck": true,
-    "moduleResolution": "bundler",
 
     "types": [
       "@cloudflare/vitest-pool-workers",

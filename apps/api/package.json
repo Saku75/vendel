@@ -21,6 +21,7 @@
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.8.38",
     "@repo/eslint": "workspace:*",
+    "@repo/typescript": "workspace:*",
     "@types/node": "^24.0.3",
     "eslint": "^9.29.0",
     "typescript": "catalog:",
