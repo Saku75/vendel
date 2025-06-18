@@ -5,10 +5,7 @@
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "test": "vitest",
-    "test:ci": "vitest run"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@noble/ciphers": "^1.3.0",

@@ -11,9 +11,7 @@
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings src/worker-env.d.ts",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "test": "vitest",
-    "test:ci": "vitest run"
+    "test": "vitest run"
   },
   "dependencies": {
     "hono": "^4.7.11"
@@ -27,7 +25,7 @@
     "typescript": "^5.8.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.3",
-    "wrangler": "^4.20.1"
+    "wrangler": "^4.20.3"
   },
   "exports": {
     "./client": {

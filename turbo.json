@@ -3,13 +3,18 @@
   "ui": "tui",
   "tasks": {
     "dev": {
-      "dependsOn": ["^build", "cf-typegen"],
+      "dependsOn": ["build"],
       "persistent": true,
       "cache": false
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["cf-typegen", "^build"],
       "outputs": ["dist/**"]
+    },
+
+    "deploy": {
+      "dependsOn": ["build"],
+      "env": ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"]
     },
 
     "cf-typegen": {
@@ -18,16 +23,10 @@
     },
 
     "lint": {
-      "dependsOn": ["^build", "cf-typegen", "^lint"]
+      "dependsOn": ["build"]
     },
-
     "test": {
-      "dependsOn": ["^build", "cf-typegen"],
-      "persistent": true,
-      "cache": false
-    },
-    "test:ci": {
-      "dependsOn": ["^build", "cf-typegen"]
+      "dependsOn": ["build"]
     }
   }
 }
