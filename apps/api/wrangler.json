@@ -1,5 +1,5 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
+  "$schema": "./node_modules/wrangler/config-schema.json",
 
   "name": "vendel-api",
   "compatibility_date": "2025-06-17",
@@ -8,7 +8,7 @@
   "workers_dev": false,
   "preview_urls": false,
 
-  "main": "src/main.ts",
+  "main": "./src/main.ts",
   "assets": {
     "directory": "./static"
   },
@@ -27,7 +27,8 @@
     {
       "binding": "DB",
       "database_name": "vendel-dev",
-      "database_id": "9680e4a3-baeb-48db-a1b5-42d0e129fc8a"
+      "database_id": "9680e4a3-baeb-48db-a1b5-42d0e129fc8a",
+      "migrations_dir": "./src/lib/database/migrations"
     }
   ],
 
@@ -49,7 +50,8 @@
         {
           "binding": "DB",
           "database_name": "vendel-dev",
-          "database_id": "9680e4a3-baeb-48db-a1b5-42d0e129fc8a"
+          "database_id": "9680e4a3-baeb-48db-a1b5-42d0e129fc8a",
+          "migrations_dir": "./src/lib/database/migrations"
         }
       ],
 
@@ -87,7 +89,8 @@
         {
           "binding": "DB",
           "database_name": "vendel-prod",
-          "database_id": "eb13a33d-79cb-4e39-8c3a-372570fa40e5"
+          "database_id": "eb13a33d-79cb-4e39-8c3a-372570fa40e5",
+          "migrations_dir": "./src/lib/database/migrations"
         }
       ],
 

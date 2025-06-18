@@ -1,4 +1,5 @@
 declare module "cloudflare:test" {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface ProvidedEnv extends Cloudflare.Env {}
+  interface ProvidedEnv extends Cloudflare.Env {
+    TEST_MIGRATIONS: D1Migration[];
+  }
 }
