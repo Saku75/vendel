@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@noble/ciphers": "^1.3.0",
@@ -16,7 +17,8 @@
     "@repo/eslint": "workspace:*",
     "@repo/typescript": "workspace:*",
     "eslint": "^9.29.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.3"
   },
   "exports": {
     ".": {

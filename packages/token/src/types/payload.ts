@@ -14,7 +14,7 @@ type TokenPayload<T extends TokenPayloadData = TokenPayloadData> = {
   issuedAt: number;
   expiresAt: number;
 
-  data: T;
+  data?: T;
 };
 
 export type { TokenPayload, TokenPayloadData };

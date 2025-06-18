@@ -119,6 +119,9 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
+      vitest:
+        specifier: ^3.2.3
+        version: 3.2.3(@types/node@24.0.3)(jiti@2.4.2)
 
   packages/typescript: {}
 

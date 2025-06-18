@@ -9,6 +9,7 @@ import { TokenVersion } from "./enums/version";
 import { TokenKeys } from "./types/keys";
 import { TokenOptions } from "./types/options";
 import { TokenPayload, TokenPayloadData } from "./types/payload";
+import { TokenReadResponse } from "./types/read";
 
 class Token {
   private readonly keys: TokenKeys;
@@ -20,7 +21,7 @@ class Token {
   }
 
   public create<T extends TokenPayloadData = TokenPayloadData>(
-    data: T,
+    data?: T,
     options?: TokenOptions,
   ): string {
     const version =
@@ -29,17 +30,14 @@ class Token {
     const issuer = options?.issuer || this.defaultOptions?.issuer;
     const purpose = options?.purpose || this.defaultOptions?.purpose;
 
-    const issuedAt = Date.now();
-    const expiresIn =
-      options?.expiresIn ||
-      this.defaultOptions?.expiresIn ||
-      TokenExpiry.OneHour;
+    const issuedAt = Token.getTimestampInSeconds();
+    const expiresIn = TokenExpiry.OneHour;
 
     const payloadBytes = this.encode({
       issuer,
       purpose,
       issuedAt,
-      expiresAt: issuedAt + expiresIn * 1000,
+      expiresAt: issuedAt + expiresIn,
       data,
     });
 
@@ -52,9 +50,9 @@ class Token {
   }
   public read<T extends TokenPayloadData = TokenPayloadData>(
     token: string,
-  ): { verified: boolean; payload: TokenPayload<T> } {
+  ): TokenReadResponse<T> {
     if (!/^v\d(\.[A-Za-z0-9_-]+){3}$/.test(token))
-      throw new Error(`Token: Unsupported token: ${token}`);
+      throw new Error(`Token: Malformed token: ${token}`);
 
     const [version, nonce, encryptedPayload, signature] = token.split(".");
 
@@ -64,7 +62,7 @@ class Token {
       version as TokenVersion,
     );
 
-    const verified = this.verify(
+    const valid = this.verify(
       payloadBytes,
       base64urlnopad.decode(signature),
       version as TokenVersion,
@@ -72,11 +70,13 @@ class Token {
 
     const payload = this.decode(payloadBytes) as TokenPayload<T>;
 
-    return { verified, payload };
+    const expired = payload.expiresAt < Token.getTimestampInSeconds();
+
+    return { valid, expired, payload };
   }
 
   private encode(payload: TokenPayload): Uint8Array {
-    const json = JSON.stringify({ payload });
+    const json = JSON.stringify({ ...payload });
     return utf8ToBytes(json);
   }
   private decode(payload: Uint8Array): TokenPayload {
@@ -134,6 +134,10 @@ class Token {
       default:
         throw new Error(`Token: Unsupported version: ${version}`);
     }
+  }
+
+  static getTimestampInSeconds() {
+    return Math.floor(Date.now() / 1000);
   }
 }
 
