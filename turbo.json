@@ -9,17 +9,17 @@
     },
     "build": {
       "dependsOn": ["cf-typegen", "^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["./dist/**"]
     },
 
     "deploy": {
-      "dependsOn": ["build"],
+      "dependsOn": ["build", "db:apply"],
       "env": ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"]
     },
 
     "cf-typegen": {
-      "inputs": ["wrangler.json"],
-      "outputs": ["src/worker-env.d.ts"]
+      "inputs": ["./wrangler.json"],
+      "outputs": ["./src/worker-env.d.ts"]
     },
 
     "lint": {
@@ -27,6 +27,10 @@
     },
     "test": {
       "dependsOn": ["build"]
+    },
+
+    "db:apply": {
+      "inputs": ["./src/lib/database/migrations/**"]
     }
   }
 }
