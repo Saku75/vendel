@@ -13,5 +13,6 @@
       "$lib/*": ["./src/lib/*"],
       "$routes/*": ["./src/routes/*"]
     }
-  }
+  },
+  "include": ["./src/**/*"]
 }
