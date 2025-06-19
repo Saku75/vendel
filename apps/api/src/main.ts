@@ -3,6 +3,7 @@ import { showRoutes } from "hono/dev";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
 import { databaseMiddleware } from "$lib/middleware/datanase";
+import { mailMiddleware } from "$lib/middleware/mail";
 import { tokenMiddleware } from "$lib/middleware/token";
 import { app } from "$lib/utils/app";
 
@@ -19,8 +20,9 @@ export default {
       cors({
         origin: env.CORS_ORIGINS.split(","),
       }),
-      tokenMiddleware,
       databaseMiddleware,
+      mailMiddleware,
+      tokenMiddleware,
     );
 
     server.route(
