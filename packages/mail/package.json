@@ -1,0 +1,27 @@
+{
+  "name": "@repo/mail",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsc -w -p ./tsconfig.build.json",
+    "build": "tsc -p ./tsconfig.build.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "resend": "^4.6.0"
+  },
+  "devDependencies": {
+    "@repo/eslint": "workspace:*",
+    "@repo/typescript": "workspace:*",
+    "eslint": "^9.29.0",
+    "typescript": "^5.8.3"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/main.d.ts",
+        "default": "./dist/main.js"
+      }
+    }
+  }
+}
