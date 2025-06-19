@@ -1,9 +1,16 @@
+import { DrizzleD1Database } from "drizzle-orm/d1";
 import { Hono } from "hono";
-import { getContext } from "hono/context-storage";
 import { HonoOptions } from "hono/hono-base";
+
+import { Token } from "@repo/token";
 
 type HonoEnv = {
   Bindings: CloudflareBindings;
+
+  Variables: {
+    database: DrizzleD1Database;
+    token: Token;
+  };
 };
 
 function app(config?: HonoOptions<HonoEnv>) {
@@ -14,9 +21,5 @@ function app(config?: HonoOptions<HonoEnv>) {
   return app;
 }
 
-function appContext() {
-  return getContext<HonoEnv>();
-}
-
-export { app, appContext };
+export { app };
 export type { HonoEnv };

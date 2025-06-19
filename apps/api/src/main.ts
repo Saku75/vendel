@@ -1,9 +1,9 @@
-import { contextStorage } from "hono/context-storage";
 import { cors } from "hono/cors";
 import { showRoutes } from "hono/dev";
-import { logger } from "hono/logger";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
+import { databaseMiddleware } from "$lib/middleware/datanase";
+import { tokenMiddleware } from "$lib/middleware/token";
 import { app } from "$lib/utils/app";
 
 import { routes } from "./routes";
@@ -15,12 +15,12 @@ export default {
     const server = app();
 
     server.use(
-      logger(),
+      trimTrailingSlash(),
       cors({
         origin: env.CORS_ORIGINS.split(","),
       }),
-      contextStorage(),
-      trimTrailingSlash(),
+      tokenMiddleware,
+      databaseMiddleware,
     );
 
     server.route(
