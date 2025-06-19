@@ -41,6 +41,9 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
+      '@repo/mail':
+        specifier: workspace:*
+        version: link:../../packages/mail
       '@repo/token':
         specifier: workspace:*
         version: link:../../packages/token

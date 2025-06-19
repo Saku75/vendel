@@ -6,6 +6,8 @@ import ts, { ConfigArray } from "typescript-eslint";
 
 function customConfig(): ConfigArray {
   return ts.config(
+    { ignores: ["./dist", "./node_modules"] },
+
     js.configs.recommended,
     ...ts.configs.recommended,
     prettier,
