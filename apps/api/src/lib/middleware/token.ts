@@ -15,7 +15,10 @@ const tokenMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
     return [hexToBytes(value[0]), hexToBytes(value[1])];
   });
 
-  c.set("token", new Token({ encryption, signing }));
+  c.set(
+    "token",
+    new Token({ encryption, signing }, { issuer: c.env.API_ORIGIN }),
+  );
 
   await next();
 });
