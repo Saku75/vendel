@@ -6,6 +6,6 @@ const id = z
     invalid_type_error: "ID skal være en streng.",
   })
   .nonempty("Noget gik galt - prøv igen senere.")
-  .cuid2("Ugyldigt ID - prøv igen eller kontakt support.");
+  .cuid2("Noget gik galt - prøv igen senere.");
 
 export { id };

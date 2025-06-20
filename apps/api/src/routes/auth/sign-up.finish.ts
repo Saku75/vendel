@@ -1,0 +1,100 @@
+import { scryptAsync } from "@noble/hashes/scrypt";
+import { base64urlnopad } from "@scure/base";
+import { eq } from "drizzle-orm";
+import z from "zod";
+
+import { MailTemplate } from "@repo/mail";
+import { TokenPurpose } from "@repo/token";
+import { validators } from "@repo/validators";
+
+import { users } from "$lib/database/schema/users";
+import { app } from "$lib/utils/app";
+import { extractIssues } from "$lib/validation/utils";
+
+import { SignUpFinishResponse, SignUpSession } from "./sign-up";
+
+const signUpFinishSchema = z.object({
+  sessionId: validators.id,
+
+  passwordClientHash: validators.password.hash,
+});
+
+const signUpFinishRoute = app().post("/", async (c) => {
+  const body = await c.req.json<z.infer<typeof signUpFinishSchema>>();
+
+  const [parsedBody, session] = await Promise.all([
+    signUpFinishSchema.safeParseAsync(body),
+    c.env.KV.get<SignUpSession>(`auth:sign-up:session:${body.sessionId}`, {
+      type: "json",
+    }),
+  ]);
+
+  if (!parsedBody.success || !session) {
+    let issues: Record<string, string> = {};
+
+    if (!parsedBody.success)
+      issues = { ...issues, ...extractIssues(parsedBody.error) };
+    if (!session)
+      issues = {
+        ...issues,
+        sessionId: "Noget gik galt - prøv igen senere.",
+      };
+
+    return c.json({ status: 400, errors: issues }, 400);
+  }
+
+  const { data } = parsedBody;
+
+  const passwordServerHash = await scryptAsync(
+    data.passwordClientHash,
+    session.serverSalt,
+    { N: 2 ** 17, r: 8, p: 1 },
+  );
+
+  const [user] = await Promise.all([
+    c.var.database
+      .update(users)
+      .set({
+        password: base64urlnopad.encode(passwordServerHash),
+      })
+      .where(eq(users.id, session.userId))
+      .returning({
+        firstName: users.firstName,
+        email: users.email,
+      }),
+
+    c.env.KV.delete(`auth:sign-up:session:${data.sessionId}`),
+  ]);
+  const { firstName, email } = user[0];
+
+  const confirmEmailToken = c.var.token.create({
+    data: {
+      userId: session.userId,
+    },
+    options: {
+      purpose: TokenPurpose.ConfirmEmail,
+    },
+  });
+
+  await c.var.mail.send({
+    to: {
+      name: firstName,
+      address: email,
+    },
+    template: MailTemplate.ConfirmEmail,
+    data: {
+      name: firstName,
+      token: confirmEmailToken,
+    },
+  });
+
+  return c.json(
+    { status: 201, data: { sessionId: data.sessionId } } satisfies {
+      status: number;
+      data: SignUpFinishResponse;
+    },
+    201,
+  );
+});
+
+export { signUpFinishRoute, signUpFinishSchema };

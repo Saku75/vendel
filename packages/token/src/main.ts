@@ -5,6 +5,7 @@ import { bytesToUtf8, randomBytes, utf8ToBytes } from "@noble/hashes/utils";
 import { base64urlnopad } from "@scure/base";
 
 import { TokenExpiry } from "./enums/expiry";
+import { TokenPurpose } from "./enums/purpose";
 import { TokenVersion } from "./enums/version";
 import { TokenKeys } from "./types/keys";
 import { TokenOptions } from "./types/options";
@@ -141,4 +142,4 @@ class Token {
   }
 }
 
-export { Token, TokenKeys };
+export { Token, TokenExpiry, TokenKeys, TokenPurpose };

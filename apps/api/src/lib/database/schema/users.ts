@@ -8,7 +8,7 @@ import {
 
 import { AuthRole } from "$lib/enums/auth/role";
 
-const usersSchema = sqliteTable("users", {
+const users = sqliteTable("users", {
   // Internal ID
   id: text({ length: 24 })
     .notNull()
@@ -35,10 +35,10 @@ const usersSchema = sqliteTable("users", {
 
   // Approval
   approved: int({ mode: "boolean" }).notNull().default(false),
-  approvedBy: text({ length: 24 }).references(
-    (): AnySQLiteColumn => usersSchema.id,
-    { onUpdate: "cascade", onDelete: "set null" },
-  ),
+  approvedBy: text({ length: 24 }).references((): AnySQLiteColumn => users.id, {
+    onUpdate: "cascade",
+    onDelete: "set null",
+  }),
 
   // Timestamps
   createdAt: int({ mode: "timestamp" })
@@ -50,4 +50,4 @@ const usersSchema = sqliteTable("users", {
     .$onUpdate(() => new Date()),
 });
 
-export { usersSchema };
+export { users };
