@@ -23,7 +23,7 @@ const usersSchema = sqliteTable("users", {
   // Credentials
   email: text({ length: 320 }).notNull().unique(),
   emailVerified: int({ mode: "boolean" }).notNull().default(false),
-  password: text({ length: 128 }),
+  password: text(),
   clientSalt: text({ length: 64 }).notNull(),
   serverSalt: text({ length: 64 }).notNull(),
 
