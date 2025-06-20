@@ -47,12 +47,18 @@ importers:
       '@repo/token':
         specifier: workspace:*
         version: link:../../packages/token
+      '@repo/validators':
+        specifier: workspace:*
+        version: link:../../packages/validators
       drizzle-orm:
         specifier: ^0.44.2
         version: 0.44.2
       hono:
         specifier: ^4.7.11
         version: 4.7.11
+      zod:
+        specifier: ^3.25.67
+        version: 3.25.67
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.8.38
@@ -164,6 +170,25 @@ importers:
         version: 3.2.3(@types/node@24.0.3)(jiti@2.4.2)
 
   packages/typescript: {}
+
+  packages/validators:
+    dependencies:
+      zod:
+        specifier: ^3.25.67
+        version: 3.25.67
+    devDependencies:
+      '@repo/eslint':
+        specifier: workspace:*
+        version: link:../eslint
+      '@repo/typescript':
+        specifier: workspace:*
+        version: link:../typescript
+      eslint:
+        specifier: ^9.29.0
+        version: 9.29.0(jiti@2.4.2)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
 
 packages:
 
@@ -2088,6 +2113,9 @@ packages:
   zod@3.22.3:
     resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
 
+  zod@3.25.67:
+    resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -2167,7 +2195,7 @@ snapshots:
       semver: 7.7.2
       vitest: 3.2.3(@types/node@24.0.3)(jiti@2.4.2)
       wrangler: 4.20.0
-      zod: 3.22.3
+      zod: 3.25.67
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
       - bufferutil
@@ -3771,3 +3799,5 @@ snapshots:
   zimmerframe@1.1.2: {}
 
   zod@3.22.3: {}
+
+  zod@3.25.67: {}
