@@ -28,6 +28,9 @@
     "test": {
       "dependsOn": ["build"]
     },
+    "test:watch": {
+      "dependsOn": ["build"]
+    },
 
     "db:apply": {
       "inputs": ["./src/lib/database/migrations/**"]

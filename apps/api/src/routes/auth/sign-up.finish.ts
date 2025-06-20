@@ -62,7 +62,6 @@ const signUpFinishRoute = app().post("/", async (c) => {
         firstName: users.firstName,
         email: users.email,
       }),
-
     c.env.KV.delete(`auth:sign-up:session:${data.sessionId}`),
   ]);
   const { firstName, email } = user[0];

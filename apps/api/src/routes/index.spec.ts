@@ -1,12 +1,15 @@
-import { env, SELF } from "cloudflare:test";
-import { expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
-it("should return API welcome message", async () => {
-  const response = await SELF.fetch(env.API_ORIGIN);
-  expect(response.status).toBe(200);
+import { testFetch } from "$lib/test/utils/fetch";
 
-  expect(await response.json()).toEqual({
-    status: 200,
-    message: "Vendel.dk API",
+describe("Root", () => {
+  it("should return API welcome message", async () => {
+    const response = await testFetch("/");
+    expect(response.status).toBe(200);
+
+    expect(await response.json()).toEqual({
+      status: 200,
+      message: "Vendel.dk API",
+    });
   });
 });

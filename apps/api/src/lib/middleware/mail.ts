@@ -9,7 +9,7 @@ const mailMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
 
   c.set(
     "mail",
-    new Mail(await RESEND_API_KEY.get(), {
+    new Mail(RESEND_API_KEY, {
       baseURL: CORS_ORIGINS.split(",")[0],
     }),
   );
