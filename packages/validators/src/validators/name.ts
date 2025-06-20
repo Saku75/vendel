@@ -14,14 +14,16 @@ const name = {
       required_error: "Mellemnavn skal udfyldes.",
       invalid_type_error: "Mellemnavn skal være tekst.",
     })
-    .max(200, "Mellemnavn må højst være 200 tegn."),
+    .max(200, "Mellemnavn må højst være 200 tegn.")
+    .optional(),
 
   last: z
     .string({
       required_error: "Efternavn skal udfyldes.",
       invalid_type_error: "Efternavn skal være tekst.",
     })
-    .max(50, "Efternavn må højst være 50 tegn."),
+    .max(50, "Efternavn må højst være 50 tegn.")
+    .optional(),
 };
 
 export { name };

@@ -1,16 +1,13 @@
 import { cors } from "hono/cors";
-import { showRoutes } from "hono/dev";
 import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
-import { databaseMiddleware } from "$lib/middleware/datanase";
+import { databaseMiddleware } from "$lib/middleware/database";
 import { mailMiddleware } from "$lib/middleware/mail";
 import { tokenMiddleware } from "$lib/middleware/token";
 import { app } from "$lib/utils/app";
 
 import { routes } from "./routes";
-
-showRoutes(routes);
 
 export default {
   async fetch(request, env, context) {

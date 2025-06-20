@@ -23,24 +23,6 @@
     "CORS_ORIGINS": "http://localhost:5173"
   },
 
-  "secrets_store_secrets": [
-    {
-      "binding": "TOKEN_ENCRYPTION_KEY",
-      "secret_name": "vendel-local_token-encryption-key",
-      "store_id": "d15506203cb34f8fa8ffd15ad4c6f40b"
-    },
-    {
-      "binding": "TOKEN_SIGNING_KEY",
-      "secret_name": "vendel-local_token-signing-key",
-      "store_id": "d15506203cb34f8fa8ffd15ad4c6f40b"
-    },
-    {
-      "binding": "RESEND_API_KEY",
-      "secret_name": "vendel-local_resend-api-key",
-      "store_id": "d15506203cb34f8fa8ffd15ad4c6f40b"
-    }
-  ],
-
   "d1_databases": [
     {
       "binding": "DB",
@@ -63,24 +45,6 @@
         "API_ORIGIN": "https://api.dev.vendel.dk",
         "CORS_ORIGINS": "https://dev.vendel.dk"
       },
-
-      "secrets_store_secrets": [
-        {
-          "binding": "TOKEN_ENCRYPTION_KEY",
-          "secret_name": "vendel-dev_token-encryption-key",
-          "store_id": "d15506203cb34f8fa8ffd15ad4c6f40b"
-        },
-        {
-          "binding": "TOKEN_SIGNING_KEY",
-          "secret_name": "vendel-dev_token-signing-key",
-          "store_id": "d15506203cb34f8fa8ffd15ad4c6f40b"
-        },
-        {
-          "binding": "RESEND_API_KEY",
-          "secret_name": "vendel-dev_resend-api-key",
-          "store_id": "d15506203cb34f8fa8ffd15ad4c6f40b"
-        }
-      ],
 
       "d1_databases": [
         {
@@ -120,24 +84,6 @@
         "API_ORIGIN": "https://api.vendel.dk",
         "CORS_ORIGINS": "https://vendel.dk,https://www.vendel.dk"
       },
-
-      "secrets_store_secrets": [
-        {
-          "binding": "TOKEN_ENCRYPTION_KEY",
-          "secret_name": "vendel-prod_token-encryption-key",
-          "store_id": "d15506203cb34f8fa8ffd15ad4c6f40b"
-        },
-        {
-          "binding": "TOKEN_SIGNING_KEY",
-          "secret_name": "vendel-prod_token-signing-key",
-          "store_id": "d15506203cb34f8fa8ffd15ad4c6f40b"
-        },
-        {
-          "binding": "RESEND_API_KEY",
-          "secret_name": "vendel-prod_resend-api-key",
-          "store_id": "d15506203cb34f8fa8ffd15ad4c6f40b"
-        }
-      ],
 
       "d1_databases": [
         {

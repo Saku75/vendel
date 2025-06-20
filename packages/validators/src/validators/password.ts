@@ -23,7 +23,8 @@ const password = {
       required_error: "Adgangskode-hash mangler.",
       invalid_type_error: "Adgangskode-hash skal være en streng.",
     })
-    .nonempty("Noget gik galt - prøv igen senere."),
+    .nonempty("Noget gik galt - prøv igen senere.")
+    .base64url("Noget gik galt - prøv igen senere."),
 };
 
 export { password };
