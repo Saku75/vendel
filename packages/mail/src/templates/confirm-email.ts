@@ -5,21 +5,22 @@ import { MailTemplateStructure } from "./types/structure";
 
 export const templateConfirmEmail: MailTemplateStructure = {
   from: MailTemplateSender[MailTemplate.ConfirmEmail],
-  subject: "Bekræft din e-mail adresse",
+  subject: "Bekræft din e-mailadresse",
   html: `<html>
   <body>
     <p>Hej {{name}},</p>
 
-    <p>Du bedes bekræfte din e-mailadresse ved at klikke på linket nedenfor:<br />
-    <a href="{{${MailTemplatePlaceholder.BaseURL}}}/auth/confirm-email?token={{token}}">Bekræft e-mail</a><br />
-    Linket udløber om 24 timer. Du kan anmode om et nyt link ved at logge ind på din konto.</p>
+    <p>Klik på linket herunder for at bekræfte din e-mailadresse:<br />
+    <a href="{{${MailTemplatePlaceholder.BaseURL}}}/auth/confirm-email?token={{token}}">Bekræft e-mail</a></p>
 
-    <p>Efter du har bekræftet din e-mailadresse, bliver din konto sendt til godkendelse.<br />
-    Vi vil sende dig en e-mail, når din konto er blevet godkendt.</p>
+    <p>Linket udløber om 24 timer. Du kan få et nyt ved at logge ind igen.</p>
 
-    <p>Hvis du ikke har oprettet en konto på Vendel.dk, kan du ignorere denne e-mail.</p>
+    <p>Når din e-mail er bekræftet, sender vi din konto til godkendelse.<br />
+    Du får besked, så snart den er klar.</p>
 
-    <p>Med venlig hilsen,<br />
+    <p>Hvis du ikke selv har oprettet en konto hos Vendel.dk, kan du bare ignorere denne mail.</p>
+
+    <p>Venlig hilsen<br />
     <a href="{{${MailTemplatePlaceholder.BaseURL}}}">Vendel.dk</a></p>
   </body>
 </html>`,
