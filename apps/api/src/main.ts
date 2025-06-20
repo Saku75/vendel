@@ -1,5 +1,6 @@
 import { cors } from "hono/cors";
 import { showRoutes } from "hono/dev";
+import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
 import { databaseMiddleware } from "$lib/middleware/datanase";
@@ -17,6 +18,7 @@ export default {
 
     server.use(
       trimTrailingSlash(),
+      secureHeaders({ strictTransportSecurity: false, xXssProtection: "1" }),
       cors({
         origin: env.CORS_ORIGINS.split(","),
       }),
