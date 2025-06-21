@@ -19,6 +19,7 @@
   "placement": { "mode": "smart" },
 
   "vars": {
+    "MODE": "local",
     "API_ORIGIN": "http://localhost:8787",
     "CORS_ORIGINS": "http://localhost:5173"
   },
@@ -42,6 +43,7 @@
   "env": {
     "dev": {
       "vars": {
+        "MODE": "dev",
         "API_ORIGIN": "https://api.dev.vendel.dk",
         "CORS_ORIGINS": "https://dev.vendel.dk"
       },
@@ -81,6 +83,7 @@
 
     "prod": {
       "vars": {
+        "MODE": "prod",
         "API_ORIGIN": "https://api.vendel.dk",
         "CORS_ORIGINS": "https://vendel.dk,https://www.vendel.dk"
       },

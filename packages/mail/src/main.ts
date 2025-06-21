@@ -15,13 +15,16 @@ import {
 class Mail {
   private readonly resend: Resend;
   private readonly builtInPlaceholderValues: MailTemplateBuiltInPlaceholders;
+  private readonly dev?: boolean;
 
   constructor(
     key: string,
     builtInPlaceholderValues: MailTemplateBuiltInPlaceholders,
+    dev?: boolean,
   ) {
     this.resend = new Resend(key);
     this.builtInPlaceholderValues = builtInPlaceholderValues;
+    this.dev = dev;
   }
 
   public async send(mail: MailOptions) {
