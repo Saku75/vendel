@@ -1,6 +1,7 @@
 import { createId } from "@paralleldrive/cuid2";
 import {
   AnySQLiteColumn,
+  blob,
   int,
   sqliteTable,
   text,
@@ -23,7 +24,7 @@ const users = sqliteTable("users", {
   // Credentials
   email: text({ length: 320 }).notNull().unique(),
   emailVerified: int({ mode: "boolean" }).notNull().default(false),
-  password: text(),
+  password: blob({ mode: "buffer" }),
   clientSalt: text({ length: 64 }).notNull(),
   serverSalt: text({ length: 64 }).notNull(),
 
