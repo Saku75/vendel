@@ -34,14 +34,14 @@ const signUpStartRoute = app().post("/", async (c) => {
 
   const parsedBody = await signUpStartSchema
     .superRefine(async (values, context) => {
-      if (!(await c.var.database.$count(users, eq(users.email, values.email))))
+      if (await c.var.database.$count(users, eq(users.email, values.email)))
         context.addIssue({
           code: z.ZodIssueCode.custom,
           message: ValidatorCodes.AlreadyExists,
           path: ["email"],
         });
 
-      if (!c.var.captcha.verify(body.captcha, captchaIdempotencyKey))
+      if (!c.var.captcha.verify(values.captcha, captchaIdempotencyKey))
         context.addIssue({
           code: z.ZodIssueCode.custom,
           message: ValidatorCodes.Invalid,

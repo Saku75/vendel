@@ -1,9 +1,7 @@
 import { scryptAsync } from "@noble/hashes/scrypt";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { MailTemplate } from "@repo/mail";
-import { TokenPurpose } from "@repo/token";
 import { ValidatorCodes } from "@repo/validators";
 import { captchaValidator } from "@repo/validators/captcha";
 import { idValidator } from "@repo/validators/id";
@@ -13,9 +11,9 @@ import { users } from "$lib/database/schema/users";
 import { ApiResponse } from "$lib/types/response";
 import { app } from "$lib/utils/app";
 
-import { SignUpFinishResponse, SignUpSession } from "./sign-up";
+import { SignInFinishResponse, SignInSession } from "./sign-in";
 
-const signUpFinishSchema = z.object({
+const signInFinishSchema = z.object({
   sessionId: idValidator,
 
   passwordClientHash: passwordHashValidator,
@@ -23,14 +21,14 @@ const signUpFinishSchema = z.object({
   captcha: captchaValidator,
 });
 
-const signUpFinishRoute = app().post("/", async (c) => {
-  const body = await c.req.json<z.infer<typeof signUpFinishSchema>>();
-  const session = await c.env.KV.get<SignUpSession>(
-    `auth:sign-up:session:${body.sessionId}`,
+const signInFinishRoute = app().post("/", async (c) => {
+  const body = await c.req.json<z.infer<typeof signInFinishSchema>>();
+  const session = await c.env.KV.get<SignInSession>(
+    `auth:sign-in:session:${body.sessionId}`,
     { type: "json" },
   );
 
-  const parsedBody = await signUpFinishSchema
+  const parsedBody = await signInFinishSchema
     .superRefine(async (values, context) => {
       if (!session) {
         context.addIssue({
@@ -65,48 +63,48 @@ const signUpFinishRoute = app().post("/", async (c) => {
   );
 
   const [user] = await Promise.all([
-    c.var.database
-      .update(users)
-      .set({
-        password: Buffer.from(passwordServerHash),
-      })
-      .where(eq(users.id, session.userId))
-      .returning({
-        firstName: users.firstName,
-        email: users.email,
-      }),
-    c.env.KV.delete(`auth:sign-up:session:${data.sessionId}`),
+    session.userExists
+      ? c.var.database
+          .select({ id: users.id })
+          .from(users)
+          .where(
+            and(
+              eq(users.id, session.userId),
+              eq(users.password, Buffer.from(passwordServerHash)),
+            ),
+          )
+      : c.var.database.select({ id: users.id }).from(users),
+    c.env.KV.delete(`auth:sign-in:session:${data.sessionId}`),
   ]);
-  const { firstName, email } = user[0];
 
-  const confirmEmailToken = c.var.token.create({
-    data: {
-      userId: session.userId,
-    },
-    options: {
-      purpose: TokenPurpose.ConfirmEmail,
-    },
-  });
-
-  await c.var.mail.send({
-    to: {
-      name: firstName,
-      address: email,
-    },
-    template: MailTemplate.ConfirmEmail,
-    data: {
-      name: firstName,
-      token: confirmEmailToken,
-    },
-  });
-
-  return c.json(
-    {
-      status: 201,
-      data: { sessionId: data.sessionId },
-    } satisfies ApiResponse<SignUpFinishResponse>,
-    201,
-  );
+  if (user.length) {
+    return c.json(
+      {
+        status: 200,
+        data: { sessionId: data.sessionId },
+      } satisfies ApiResponse<SignInFinishResponse>,
+      200,
+    );
+  } else {
+    return c.json(
+      {
+        status: 400,
+        errors: [
+          {
+            code: z.ZodIssueCode.custom,
+            message: ValidatorCodes.Invalid,
+            path: ["email"],
+          },
+          {
+            code: z.ZodIssueCode.custom,
+            message: ValidatorCodes.Invalid,
+            path: ["password"],
+          },
+        ],
+      } satisfies ApiResponse,
+      400,
+    );
+  }
 });
 
-export { signUpFinishRoute, signUpFinishSchema };
+export { signInFinishRoute, signInFinishSchema };
