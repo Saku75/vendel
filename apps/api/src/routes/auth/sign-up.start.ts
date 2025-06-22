@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { ValidatorCodes } from "@repo/validators";
+import { captchaValidator } from "@repo/validators/captcha";
 import { emailValidator } from "@repo/validators/email";
 import {
   firstNameValidator,
@@ -22,10 +23,13 @@ const signUpStartSchema = z.object({
   lastName: lastNameValidator,
 
   email: emailValidator,
+
+  captcha: captchaValidator,
 });
 
 const signUpStartRoute = app().post("/", async (c) => {
   const body = await c.req.json<z.infer<typeof signUpStartSchema>>();
+  const captchaIdempotencyKey = c.var.captcha.createIdempotencyKey();
 
   const parsedBody = await signUpStartSchema
     .superRefine(async (values, context) => {
@@ -34,6 +38,13 @@ const signUpStartRoute = app().post("/", async (c) => {
           code: z.ZodIssueCode.custom,
           message: ValidatorCodes.AlreadyExists,
           path: ["email"],
+        });
+
+      if (!c.var.captcha.verify(body.captcha, captchaIdempotencyKey))
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: ValidatorCodes.Invalid,
+          path: ["captcha"],
         });
     })
     .safeParseAsync(body);
@@ -66,6 +77,7 @@ const signUpStartRoute = app().post("/", async (c) => {
     JSON.stringify({
       userId,
       serverSalt,
+      captchaIdempotencyKey,
     } satisfies SignUpSession),
     { expirationTtl: 60 },
   );

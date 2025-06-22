@@ -20,6 +20,8 @@ type SignUpSession = {
   userId: string;
 
   serverSalt: string;
+
+  captchaIdempotencyKey: string;
 };
 
 export { signUpRoutes };
