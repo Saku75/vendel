@@ -3,7 +3,12 @@ import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { validators } from "@repo/validators";
+import { emailValidator } from "@repo/validators/email";
+import {
+  firstNameValidator,
+  lastNameValidator,
+  middleNameValidator,
+} from "@repo/validators/name";
 
 import { users } from "$lib/database/schema/users";
 import { app } from "$lib/utils/app";
@@ -12,11 +17,11 @@ import { extractIssues } from "$lib/validation/utils";
 import { SignUpSession, SignUpStartResponse } from "./sign-up";
 
 const signUpStartSchema = z.object({
-  firstName: validators.name.first,
-  middleName: validators.name.middle,
-  lastName: validators.name.last,
+  firstName: firstNameValidator,
+  middleName: middleNameValidator,
+  lastName: lastNameValidator,
 
-  email: validators.email,
+  email: emailValidator,
 });
 
 const signUpStartRoute = app().post("/", async (c) => {

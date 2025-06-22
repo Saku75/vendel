@@ -22,6 +22,12 @@
         "types": "./dist/main.d.ts",
         "default": "./dist/main.js"
       }
+    },
+    "./*": {
+      "import": {
+        "types": "./dist/validators/*.d.ts",
+        "default": "./dist/validators/*.js"
+      }
     }
   }
 }

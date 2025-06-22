@@ -5,7 +5,8 @@ import z from "zod";
 
 import { MailTemplate } from "@repo/mail";
 import { TokenPurpose } from "@repo/token";
-import { validators } from "@repo/validators";
+import { idValidator } from "@repo/validators/id";
+import { passwordHashValidator } from "@repo/validators/password";
 
 import { users } from "$lib/database/schema/users";
 import { app } from "$lib/utils/app";
@@ -14,9 +15,9 @@ import { extractIssues } from "$lib/validation/utils";
 import { SignUpFinishResponse, SignUpSession } from "./sign-up";
 
 const signUpFinishSchema = z.object({
-  sessionId: validators.id,
+  sessionId: idValidator,
 
-  passwordClientHash: validators.password.hash,
+  passwordClientHash: passwordHashValidator,
 });
 
 const signUpFinishRoute = app().post("/", async (c) => {

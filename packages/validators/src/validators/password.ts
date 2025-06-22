@@ -1,30 +1,30 @@
 import z from "zod";
 
-const password = {
-  plain: z
-    .string({
-      required_error: "Adgangskode skal udfyldes.",
-      invalid_type_error: "Adgangskode skal være tekst.",
-    })
-    .min(10, "Adgangskode skal være mindst 10 tegn.")
-    .max(64, "Adgangskode må højst være 64 tegn.")
-    .regex(
-      /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])/,
-      "Adgangskode skal indeholde mindst ét stort bogstav, ét lille bogstav, et tal og et specialtegn.",
-    ),
+import { ValidatorCodes } from "../main";
 
-  confirm: z.string({
-    required_error: "Bekræft adgangskode skal udfyldes.",
-    invalid_type_error: "Bekræft adgangskode skal være tekst.",
-  }),
+const passwordValidator = z
+  .string({
+    required_error: ValidatorCodes.Required,
+    invalid_type_error: ValidatorCodes.InvalidType,
+  })
+  .min(10, ValidatorCodes.TooShort)
+  .max(64, ValidatorCodes.TooLong)
+  .regex(
+    /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])/,
+    ValidatorCodes.InvalidFormat,
+  );
 
-  hash: z
-    .string({
-      required_error: "Adgangskode-hash mangler.",
-      invalid_type_error: "Adgangskode-hash skal være en streng.",
-    })
-    .nonempty("Noget gik galt - prøv igen senere.")
-    .base64url("Noget gik galt - prøv igen senere."),
-};
+const passwordConfirmValidator = z.string({
+  required_error: ValidatorCodes.Required,
+  invalid_type_error: ValidatorCodes.InvalidType,
+});
 
-export { password };
+const passwordHashValidator = z
+  .string({
+    required_error: ValidatorCodes.Required,
+    invalid_type_error: ValidatorCodes.InvalidType,
+  })
+  .nonempty(ValidatorCodes.Required)
+  .base64url(ValidatorCodes.InvalidFormat);
+
+export { passwordConfirmValidator, passwordHashValidator, passwordValidator };

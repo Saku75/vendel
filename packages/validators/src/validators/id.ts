@@ -1,11 +1,13 @@
 import { z } from "zod";
 
-const id = z
-  .string({
-    required_error: "ID mangler.",
-    invalid_type_error: "ID skal være en streng.",
-  })
-  .nonempty("Noget gik galt - prøv igen senere.")
-  .cuid2("Noget gik galt - prøv igen senere.");
+import { ValidatorCodes } from "../main";
 
-export { id };
+const idValidator = z
+  .string({
+    required_error: ValidatorCodes.Required,
+    invalid_type_error: ValidatorCodes.InvalidType,
+  })
+  .nonempty(ValidatorCodes.Required)
+  .cuid2(ValidatorCodes.InvalidFormat);
+
+export { idValidator };
