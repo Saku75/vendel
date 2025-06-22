@@ -11,6 +11,7 @@ import { idValidator } from "@repo/validators/id";
 import { passwordHashValidator } from "@repo/validators/password";
 
 import { users } from "$lib/database/schema/users";
+import { ApiResponse } from "$lib/types/response";
 import { app } from "$lib/utils/app";
 
 import { SignUpFinishResponse, SignUpSession } from "./sign-up";
@@ -51,7 +52,10 @@ const signUpFinishRoute = app().post("/", async (c) => {
     .safeParseAsync(body);
 
   if (!parsedBody.success || !session)
-    return c.json({ status: 400, errors: parsedBody.error!.errors }, 400);
+    return c.json(
+      { status: 400, errors: parsedBody.error!.errors } satisfies ApiResponse,
+      400,
+    );
 
   const { data } = parsedBody;
 
@@ -98,10 +102,10 @@ const signUpFinishRoute = app().post("/", async (c) => {
   });
 
   return c.json(
-    { status: 201, data: { sessionId: data.sessionId } } satisfies {
-      status: number;
-      data: SignUpFinishResponse;
-    },
+    {
+      status: 201,
+      data: { sessionId: data.sessionId },
+    } satisfies ApiResponse<SignUpFinishResponse>,
     201,
   );
 });
