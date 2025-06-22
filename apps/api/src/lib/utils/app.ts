@@ -5,10 +5,13 @@ import { HonoOptions } from "hono/hono-base";
 import { Mail } from "@repo/mail";
 import { Token } from "@repo/token";
 
+import { Captcha } from "./captcha";
+
 type HonoEnv = {
   Bindings: CloudflareBindings;
 
   Variables: {
+    captcha: Captcha;
     database: DrizzleD1Database;
     token: Token;
     mail: Mail;

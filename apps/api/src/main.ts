@@ -2,6 +2,7 @@ import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
+import { captchaMiddleware } from "$lib/middleware/captcha";
 import { databaseMiddleware } from "$lib/middleware/database";
 import { mailMiddleware } from "$lib/middleware/mail";
 import { tokenMiddleware } from "$lib/middleware/token";
@@ -19,6 +20,7 @@ export default {
       cors({
         origin: env.CORS_ORIGINS.split(","),
       }),
+      captchaMiddleware,
       databaseMiddleware,
       mailMiddleware,
       tokenMiddleware,

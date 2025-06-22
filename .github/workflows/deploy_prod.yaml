@@ -16,6 +16,7 @@ jobs:
       TOKEN_ENCRYPTION_KEY: ${{ secrets.TOKEN_ENCRYPTION_KEY }}
       TOKEN_SIGNING_KEY: ${{ secrets.TOKEN_SIGNING_KEY }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
 
   deploy-prod:
     needs: call-ci

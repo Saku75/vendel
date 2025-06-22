@@ -59,6 +59,9 @@ importers:
       hono:
         specifier: ^4.7.11
         version: 4.7.11
+      ky:
+        specifier: ^1.8.1
+        version: 1.8.1
       zod:
         specifier: ^3.25.67
         version: 3.25.67
@@ -1491,6 +1494,10 @@ packages:
 
   known-css-properties@0.36.0:
     resolution: {integrity: sha512-A+9jP+IUmuQsNdsLdcg6Yt7voiMF/D4K83ew0OpJtpu+l34ef7LaohWV0Rc6KNvzw6ZDizkqfyB5JznZnzuKQA==}
+
+  ky@1.8.1:
+    resolution: {integrity: sha512-7Bp3TpsE+L+TARSnnDpk3xg8Idi8RwSLdj6CMbNWoOARIrGrbuLGusV0dYwbZOm4bB3jHNxSw8Wk/ByDqJEnDw==}
+    engines: {node: '>=18'}
 
   leac@0.6.0:
     resolution: {integrity: sha512-y+SqErxb8h7nE/fiEX07jsbuhrpO9lL8eca7/Y1nuWV2moNlXhyd59iDGcRf6moVyDMbmTNzL40SUyrFU/yDpg==}
@@ -3206,6 +3213,8 @@ snapshots:
       json-buffer: 3.0.1
 
   known-css-properties@0.36.0: {}
+
+  ky@1.8.1: {}
 
   leac@0.6.0: {}
 
