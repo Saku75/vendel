@@ -1,13 +1,15 @@
-import { email } from "./validators/email";
-import { id } from "./validators/id";
-import { name } from "./validators/name";
-import { password } from "./validators/password";
+enum ValidatorCodes {
+  Required = "required",
+  NotFound = "not-found",
+  AlreadyExists = "already-exists",
 
-const validators = {
-  email,
-  id,
-  name,
-  password,
-};
+  TooShort = "too-short",
+  TooLong = "too-long",
+  TooSmall = "too-small",
+  TooBig = "too-big",
 
-export { validators };
+  InvalidType = "invalid-type",
+  InvalidFormat = "invalid-format",
+}
+
+export { ValidatorCodes };
