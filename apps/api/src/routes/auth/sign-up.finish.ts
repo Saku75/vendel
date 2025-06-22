@@ -6,6 +6,7 @@ import z from "zod";
 import { MailTemplate } from "@repo/mail";
 import { TokenPurpose } from "@repo/token";
 import { ValidatorCodes } from "@repo/validators";
+import { captchaValidator } from "@repo/validators/captcha";
 import { idValidator } from "@repo/validators/id";
 import { passwordHashValidator } from "@repo/validators/password";
 
@@ -18,6 +19,8 @@ const signUpFinishSchema = z.object({
   sessionId: idValidator,
 
   passwordClientHash: passwordHashValidator,
+
+  captcha: captchaValidator,
 });
 
 const signUpFinishRoute = app().post("/", async (c) => {
@@ -37,6 +40,13 @@ const signUpFinishRoute = app().post("/", async (c) => {
         });
         return;
       }
+
+      if (!c.var.captcha.verify(values.captcha, session.captchaIdempotencyKey))
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: ValidatorCodes.Invalid,
+          path: ["captcha"],
+        });
     })
     .safeParseAsync(body);
 
