@@ -8,6 +8,7 @@ enum ValidatorCodes {
   TooSmall = "too-small",
   TooBig = "too-big",
 
+  Invalid = "invalid",
   InvalidType = "invalid-type",
   InvalidFormat = "invalid-format",
 }

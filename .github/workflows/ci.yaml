@@ -9,6 +9,8 @@ on:
         required: true
       RESEND_API_KEY:
         required: true
+      TURNSTILE_SECRET_KEY:
+        required: true
 
 jobs:
   lint:
@@ -45,6 +47,7 @@ jobs:
           TOKEN_ENCRYPTION_KEY=${{ secrets.TOKEN_ENCRYPTION_KEY }}
           TOKEN_SIGNING_KEY=${{ secrets.TOKEN_SIGNING_KEY }}
           RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
+          TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}
           EOF
       - run: |
           pnpm test
