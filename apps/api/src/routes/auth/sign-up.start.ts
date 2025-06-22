@@ -3,6 +3,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { ValidatorCodes } from "@repo/validators";
 import { emailValidator } from "@repo/validators/email";
 import {
   firstNameValidator,
@@ -12,7 +13,6 @@ import {
 
 import { users } from "$lib/database/schema/users";
 import { app } from "$lib/utils/app";
-import { extractIssues } from "$lib/validation/utils";
 
 import { SignUpSession, SignUpStartResponse } from "./sign-up";
 
@@ -27,27 +27,19 @@ const signUpStartSchema = z.object({
 const signUpStartRoute = app().post("/", async (c) => {
   const body = await c.req.json<z.infer<typeof signUpStartSchema>>();
 
-  const [parsedBody, emailCheck] = await Promise.all([
-    signUpStartSchema.safeParseAsync(body),
-    c.var.database
-      .select({ email: users.email })
-      .from(users)
-      .where(eq(users.email, body.email)),
-  ]);
+  const parsedBody = await signUpStartSchema
+    .superRefine(async (values, context) => {
+      if (!(await c.var.database.$count(users, eq(users.email, values.email))))
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: ValidatorCodes.AlreadyExists,
+          path: ["email"],
+        });
+    })
+    .safeParseAsync(body);
 
-  if (!parsedBody.success || emailCheck.length) {
-    let issues: Record<string, string> = {};
-
-    if (!parsedBody.success)
-      issues = { ...issues, ...extractIssues(parsedBody.error) };
-    if (emailCheck.length)
-      issues = {
-        ...issues,
-        email: "Der findes allerede en konto med denne e-mail.",
-      };
-
-    return c.json({ status: 400, errors: issues }, 400);
-  }
+  if (!parsedBody.success)
+    return c.json({ status: 400, errors: parsedBody.error.errors }, 400);
 
   const { data } = parsedBody;
 
