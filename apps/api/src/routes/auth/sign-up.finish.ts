@@ -5,12 +5,12 @@ import z from "zod";
 
 import { MailTemplate } from "@repo/mail";
 import { TokenPurpose } from "@repo/token";
+import { ValidatorCodes } from "@repo/validators";
 import { idValidator } from "@repo/validators/id";
 import { passwordHashValidator } from "@repo/validators/password";
 
 import { users } from "$lib/database/schema/users";
 import { app } from "$lib/utils/app";
-import { extractIssues } from "$lib/validation/utils";
 
 import { SignUpFinishResponse, SignUpSession } from "./sign-up";
 
@@ -22,27 +22,26 @@ const signUpFinishSchema = z.object({
 
 const signUpFinishRoute = app().post("/", async (c) => {
   const body = await c.req.json<z.infer<typeof signUpFinishSchema>>();
+  const session = await c.env.KV.get<SignUpSession>(
+    `auth:sign-up:session:${body.sessionId}`,
+    { type: "json" },
+  );
 
-  const [parsedBody, session] = await Promise.all([
-    signUpFinishSchema.safeParseAsync(body),
-    c.env.KV.get<SignUpSession>(`auth:sign-up:session:${body.sessionId}`, {
-      type: "json",
-    }),
-  ]);
+  const parsedBody = await signUpFinishSchema
+    .superRefine(async (values, context) => {
+      if (!session) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: ValidatorCodes.NotFound,
+          path: ["id"],
+        });
+        return;
+      }
+    })
+    .safeParseAsync(body);
 
-  if (!parsedBody.success || !session) {
-    let issues: Record<string, string> = {};
-
-    if (!parsedBody.success)
-      issues = { ...issues, ...extractIssues(parsedBody.error) };
-    if (!session)
-      issues = {
-        ...issues,
-        sessionId: "Noget gik galt - prøv igen senere.",
-      };
-
-    return c.json({ status: 400, errors: issues }, 400);
-  }
+  if (!parsedBody.success || !session)
+    return c.json({ status: 400, errors: parsedBody.error!.errors }, 400);
 
   const { data } = parsedBody;
 
