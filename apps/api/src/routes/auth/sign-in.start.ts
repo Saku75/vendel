@@ -25,7 +25,7 @@ const signInStartRoute = app().post("/", async (c) => {
 
   const parsedBody = await signInStartSchema
     .superRefine(async (values, context) => {
-      if (!c.var.captcha.verify(values.captcha, captchaIdempotencyKey))
+      if (!(await c.var.captcha.verify(values.captcha, captchaIdempotencyKey)))
         context.addIssue({
           code: z.ZodIssueCode.custom,
           message: ValidatorCodes.Invalid,
