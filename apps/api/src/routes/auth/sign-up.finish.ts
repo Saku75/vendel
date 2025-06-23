@@ -41,7 +41,12 @@ const signUpFinishRoute = app().post("/", async (c) => {
         return;
       }
 
-      if (!c.var.captcha.verify(values.captcha, session.captchaIdempotencyKey))
+      if (
+        !(await c.var.captcha.verify(
+          values.captcha,
+          session.captchaIdempotencyKey,
+        ))
+      )
         context.addIssue({
           code: z.ZodIssueCode.custom,
           message: ValidatorCodes.Invalid,
