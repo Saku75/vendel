@@ -1,6 +1,9 @@
 {
   "$schema": "./node_modules/turbo/schema.json",
   "ui": "tui",
+
+  "globalPassThroughEnv": ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"],
+
   "tasks": {
     "dev": {
       "dependsOn": ["build"],
@@ -13,8 +16,7 @@
     },
 
     "deploy": {
-      "dependsOn": ["build", "db:apply"],
-      "env": ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"]
+      "dependsOn": ["build"]
     },
 
     "cf-typegen": {
