@@ -14,7 +14,6 @@ type SignInStartRequest = z.infer<typeof signInStartSchema>;
 type SignInStartResponse = { sessionId: string; clientSalt: string };
 
 type SignInFinishRequest = z.infer<typeof signInFinishSchema>;
-type SignInFinishResponse = { sessionId: string };
 
 type SignInSession =
   | {
@@ -37,7 +36,6 @@ type SignInSession =
 export { signInRoutes };
 export type {
   SignInFinishRequest,
-  SignInFinishResponse,
   SignInSession,
   SignInStartRequest,
   SignInStartResponse,

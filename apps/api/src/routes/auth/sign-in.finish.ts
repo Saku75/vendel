@@ -11,7 +11,7 @@ import { users } from "$lib/database/schema/users";
 import { ApiResponse } from "$lib/types/response";
 import { app } from "$lib/utils/app";
 
-import { SignInFinishResponse, SignInSession } from "./sign-in";
+import { SignInSession } from "./sign-in";
 
 const signInFinishSchema = z.object({
   sessionId: idValidator,
@@ -82,15 +82,7 @@ const signInFinishRoute = app().post("/", async (c) => {
     c.env.KV.delete(`auth:sign-in:session:${data.sessionId}`),
   ]);
 
-  if (user.length && session.userExists) {
-    return c.json(
-      {
-        status: 200,
-        data: { sessionId: data.sessionId },
-      } satisfies ApiResponse<SignInFinishResponse>,
-      200,
-    );
-  } else {
+  if (!user.length && !session.userExists) {
     return c.json(
       {
         status: 400,
@@ -110,6 +102,14 @@ const signInFinishRoute = app().post("/", async (c) => {
       400,
     );
   }
+
+  return c.json(
+    {
+      status: 200,
+      message: "User signed in",
+    } satisfies ApiResponse,
+    200,
+  );
 });
 
 export { signInFinishRoute, signInFinishSchema };
