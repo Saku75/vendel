@@ -77,7 +77,7 @@ const signInFinishRoute = app().post("/", async (c) => {
     c.env.KV.delete(`auth:sign-in:session:${data.sessionId}`),
   ]);
 
-  if (user.length) {
+  if (user.length && session.userExists) {
     return c.json(
       {
         status: 200,
