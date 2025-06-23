@@ -13,7 +13,7 @@ import { users } from "$lib/database/schema/users";
 import { ApiResponse } from "$lib/types/response";
 import { app } from "$lib/utils/app";
 
-import { SignUpFinishResponse, SignUpSession } from "./sign-up";
+import { SignUpSession } from "./sign-up";
 
 const signUpFinishSchema = z.object({
   sessionId: idValidator,
@@ -108,8 +108,8 @@ const signUpFinishRoute = app().post("/", async (c) => {
   return c.json(
     {
       status: 201,
-      data: { sessionId: data.sessionId },
-    } satisfies ApiResponse<SignUpFinishResponse>,
+      message: "User signed up",
+    } satisfies ApiResponse,
     201,
   );
 });

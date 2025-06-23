@@ -10,24 +10,29 @@ import { ZodIssue } from "zod";
 
 type ApiResponseWithInfo = {
   status: Exclude<InfoStatusCode, 101>;
+  message?: string;
 };
 
 type ApiResponseWithSuccess<T extends JSONValue = JSONValue> = {
   status: Exclude<SuccessStatusCode, 204 | 205>;
-  data: T;
+  message?: string;
+  data?: T;
 };
 
 type ApiResponseWithRedirect = {
   status: Exclude<RedirectStatusCode, 304>;
+  message?: string;
 };
 
 type ApiResponseWithClientError = {
   status: ClientErrorStatusCode;
-  errors: ZodIssue[];
+  message?: string;
+  errors?: ZodIssue[];
 };
 
 type ApiResponseWithServerError = {
   status: ServerErrorStatusCode;
+  message?: string;
 };
 
 type ApiResponse<T extends JSONValue = JSONValue> =

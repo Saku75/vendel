@@ -14,7 +14,6 @@ type SignUpStartRequest = z.infer<typeof signUpStartSchema>;
 type SignUpStartResponse = { sessionId: string; clientSalt: string };
 
 type SignUpFinishRequest = z.infer<typeof signUpFinishSchema>;
-type SignUpFinishResponse = { sessionId: string };
 
 type SignUpSession = {
   userId: string;
@@ -27,7 +26,6 @@ type SignUpSession = {
 export { signUpRoutes };
 export type {
   SignUpFinishRequest,
-  SignUpFinishResponse,
   SignUpSession,
   SignUpStartRequest,
   SignUpStartResponse,
