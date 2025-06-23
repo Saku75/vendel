@@ -23,6 +23,10 @@ function app(config?: HonoOptions<HonoEnv>) {
 
   app.notFound((c) => c.json({ status: 404, message: "Not found" }, 404));
 
+  app.onError((_, c) =>
+    c.json({ status: 500, message: "Internal server error" }, 500),
+  );
+
   return app;
 }
 
