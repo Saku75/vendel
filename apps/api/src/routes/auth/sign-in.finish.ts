@@ -11,7 +11,7 @@ import { users } from "$lib/database/schema/users";
 import { ApiResponse } from "$lib/types/response";
 import { app } from "$lib/utils/app";
 
-import { SignInSession } from "./sign-in";
+import { SignInSession, signInSessionKey } from "./sign-in";
 import { signIn } from "./utils/sign-in";
 
 const signInFinishSchema = z.object({
@@ -25,7 +25,7 @@ const signInFinishSchema = z.object({
 const signInFinishRoute = app().post("/", async (c) => {
   const body = await c.req.json<z.infer<typeof signInFinishSchema>>();
   const session = await c.env.KV.get<SignInSession>(
-    `auth:sign-in:session:${body.sessionId}`,
+    signInSessionKey(body.sessionId),
     { type: "json" },
   );
 
@@ -80,7 +80,7 @@ const signInFinishRoute = app().post("/", async (c) => {
             ),
           )
       : c.var.database.select({ id: users.id }).from(users),
-    c.env.KV.delete(`auth:sign-in:session:${data.sessionId}`),
+    c.env.KV.delete(signInSessionKey(data.sessionId)),
   ]);
 
   if (!user.length && !session.userExists) {
