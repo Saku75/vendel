@@ -12,6 +12,7 @@ import { ApiResponse } from "$lib/types/response";
 import { app } from "$lib/utils/app";
 
 import { SignInSession } from "./sign-in";
+import { signIn } from "./utils/sign-in";
 
 const signInFinishSchema = z.object({
   sessionId: idValidator,
@@ -102,6 +103,8 @@ const signInFinishRoute = app().post("/", async (c) => {
       400,
     );
   }
+
+  await signIn(c, user[0].id);
 
   return c.json(
     {
