@@ -196,6 +196,15 @@ importers:
         specifier: ^5.8.3
         version: 5.8.3
 
+  tools:
+    dependencies:
+      '@noble/hashes':
+        specifier: ^1.8.0
+        version: 1.8.0
+      '@scure/base':
+        specifier: ^1.2.6
+        version: 1.2.6
+
 packages:
 
   '@ampproject/remapping@2.3.0':
