@@ -11,7 +11,11 @@ import { users } from "$lib/database/schema/users";
 import { ApiResponse } from "$lib/types/response";
 import { app } from "$lib/utils/app";
 
-import { SignInSession, SignInStartResponse } from "./sign-in";
+import {
+  SignInSession,
+  signInSessionKey,
+  SignInStartResponse,
+} from "./sign-in";
 
 const signInStartSchema = z.object({
   email: emailValidator,
@@ -55,7 +59,7 @@ const signInStartRoute = app().post("/", async (c) => {
 
   if (user.length) {
     await c.env.KV.put(
-      `auth:sign-in:session:${sessionId}`,
+      signInSessionKey(sessionId),
       JSON.stringify({
         userExists: true,
         userId: user[0].id,
@@ -66,7 +70,7 @@ const signInStartRoute = app().post("/", async (c) => {
     );
   } else {
     await c.env.KV.put(
-      `auth:sign-in:session:${sessionId}`,
+      signInSessionKey(sessionId),
       JSON.stringify({
         userExists: false,
         serverSalt: bytesToHex(randomBytes(32)),

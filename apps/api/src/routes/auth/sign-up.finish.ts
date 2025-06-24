@@ -13,7 +13,7 @@ import { users } from "$lib/database/schema/users";
 import { ApiResponse } from "$lib/types/response";
 import { app } from "$lib/utils/app";
 
-import { SignUpSession } from "./sign-up";
+import { SignUpSession, signUpSessionKey } from "./sign-up";
 import { signIn } from "./utils/sign-in";
 
 const signUpFinishSchema = z.object({
@@ -27,7 +27,7 @@ const signUpFinishSchema = z.object({
 const signUpFinishRoute = app().post("/", async (c) => {
   const body = await c.req.json<z.infer<typeof signUpFinishSchema>>();
   const session = await c.env.KV.get<SignUpSession>(
-    `auth:sign-up:session:${body.sessionId}`,
+    signUpSessionKey(body.sessionId),
     { type: "json" },
   );
 
@@ -82,7 +82,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
         firstName: users.firstName,
         email: users.email,
       }),
-    c.env.KV.delete(`auth:sign-up:session:${data.sessionId}`),
+    c.env.KV.delete(signUpSessionKey(data.sessionId)),
   ]);
   const { id: userId, firstName, email } = user[0];
 

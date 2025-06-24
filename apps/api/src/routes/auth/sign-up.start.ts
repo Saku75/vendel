@@ -16,6 +16,7 @@ import { users } from "$lib/database/schema/users";
 import { ApiResponse } from "$lib/types/response";
 import { app } from "$lib/utils/app";
 
+import { signInSessionKey } from "./sign-in";
 import { SignUpSession, SignUpStartResponse } from "./sign-up";
 
 const signUpStartSchema = z.object({
@@ -77,7 +78,7 @@ const signUpStartRoute = app().post("/", async (c) => {
   const sessionId = createId();
 
   await c.env.KV.put(
-    `auth:sign-up:session:${sessionId}`,
+    signInSessionKey(sessionId),
     JSON.stringify({
       userId,
       serverSalt,

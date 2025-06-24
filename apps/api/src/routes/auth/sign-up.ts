@@ -23,7 +23,11 @@ type SignUpSession = {
   captchaIdempotencyKey: string;
 };
 
-export { signUpRoutes };
+function signUpSessionKey(sessionId: string) {
+  return `auth:sign-up:session:${sessionId}`;
+}
+
+export { signUpRoutes, signUpSessionKey };
 export type {
   SignUpFinishRequest,
   SignUpSession,
