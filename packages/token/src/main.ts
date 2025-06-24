@@ -31,14 +31,14 @@ class Token {
     const issuer = options?.issuer || this.defaultOptions?.issuer;
     const purpose = options?.purpose || this.defaultOptions?.purpose;
 
-    const issuedAt = Token.getTimestampInSeconds();
-    const expiresIn = TokenExpiry.OneHour;
+    const issuedAt = Date.now();
+    const expiresIn = options?.expiresIn || TokenExpiry.OneHour;
 
     const payloadBytes = this.encode({
       issuer,
       purpose,
       issuedAt,
-      expiresAt: issuedAt + expiresIn,
+      expiresAt: options?.expiresAt || issuedAt + expiresIn * 1000,
       data,
     });
 
@@ -71,7 +71,7 @@ class Token {
 
     const payload = this.decode(payloadBytes) as TokenPayload<T>;
 
-    const expired = payload.expiresAt < Token.getTimestampInSeconds();
+    const expired = payload.expiresAt < Date.now();
 
     return { valid, expired, payload };
   }
@@ -135,10 +135,6 @@ class Token {
       default:
         throw new Error(`Token: Unsupported version: ${version}`);
     }
-  }
-
-  static getTimestampInSeconds() {
-    return Math.floor(Date.now() / 1000);
   }
 }
 

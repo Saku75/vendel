@@ -3,7 +3,7 @@ import { expect, it } from "vitest";
 
 import { TokenExpiry } from "./enums/expiry";
 import { Token } from "./main";
-import { TokenPayload, TokenPayloadData } from "./types/payload";
+import { TokenPayloadData } from "./types/payload";
 
 const tokens = new Token({
   encryption: randomBytes(32),
@@ -15,15 +15,16 @@ it("should return valid and non-expired token by default", () => {
 
   expect(/^v\d(\.[A-Za-z0-9_-]+){3}$/.test(token)).toBe(true);
 
-  const currentTime = Token.getTimestampInSeconds();
+  const currentTime = Date.now();
   const { valid, expired, payload } = tokens.read(token);
 
   expect(valid).toBe(true);
   expect(expired).toBe(false);
-  expect(payload).toEqual<TokenPayload>({
-    issuedAt: currentTime,
-    expiresAt: currentTime + TokenExpiry.OneHour,
-  });
+  expect(Math.abs(payload.issuedAt - currentTime) < 1000).toBe(true);
+  expect(
+    Math.abs(payload.expiresAt - (currentTime + TokenExpiry.OneHour * 1000)) <
+      1000,
+  ).toBe(true);
 });
 
 it("should return token data unmodified", () => {
