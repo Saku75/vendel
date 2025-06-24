@@ -14,6 +14,7 @@ import { ApiResponse } from "$lib/types/response";
 import { app } from "$lib/utils/app";
 
 import { SignUpSession } from "./sign-up";
+import { signIn } from "./utils/sign-in";
 
 const signUpFinishSchema = z.object({
   sessionId: idValidator,
@@ -77,12 +78,13 @@ const signUpFinishRoute = app().post("/", async (c) => {
       })
       .where(eq(users.id, session.userId))
       .returning({
+        id: users.id,
         firstName: users.firstName,
         email: users.email,
       }),
     c.env.KV.delete(`auth:sign-up:session:${data.sessionId}`),
   ]);
-  const { firstName, email } = user[0];
+  const { id: userId, firstName, email } = user[0];
 
   const confirmEmailToken = c.var.token.create({
     data: {
@@ -104,6 +106,8 @@ const signUpFinishRoute = app().post("/", async (c) => {
       token: confirmEmailToken,
     },
   });
+
+  await signIn(c, userId);
 
   return c.json(
     {
