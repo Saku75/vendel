@@ -22,7 +22,7 @@ async function signIn(c: Context<HonoEnv>, userId: string) {
 
   setCookie(
     c,
-    `${url.host}-auth-refresh`,
+    `${url.hostname}-auth-refresh`,
     c.var.token.create(
       { refreshTokenId: refreshToken[0].id },
       {
@@ -31,25 +31,35 @@ async function signIn(c: Context<HonoEnv>, userId: string) {
       },
     ),
     {
-      domain: c.env.MODE === "local" ? "localhost" : ".vendel.dk",
+      domain: c.env.MODE !== "local" ? ".vendel.dk" : undefined,
       httpOnly: true,
-      secure: true,
+      secure: c.env.MODE !== "local",
+      sameSite: "strict",
+      expires: refreshToken[0].expiresAt,
       path:
-        url.origin === c.env.API_ORIGIN ? "/auth/refresh" : "/api/auth/refresh",
+        c.env.MODE !== "local" && url.origin === c.env.API_ORIGIN
+          ? "/auth/refresh"
+          : "/api/auth/refresh",
     },
   );
 
   setCookie(
     c,
-    `${url.host}-auth`,
+    `${url.hostname}-auth`,
     c.var.token.create(
       { refreshTokenId: refreshToken[0].id, userId },
       { purpose: TokenPurpose.Auth },
     ),
     {
-      domain: ".vendel.dk",
+      domain: c.env.MODE !== "local" ? ".vendel.dk" : undefined,
       httpOnly: true,
-      secure: true,
+      secure: c.env.MODE !== "local",
+      sameSite: "strict",
+      expires: refreshToken[0].expiresAt,
+      path:
+        c.env.MODE !== "local" && url.origin === c.env.API_ORIGIN
+          ? "/"
+          : "/api",
     },
   );
 }
