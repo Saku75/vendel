@@ -1,4 +1,3 @@
-import { scryptAsync } from "@noble/hashes/scrypt";
 import { base64urlnopad } from "@scure/base";
 
 import { createClientRoute } from "$lib/client/create-route";
@@ -10,6 +9,7 @@ import type {
   SignUpStartRequest,
   SignUpStartResponse,
 } from "./sign-up";
+import { scrypt } from "./utils/scrypt";
 
 const createSignUpClient = createClientRoute((ky, ctx) => {
   return async function signUp(data: {
@@ -36,16 +36,7 @@ const createSignUpClient = createClientRoute((ky, ctx) => {
     const startJson = await handleApiResponse<SignUpStartResponse>(startRes);
     if (!startJson.ok || !startJson.data) return startJson;
 
-    const passwordHash = await scryptAsync(
-      password,
-      startJson.data.clientSalt,
-      {
-        N: 2 ** 17,
-        r: 8,
-        p: 1,
-        dkLen: 256,
-      },
-    );
+    const passwordHash = await scrypt(password, startJson.data.clientSalt);
 
     const finishRes = await ky.post(getClientUrl("/auth/sign-in/finish", ctx), {
       json: {

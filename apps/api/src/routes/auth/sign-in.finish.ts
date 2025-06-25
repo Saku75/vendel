@@ -1,4 +1,3 @@
-import { scryptAsync } from "@noble/hashes/scrypt";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -12,6 +11,7 @@ import { Err, Ok } from "$lib/types/result";
 import { app } from "$lib/utils/app";
 
 import { SignInSession, signInSessionKey } from "./sign-in";
+import { scrypt } from "./utils/scrypt";
 import { signIn } from "./utils/sign-in";
 
 const signInFinishSchema = z.object({
@@ -66,10 +66,9 @@ const signInFinishRoute = app().post("/", async (c) => {
 
   const { data } = parsedBody;
 
-  const passwordServerHash = await scryptAsync(
+  const passwordServerHash = await scrypt(
     data.passwordClientHash,
     session.serverSalt,
-    { N: 2 ** 17, r: 8, p: 1, dkLen: 256 },
   );
 
   const [user] = await Promise.all([
