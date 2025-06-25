@@ -13,7 +13,7 @@ import {
 } from "@repo/validators/name";
 
 import { users } from "$lib/database/schema/users";
-import { ApiResponse } from "$lib/types/response";
+import { Err, Ok } from "$lib/types/result";
 import { app } from "$lib/utils/app";
 
 import { signInSessionKey } from "./sign-in";
@@ -53,7 +53,11 @@ const signUpStartRoute = app().post("/", async (c) => {
 
   if (!parsedBody.success)
     return c.json(
-      { status: 400, errors: parsedBody.error.errors } satisfies ApiResponse,
+      {
+        ok: false,
+        status: 400,
+        errors: parsedBody.error.errors,
+      } satisfies Err,
       400,
     );
 
@@ -89,9 +93,10 @@ const signUpStartRoute = app().post("/", async (c) => {
 
   return c.json(
     {
+      ok: true,
       status: 201,
       data: { sessionId, clientSalt },
-    } satisfies ApiResponse<SignUpStartResponse>,
+    } satisfies Ok<SignUpStartResponse>,
     201,
   );
 });

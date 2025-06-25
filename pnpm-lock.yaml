@@ -201,6 +201,9 @@ importers:
       '@noble/hashes':
         specifier: ^1.8.0
         version: 1.8.0
+      '@repo/token':
+        specifier: workspace:*
+        version: link:../packages/token
       '@scure/base':
         specifier: ^1.2.6
         version: 1.2.6
