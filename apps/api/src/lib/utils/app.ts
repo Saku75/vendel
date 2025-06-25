@@ -27,16 +27,18 @@ function app(config?: HonoOptions<HonoEnv>) {
     c.json({ ok: false, status: 404, message: "Not found" } satisfies Err, 404),
   );
 
-  app.onError((_, c) =>
-    c.json(
+  app.onError((err, c) => {
+    console.error(err);
+
+    return c.json(
       {
         ok: false,
         status: 500,
         message: "Internal server error",
       } satisfies Err,
       500,
-    ),
-  );
+    );
+  });
 
   return app;
 }
