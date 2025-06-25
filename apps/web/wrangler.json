@@ -1,0 +1,54 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  "name": "vendel-web",
+  "compatibility_date": "2025-06-20",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "workers_dev": false,
+  "preview_urls": false,
+
+  "main": "./.svelte-kit/cloudflare/_worker.js",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./.svelte-kit/cloudflare"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+  "placement": { "mode": "smart" },
+
+  "services": [{ "binding": "API", "service": "vendel-api" }],
+
+  "env": {
+    "dev": {
+      "services": [{ "binding": "API", "service": "vendel-api-dev" }],
+
+      "routes": [
+        {
+          "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
+          "pattern": "dev.vendel.dk",
+          "custom_domain": true
+        }
+      ]
+    },
+
+    "prod": {
+      "services": [{ "binding": "API", "service": "vendel-api-prod" }],
+
+      "routes": [
+        {
+          "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
+          "pattern": "vendel.dk",
+          "custom_domain": true
+        },
+        {
+          "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
+          "pattern": "www.vendel.dk",
+          "custom_domain": true
+        }
+      ]
+    }
+  }
+}

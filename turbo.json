@@ -6,13 +6,15 @@
 
   "tasks": {
     "dev": {
+      "with": ["@repo/api#dev"],
       "dependsOn": ["build"],
       "persistent": true,
       "cache": false
     },
     "build": {
       "dependsOn": ["cf-typegen", "^build"],
-      "outputs": ["./dist/**"]
+      "outputs": ["./dist/**", "./.svelte-kit/**"],
+      "inputs": ["!./dist/**", "!./.svelte-kit/**", "!./.wrangler"]
     },
 
     "deploy": {
