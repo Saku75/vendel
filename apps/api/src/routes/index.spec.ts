@@ -8,6 +8,7 @@ describe("Root", () => {
     expect(response.status).toBe(200);
 
     expect(await response.json()).toEqual({
+      ok: true,
       status: 200,
       message: "Vendel.dk API",
     });
