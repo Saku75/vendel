@@ -8,7 +8,7 @@ import { captchaValidator } from "@repo/validators/captcha";
 import { emailValidator } from "@repo/validators/email";
 
 import { users } from "$lib/database/schema/users";
-import { ApiResponse } from "$lib/types/response";
+import { Err, Ok } from "$lib/types/result";
 import { app } from "$lib/utils/app";
 
 import {
@@ -40,7 +40,7 @@ const signInStartRoute = app().post("/", async (c) => {
 
   if (!parsedBody.success)
     return c.json(
-      { status: 400, errors: parsedBody.error.errors } satisfies ApiResponse,
+      { ok: false, status: 400, errors: parsedBody.error.errors } satisfies Err,
       400,
     );
 
@@ -80,23 +80,17 @@ const signInStartRoute = app().post("/", async (c) => {
     );
   }
 
-  if (user.length) {
-    return c.json(
-      {
-        status: 200,
-        data: { sessionId, clientSalt: user[0].clientSalt },
-      } satisfies ApiResponse<SignInStartResponse>,
-      200,
-    );
-  } else {
-    return c.json(
-      {
-        status: 200,
-        data: { sessionId, clientSalt: bytesToHex(randomBytes(32)) },
-      } satisfies ApiResponse<SignInStartResponse>,
-      200,
-    );
-  }
+  return c.json(
+    {
+      ok: true,
+      status: 200,
+      data: {
+        sessionId,
+        clientSalt: user[0].clientSalt || bytesToHex(randomBytes(32)),
+      },
+    } satisfies Ok<SignInStartResponse>,
+    200,
+  );
 });
 
 export { signInStartRoute, signInStartSchema };

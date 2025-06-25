@@ -5,7 +5,7 @@ import { HonoOptions } from "hono/hono-base";
 import { Mail } from "@repo/mail";
 import { Token } from "@repo/token";
 
-import { ApiResponse } from "$lib/types/response";
+import { Err } from "$lib/types/result";
 
 import { Captcha } from "./captcha";
 
@@ -24,12 +24,16 @@ function app(config?: HonoOptions<HonoEnv>) {
   const app = new Hono<HonoEnv>(config);
 
   app.notFound((c) =>
-    c.json({ status: 404, message: "Not found" } satisfies ApiResponse, 404),
+    c.json({ ok: false, status: 404, message: "Not found" } satisfies Err, 404),
   );
 
   app.onError((_, c) =>
     c.json(
-      { status: 500, message: "Internal server error" } satisfies ApiResponse,
+      {
+        ok: false,
+        status: 500,
+        message: "Internal server error",
+      } satisfies Err,
       500,
     ),
   );
