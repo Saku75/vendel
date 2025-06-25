@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "pnpm --filter @repo/api --parallel \"/^dev:.*/\"",
     "dev:tsc": "tsc -w -p ./tsconfig.build.json",
+    "dev:tsc-alias": "tsc-alias -w -p ./tsconfig.build.json",
     "dev:wrangler": "wrangler dev",
-    "build": "tsc -p ./tsconfig.build.json",
+    "build": "tsc -p ./tsconfig.build.json && tsc-alias -p ./tsconfig.build.json",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings src/worker-env.d.ts",
     "lint": "eslint .",
@@ -35,6 +36,7 @@
     "@types/node": "^24.0.3",
     "drizzle-kit": "^0.31.1",
     "eslint": "^9.29.0",
+    "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.3",
