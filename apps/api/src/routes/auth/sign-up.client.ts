@@ -23,7 +23,7 @@ const createSignUpClient = createClientRoute((ky, ctx) => {
   }) {
     const { firstName, middleName, lastName, email, password, captcha } = data;
 
-    const startRes = await ky.post(getClientUrl("/auth/sign-in/start", ctx), {
+    const startRes = await ky.post(getClientUrl("/auth/sign-up/start", ctx), {
       json: {
         firstName,
         middleName,
@@ -38,7 +38,7 @@ const createSignUpClient = createClientRoute((ky, ctx) => {
 
     const passwordHash = await scrypt(password, startJson.data.clientSalt);
 
-    const finishRes = await ky.post(getClientUrl("/auth/sign-in/finish", ctx), {
+    const finishRes = await ky.post(getClientUrl("/auth/sign-up/finish", ctx), {
       json: {
         sessionId: startJson.data.sessionId,
         passwordClientHash: base64urlnopad.encode(passwordHash),
