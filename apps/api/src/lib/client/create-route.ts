@@ -8,15 +8,6 @@ function createClientRoute<T>(
   return (ctx) => {
     const ky = kyFactory.create({
       fetch: ctx?.fetch,
-      hooks: {
-        beforeRequest: [
-          (req) => {
-            if (ctx?.apiKey) {
-              req.headers.set("X-API-Key", ctx.apiKey);
-            }
-          },
-        ],
-      },
     });
 
     return factory(ky, ctx);
