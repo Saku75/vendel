@@ -16,8 +16,11 @@ import { users } from "$lib/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
 import { app } from "$lib/utils/app";
 
-import { signInSessionKey } from "./sign-in";
-import { SignUpSession, SignUpStartResponse } from "./sign-up";
+import {
+  SignUpSession,
+  signUpSessionKey,
+  SignUpStartResponse,
+} from "./sign-up";
 
 const signUpStartSchema = z.object({
   firstName: firstNameValidator,
@@ -82,7 +85,7 @@ const signUpStartRoute = app().post("/", async (c) => {
   const sessionId = createId();
 
   await c.env.KV.put(
-    signInSessionKey(sessionId),
+    signUpSessionKey(sessionId),
     JSON.stringify({
       userId,
       serverSalt,
