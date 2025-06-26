@@ -11,7 +11,8 @@ const config = {
   tailwindFunctions: ["clsx", "twMerge", "cn"],
 
   importOrder: [
-    "^@repo/(.*)$",
+    "^@app/(.*)$",
+    "^@package/(.*)$",
     "^\\$app/(.*)$",
     "^\\$env/(.*)$",
     "^\\$lib/(.*)$",

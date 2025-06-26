@@ -1,5 +1,5 @@
 {
-  "name": "@repo/token",
+  "name": "@package/token",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,8 +15,8 @@
     "@scure/base": "^1.2.6"
   },
   "devDependencies": {
-    "@repo/eslint": "workspace:*",
-    "@repo/typescript": "workspace:*",
+    "@package/eslint": "workspace:*",
+    "@package/typescript": "workspace:*",
     "eslint": "^9.29.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.3"

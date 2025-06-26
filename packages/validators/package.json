@@ -1,5 +1,5 @@
 {
-  "name": "@repo/validators",
+  "name": "@package/validators",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,8 +11,8 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@repo/eslint": "workspace:*",
-    "@repo/typescript": "workspace:*",
+    "@package/eslint": "workspace:*",
+    "@package/typescript": "workspace:*",
     "eslint": "^9.29.0",
     "typescript": "^5.8.3"
   },

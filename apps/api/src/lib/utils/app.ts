@@ -2,8 +2,8 @@ import { DrizzleD1Database } from "drizzle-orm/d1";
 import { Hono } from "hono";
 import { HonoOptions } from "hono/hono-base";
 
-import { Mail } from "@repo/mail";
-import { Token } from "@repo/token";
+import { Mail } from "@package/mail";
+import { Token } from "@package/token";
 
 import { Err } from "$lib/types/result";
 

@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory";
 
-import { Mail } from "@repo/mail";
+import { Mail } from "@package/mail";
 
 import { HonoEnv } from "$lib/utils/app";
 

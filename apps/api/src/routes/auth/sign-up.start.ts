@@ -3,14 +3,14 @@ import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { ValidatorCodes } from "@repo/validators";
-import { captchaValidator } from "@repo/validators/captcha";
-import { emailValidator } from "@repo/validators/email";
+import { ValidatorCodes } from "@package/validators";
+import { captchaValidator } from "@package/validators/captcha";
+import { emailValidator } from "@package/validators/email";
 import {
   firstNameValidator,
   lastNameValidator,
   middleNameValidator,
-} from "@repo/validators/name";
+} from "@package/validators/name";
 
 import { users } from "$lib/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
