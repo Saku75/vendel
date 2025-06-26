@@ -1,10 +1,10 @@
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { ValidatorCodes } from "@repo/validators";
-import { captchaValidator } from "@repo/validators/captcha";
-import { idValidator } from "@repo/validators/id";
-import { passwordHashValidator } from "@repo/validators/password";
+import { ValidatorCodes } from "@package/validators";
+import { captchaValidator } from "@package/validators/captcha";
+import { idValidator } from "@package/validators/id";
+import { passwordHashValidator } from "@package/validators/password";
 
 import { users } from "$lib/database/schema/users";
 import { Err, Ok } from "$lib/types/result";

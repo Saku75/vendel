@@ -1,7 +1,7 @@
 import { hexToBytes } from "@noble/hashes/utils";
 import { createMiddleware } from "hono/factory";
 
-import { Token } from "@repo/token";
+import { Token } from "@package/token";
 
 import { HonoEnv } from "$lib/utils/app";
 

@@ -1,7 +1,7 @@
 import { Context } from "hono";
 import { setCookie } from "hono/cookie";
 
-import { TokenPurpose } from "@repo/token";
+import { TokenPurpose } from "@package/token";
 
 import { refreshTokenFamilies } from "$lib/database/schema/refresh-token-families";
 import { refreshTokens } from "$lib/database/schema/refresh-tokens";

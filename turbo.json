@@ -6,7 +6,7 @@
 
   "tasks": {
     "dev": {
-      "with": ["@repo/api#dev"],
+      "with": ["@app/api#dev"],
       "dependsOn": ["build"],
       "persistent": true,
       "cache": false

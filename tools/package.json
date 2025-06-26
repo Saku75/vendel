@@ -3,7 +3,7 @@
   "type": "module",
   "dependencies": {
     "@noble/hashes": "^1.8.0",
-    "@repo/token": "workspace:*",
+    "@package/token": "workspace:*",
     "@scure/base": "^1.2.6"
   }
 }
