@@ -1,0 +1,19 @@
+{
+  "name": "@app/mail",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings src/worker-env.d.ts",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@package/eslint": "workspace:*",
+    "@package/typescript": "workspace:*",
+    "@types/node": "^24.0.3",
+    "eslint": "^9.29.0",
+    "typescript": "^5.8.3",
+    "wrangler": "^4.21.2"
+  }
+}

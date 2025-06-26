@@ -1,0 +1,9 @@
+{
+  "extends": ["@package/typescript/configs/base.json"],
+  "compilerOptions": {
+    "noEmit": true,
+
+    "types": ["@types/node", "./src/worker-env.d.ts"]
+  },
+  "include": ["./src/**/*"]
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  "name": "vendel-mail",
+  "compatibility_date": "2025-06-17",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "workers_dev": false,
+  "preview_urls": false,
+
+  "main": "./src/main.ts",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./static"
+  },
+
+  "observability": {
+    "enabled": true
+  },
+  "placement": { "mode": "smart" },
+
+  "services": [{ "binding": "API", "service": "vendel-api" }],
+
+  "env": {
+    "dev": {
+      "services": [{ "binding": "API", "service": "vendel-api-dev" }]
+    },
+
+    "prod": {
+      "services": [{ "binding": "API", "service": "vendel-api-prod" }]
+    }
+  }
+}
