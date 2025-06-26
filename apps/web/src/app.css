@@ -27,7 +27,7 @@
     @apply bg-stone-100 text-stone-950 dark:bg-stone-900 dark:text-stone-50;
 
     > div#app {
-      @apply grid min-h-svh grid-rows-layout;
+      @apply mx-auto grid min-h-svh max-w-7xl grid-rows-layout px-2;
 
       > * {
         @apply col-start-1;
@@ -46,3 +46,13 @@
 }
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@custom-variant hocus {
+  &:hover {
+    @slot;
+  }
+
+  &:focus {
+    @slot;
+  }
+}

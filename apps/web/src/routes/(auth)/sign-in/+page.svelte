@@ -37,7 +37,7 @@
 
   <Turnstile
     siteKey={data.config.turnstileSiteKey}
-    action="auth:sign-up"
+    action="auth_sign-up"
     bind:reset
   />
 

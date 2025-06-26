@@ -1,6 +1,5 @@
-<h1>Vendel.dk</h1>
-
-<div>
-  <a href="/sign-in">Sign-in</a>
-  <a href="/sign-up">Sign-up</a>
-</div>
+<main class="grid place-items-center text-center">
+  <h1 class="px-4 text-5xl font-medium sm:text-6xl md:text-7xl">
+    Velkommen til Vendel.dk
+  </h1>
+</main>
