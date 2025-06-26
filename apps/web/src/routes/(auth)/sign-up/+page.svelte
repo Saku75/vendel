@@ -50,7 +50,11 @@
   <input type="email" name="email" required />
   <input type="password" name="password" required />
 
-  <Turnstile siteKey={data.config.turnstileSiteKey} bind:reset />
+  <Turnstile
+    siteKey={data.config.turnstileSiteKey}
+    action="auth:sign-up"
+    bind:reset
+  />
 
   <button type="submit">Submit</button>
 </form>
