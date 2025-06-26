@@ -19,10 +19,18 @@
   },
   "placement": { "mode": "smart" },
 
+  "vars": {
+    "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
+  },
+
   "services": [{ "binding": "API", "service": "vendel-api" }],
 
   "env": {
     "dev": {
+      "vars": {
+        "TURNSTILE_SITE_KEY": "0x4AAAAAABh5FlLMz6Dpndqg"
+      },
+
       "services": [{ "binding": "API", "service": "vendel-api-dev" }],
 
       "routes": [
@@ -35,6 +43,10 @@
     },
 
     "prod": {
+      "vars": {
+        "TURNSTILE_SITE_KEY": "0x4AAAAAABh5GKQ74cdhLL-d"
+      },
+
       "services": [{ "binding": "API", "service": "vendel-api-prod" }],
 
       "routes": [

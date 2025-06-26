@@ -30,6 +30,7 @@
     "eslint-plugin-svelte": "^3.9.2",
     "svelte": "^5.34.8",
     "svelte-check": "^4.2.2",
+    "svelte-turnstile": "^0.11.0",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.34.0",
