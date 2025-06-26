@@ -42,6 +42,25 @@ class Mail {
     html: string,
     text: string,
   ) {
+    if (this.dev) {
+      console.log(
+        "Email sent:",
+        JSON.stringify(
+          {
+            from,
+            to,
+            subject,
+            html,
+            text,
+          },
+          null,
+          2,
+        ),
+      );
+
+      return;
+    }
+
     return await this.resend.emails.send({
       from: `${from.name} <${from.address}>`,
       to: `${to.name} <${to.address}>`,
