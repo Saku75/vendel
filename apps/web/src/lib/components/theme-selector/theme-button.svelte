@@ -14,7 +14,9 @@
   $effect(() => {
     if (layoutStore.theme != LayoutTheme.System) {
       document.documentElement.dataset.theme = layoutStore.theme;
-      document.cookie = `theme-preference=${layoutStore.theme}; SameSite=Strict; Secure; Path=/`;
+      const currentTime = new Date();
+      currentTime.setFullYear(currentTime.getFullYear() + 1);
+      document.cookie = `theme-preference=${layoutStore.theme}; SameSite=Strict; Secure; Path=/; Expires=${currentTime.toUTCString()}`;
     } else {
       document.documentElement.dataset.theme = window.matchMedia(
         "(prefers-color-scheme: dark)",
