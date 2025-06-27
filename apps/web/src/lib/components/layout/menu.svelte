@@ -30,14 +30,12 @@
 </script>
 
 {#if layoutStore.menu.open}
-  <div class="w-full">
-    <div transition:slide={{ duration: 500 }}>
-      <hr
-        class="mx-auto my-1 w-full max-w-32 self-center border-t border-sky-400/50 dark:border-sky-600/50"
-      />
-      <div class="max-h-[calc(100vh-3rem)]">
-        {@render children()}
-      </div>
+  <div transition:slide={{ duration: 500 }}>
+    <hr
+      class="mx-auto my-1 max-w-32 self-center border-t border-sky-400/50 dark:border-sky-600/50"
+    />
+    <div class="max-h-[calc(100vh-4.75rem)] overflow-y-auto rounded-2xl">
+      {@render children()}
     </div>
   </div>
 {/if}

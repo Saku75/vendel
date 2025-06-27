@@ -14,7 +14,7 @@
   import HeaderLink from "./header-link.svelte";
 </script>
 
-<header class="sticky top-0 z-40 row-start-1 my-3 h-12">
+<header class="sticky top-0 z-40 row-start-1 h-18 py-3">
   <div class="rounded-3xl bg-sky-300/50 p-1 backdrop-blur dark:bg-sky-800/50">
     <div class="grid h-10 grid-cols-layout gap-1">
       <HeaderLink href="/" class="pl-2 font-heading text-[20px]">
