@@ -13,8 +13,7 @@
     },
     "build": {
       "dependsOn": ["cf-typegen", "^build"],
-      "outputs": ["./dist/**", "./.svelte-kit/**"],
-      "inputs": ["!./dist/**", "!./.svelte-kit/**", "!./.wrangler"]
+      "outputs": ["./dist/**", "./.svelte-kit/**"]
     },
 
     "deploy": {
