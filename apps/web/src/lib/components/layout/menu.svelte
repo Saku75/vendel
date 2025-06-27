@@ -31,10 +31,10 @@
 
 {#if layoutStore.menu.open}
   <div transition:slide={{ duration: 500 }}>
-    <hr
-      class="mx-auto my-1 max-w-32 self-center border-t border-sky-400/50 dark:border-sky-600/50"
-    />
-    <div class="max-h-[calc(100vh-4.75rem)] overflow-y-auto rounded-2xl">
+    <div class="max-h-[calc(100vh-4.75rem-1px)] overflow-y-auto rounded-2xl">
+      <hr
+        class="mx-auto my-1 block max-w-32 self-center border-t border-sky-400/50 dark:border-sky-600/50"
+      />
       {@render children()}
     </div>
   </div>
