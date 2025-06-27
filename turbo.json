@@ -7,7 +7,7 @@
   "tasks": {
     "dev": {
       "with": ["@app/api#dev"],
-      "dependsOn": ["build"],
+      "dependsOn": ["cf-typegen", "^build"],
       "persistent": true,
       "cache": false
     },
