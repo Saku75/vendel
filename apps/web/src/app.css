@@ -13,13 +13,21 @@
 @layer base {
   html {
     &[data-theme="light"] {
-      scrollbar-color: oklch(0.709 0.01 56.259) oklch(0.923 0.003 48.717);
+      scrollbar-color: var(--color-stone-400) var(--color-stone-100);
       color: light;
+
+      * {
+        scrollbar-color: var(--color-stone-400) transparent;
+      }
     }
 
     &[data-theme="dark"] {
-      scrollbar-color: oklch(0.444 0.011 73.639) oklch(0.268 0.007 34.298);
+      scrollbar-color: var(--color-stone-600) var(--color-stone-900);
       color: dark;
+
+      * {
+        scrollbar-color: var(--color-stone-600) transparent;
+      }
     }
   }
 
