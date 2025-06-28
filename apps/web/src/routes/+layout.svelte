@@ -22,6 +22,8 @@
 
 <Header />
 
-{@render children()}
+<div class="flex flex-col justify-center px-2 py-8">
+  {@render children()}
+</div>
 
 <Footer />
