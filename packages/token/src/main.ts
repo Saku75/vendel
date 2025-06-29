@@ -138,4 +138,14 @@ class Token {
   }
 }
 
-export { Token, TokenExpiry, TokenKeys, TokenPurpose };
+export {
+  Token,
+  TokenExpiry,
+  TokenKeys,
+  TokenOptions,
+  TokenPayload,
+  TokenPayloadData,
+  TokenPurpose,
+  TokenReadResponse,
+  TokenVersion,
+};

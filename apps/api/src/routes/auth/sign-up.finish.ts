@@ -14,7 +14,7 @@ import { app } from "$lib/utils/app";
 
 import { SignUpSession, signUpSessionKey } from "./sign-up";
 import { scrypt } from "./utils/scrypt";
-import { signIn } from "./utils/sign-in";
+import { setAuthSession } from "./utils/session";
 
 const signUpFinishSchema = z.object({
   sessionId: idValidator,
@@ -110,7 +110,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
     },
   });
 
-  await signIn(c, userId);
+  await setAuthSession(c, userId);
 
   return c.json(
     {

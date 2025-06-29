@@ -12,7 +12,7 @@ import { app } from "$lib/utils/app";
 
 import { SignInSession, signInSessionKey } from "./sign-in";
 import { scrypt } from "./utils/scrypt";
-import { signIn } from "./utils/sign-in";
+import { setAuthSession } from "./utils/session";
 
 const signInFinishSchema = z.object({
   sessionId: idValidator,
@@ -108,7 +108,7 @@ const signInFinishRoute = app().post("/", async (c) => {
     );
   }
 
-  await signIn(c, user[0].id);
+  await setAuthSession(c, user[0].id);
 
   return c.json(
     {

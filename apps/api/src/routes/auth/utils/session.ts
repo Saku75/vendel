@@ -1,0 +1,124 @@
+import { Context } from "hono";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
+import { CookieOptions } from "hono/utils/cookie";
+
+import { TokenPurpose } from "@package/token";
+
+import { refreshTokenFamilies } from "$lib/database/schema/refresh-token-families";
+import { refreshTokens } from "$lib/database/schema/refresh-tokens";
+import { HonoEnv } from "$lib/utils/app";
+
+function cookieName(
+  name: string,
+  options?: { prefix?: string; suffix?: string },
+): string {
+  const fullName: string[] = [];
+
+  if (options?.prefix) fullName.push(options.prefix);
+  fullName.push(name);
+  if (options?.suffix) fullName.push(options.suffix);
+
+  return fullName.join("-");
+}
+
+function cookieOptions(
+  c: Context<HonoEnv>,
+  options: CookieOptions,
+): CookieOptions {
+  const url = new URL(c.req.url);
+
+  return {
+    domain: c.env.MODE !== "local" ? ".vendel.dk" : undefined,
+    httpOnly: true,
+    secure: c.env.MODE !== "local",
+    sameSite: "strict",
+    ...options,
+    path:
+      c.env.MODE !== "local" && url.origin === c.env.API_ORIGIN
+        ? `${options.path || "/"}`
+        : `/api${options.path}`,
+  };
+}
+
+const REFRESH_TOKEN_NAME = "auth-refresh";
+const AUTH_TOKEN_NAME = "auth";
+
+type RefreshTokenData = {
+  refreshTokenId: string;
+};
+
+type AuthTokenData = {
+  refreshTokenId: string;
+  userId: string;
+};
+
+async function setAuthSession(c: Context<HonoEnv>, userId: string) {
+  const refreshTokenFamily = await c.var.database
+    .insert(refreshTokenFamilies)
+    .values({ userId })
+    .returning({ id: refreshTokenFamilies.id });
+
+  const refreshToken = await c.var.database
+    .insert(refreshTokens)
+    .values({ refreshTokenFamilyId: refreshTokenFamily[0].id })
+    .returning({ id: refreshTokens.id, expiresAt: refreshTokens.expiresAt });
+
+  const url = new URL(c.req.url);
+
+  setCookie(
+    c,
+    cookieName(REFRESH_TOKEN_NAME, { prefix: url.hostname }),
+    c.var.token.create<RefreshTokenData>(
+      { refreshTokenId: refreshToken[0].id },
+      {
+        purpose: TokenPurpose.Refresh,
+        expiresAt: Number(refreshToken[0].expiresAt.toUTCString()),
+      },
+    ),
+    cookieOptions(c, {
+      expires: refreshToken[0].expiresAt,
+      path: "/auth/refresh",
+    }),
+  );
+
+  setCookie(
+    c,
+    cookieName(AUTH_TOKEN_NAME, { prefix: url.hostname }),
+    c.var.token.create<AuthTokenData>(
+      { refreshTokenId: refreshToken[0].id, userId },
+      { purpose: TokenPurpose.Auth },
+    ),
+    cookieOptions(c, {
+      expires: refreshToken[0].expiresAt,
+    }),
+  );
+}
+
+function getAuthSession(c: Context<HonoEnv>) {
+  const url = new URL(c.req.url);
+
+  const refreshCookie = getCookie(
+    c,
+    cookieName(REFRESH_TOKEN_NAME, { prefix: url.hostname }),
+  );
+  const authCookie = getCookie(
+    c,
+    cookieName(AUTH_TOKEN_NAME, { prefix: url.hostname }),
+  );
+
+  return {
+    refresh: refreshCookie
+      ? c.var.token.read<RefreshTokenData>(refreshCookie)
+      : undefined,
+    auth: authCookie ? c.var.token.read<AuthTokenData>(authCookie) : undefined,
+  };
+}
+
+function removeAuthSession(c: Context<HonoEnv>) {
+  const url = new URL(c.req.url);
+
+  deleteCookie(c, cookieName(REFRESH_TOKEN_NAME, { prefix: url.hostname }));
+  deleteCookie(c, cookieName(AUTH_TOKEN_NAME, { prefix: url.hostname }));
+}
+
+export { getAuthSession, removeAuthSession, setAuthSession };
