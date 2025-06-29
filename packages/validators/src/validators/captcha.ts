@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-import { ValidatorCodes } from "../main";
+import { ValidatorCode } from "../main";
 
 const captchaValidator = z
   .string({
-    required_error: ValidatorCodes.Required,
-    invalid_type_error: ValidatorCodes.InvalidType,
+    required_error: ValidatorCode.Required,
+    invalid_type_error: ValidatorCode.InvalidType,
   })
-  .nonempty(ValidatorCodes.Required)
-  .max(2048, ValidatorCodes.TooLong);
+  .nonempty(ValidatorCode.Required)
+  .max(2048, ValidatorCode.TooLong);
 
 export { captchaValidator };

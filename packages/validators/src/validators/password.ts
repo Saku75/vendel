@@ -1,30 +1,31 @@
 import z from "zod";
 
-import { ValidatorCodes } from "../main";
+import { ValidatorCode } from "../main";
 
 const passwordValidator = z
   .string({
-    required_error: ValidatorCodes.Required,
-    invalid_type_error: ValidatorCodes.InvalidType,
+    required_error: ValidatorCode.Required,
+    invalid_type_error: ValidatorCode.InvalidType,
   })
-  .min(10, ValidatorCodes.TooShort)
-  .max(64, ValidatorCodes.TooLong)
+  .nonempty(ValidatorCode.Required)
+  .min(10, ValidatorCode.TooShort)
+  .max(64, ValidatorCode.TooLong)
   .regex(
     /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])/,
-    ValidatorCodes.InvalidFormat,
+    ValidatorCode.InvalidFormat,
   );
 
 const passwordConfirmValidator = z.string({
-  required_error: ValidatorCodes.Required,
-  invalid_type_error: ValidatorCodes.InvalidType,
+  required_error: ValidatorCode.Required,
+  invalid_type_error: ValidatorCode.InvalidType,
 });
 
 const passwordHashValidator = z
   .string({
-    required_error: ValidatorCodes.Required,
-    invalid_type_error: ValidatorCodes.InvalidType,
+    required_error: ValidatorCode.Required,
+    invalid_type_error: ValidatorCode.InvalidType,
   })
-  .nonempty(ValidatorCodes.Required)
-  .base64url(ValidatorCodes.InvalidFormat);
+  .nonempty(ValidatorCode.Required)
+  .base64url(ValidatorCode.InvalidFormat);
 
 export { passwordConfirmValidator, passwordHashValidator, passwordValidator };

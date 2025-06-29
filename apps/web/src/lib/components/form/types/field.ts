@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { ValidatorCode } from "@package/validators";
+
 import type { FieldType } from "../enums/field/type";
 
 interface CommonField {
@@ -15,7 +17,7 @@ interface CommonField {
   initialValue: unknown;
 
   validator?: z.ZodType;
-  error?: string;
+  error?: ValidatorCode;
 
   isTouched: boolean;
   isValid: boolean;
