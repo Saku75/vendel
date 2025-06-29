@@ -1,5 +1,7 @@
 import { getContext, setContext } from "svelte";
 
+import type { ValidatorCode } from "@package/validators";
+
 import { FieldType } from "./enums/field/type";
 import type { FormContext } from "./types/context";
 import type { Field, Fields, FieldValues } from "./types/field";
@@ -77,11 +79,15 @@ function setFormContext<T extends Fields>(name: string) {
     },
 
     setErrors(errors) {
-      for (const key in errors) {
-        const error = errors[key];
-        const fieldKey = error.path[0].toString();
+      if (!errors) return;
 
-        if (this.fields[fieldKey]) this.fields[fieldKey].error = error.message;
+      this.resetCaptchas();
+
+      for (const error of errors) {
+        const fieldKey = error.path[0]?.toString();
+        if (fieldKey && this.fields[fieldKey]) {
+          this.fields[fieldKey].error = error.message as ValidatorCode;
+        }
       }
     },
   });
