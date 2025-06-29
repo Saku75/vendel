@@ -1,3 +1,4 @@
+import { createId } from "@paralleldrive/cuid2";
 import { Context } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { CookieOptions } from "hono/utils/cookie";
@@ -6,6 +7,14 @@ import { TokenPurpose } from "@package/token";
 
 import { refreshTokenFamilies } from "$lib/database/schema/refresh-token-families";
 import { refreshTokens } from "$lib/database/schema/refresh-tokens";
+import { AuthRole } from "$lib/enums/auth/role";
+import { authSessionUserKey } from "$lib/middleware/auth";
+import { AuthSessionUser } from "$lib/types/auth/session";
+import {
+  AuthTokenData,
+  AuthTokens,
+  RefreshTokenData,
+} from "$lib/types/auth/tokens";
 import { HonoEnv } from "$lib/utils/app";
 
 function cookieName(
@@ -43,16 +52,11 @@ function cookieOptions(
 const REFRESH_TOKEN_NAME = "auth-refresh";
 const AUTH_TOKEN_NAME = "auth";
 
-type RefreshTokenData = {
-  refreshTokenId: string;
-};
-
-type AuthTokenData = {
-  refreshTokenId: string;
-  userId: string;
-};
-
-async function setAuthSession(c: Context<HonoEnv>, userId: string) {
+async function setAuthTokens(
+  c: Context<HonoEnv>,
+  userId: string,
+  userRole: AuthRole | null,
+) {
   const refreshTokenFamily = await c.var.database
     .insert(refreshTokenFamilies)
     .values({ userId })
@@ -81,11 +85,22 @@ async function setAuthSession(c: Context<HonoEnv>, userId: string) {
     }),
   );
 
+  const sessionId = createId();
+
+  await c.env.KV.put(
+    authSessionUserKey(sessionId),
+    JSON.stringify({
+      id: userId,
+      role: userRole,
+    } satisfies AuthSessionUser),
+    { expiration: refreshToken[0].expiresAt.valueOf() },
+  );
+
   setCookie(
     c,
     cookieName(AUTH_TOKEN_NAME, { prefix: url.hostname }),
     c.var.token.create<AuthTokenData>(
-      { refreshTokenId: refreshToken[0].id, userId },
+      { refreshTokenId: refreshToken[0].id, authTokenId: sessionId },
       { purpose: TokenPurpose.Auth },
     ),
     cookieOptions(c, {
@@ -94,7 +109,7 @@ async function setAuthSession(c: Context<HonoEnv>, userId: string) {
   );
 }
 
-function getAuthSession(c: Context<HonoEnv>) {
+function getAuthTokens(c: Context<HonoEnv>): Partial<AuthTokens> {
   const url = new URL(c.req.url);
 
   const refreshCookie = getCookie(
@@ -114,11 +129,11 @@ function getAuthSession(c: Context<HonoEnv>) {
   };
 }
 
-function removeAuthSession(c: Context<HonoEnv>) {
+function removeAuthTokens(c: Context<HonoEnv>) {
   const url = new URL(c.req.url);
 
   deleteCookie(c, cookieName(REFRESH_TOKEN_NAME, { prefix: url.hostname }));
   deleteCookie(c, cookieName(AUTH_TOKEN_NAME, { prefix: url.hostname }));
 }
 
-export { getAuthSession, removeAuthSession, setAuthSession };
+export { getAuthTokens, removeAuthTokens, setAuthTokens };

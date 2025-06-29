@@ -3,7 +3,7 @@ import { TokenPurpose } from "../enums/purpose";
 import { TokenVersion } from "../enums/version";
 import { TokenPayload } from "./payload";
 
-type TokenOptionsWithExpireIn = Partial<{
+type TokenOptionsWithExpiresIn = Partial<{
   version: TokenVersion;
 
   issuer: TokenPayload["issuer"];
@@ -23,6 +23,6 @@ type TokenOptionsWithExpiresAt = Partial<{
   expiresAt: number;
 }>;
 
-type TokenOptions = TokenOptionsWithExpireIn | TokenOptionsWithExpiresAt;
+type TokenOptions = TokenOptionsWithExpiresIn | TokenOptionsWithExpiresAt;
 
 export { TokenOptions };
