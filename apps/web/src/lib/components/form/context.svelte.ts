@@ -15,8 +15,6 @@ function setFormContext<T extends Fields>(name: string) {
     isDirty: false,
     isValid: false,
 
-    majorityRequired: false,
-
     fields: {},
 
     addField<F extends Field>(field: F): [string, F] {
@@ -39,6 +37,8 @@ function setFormContext<T extends Fields>(name: string) {
     },
 
     reset() {
+      this.resetCaptchas();
+
       for (const field in this.fields) {
         if (
           !this.fields[field] ||
@@ -48,6 +48,16 @@ function setFormContext<T extends Fields>(name: string) {
 
         this.fields[field].value = this.fields[field].initialValue;
         this.fields[field].isTouched = false;
+      }
+    },
+    resetCaptchas() {
+      for (const field in this.fields) {
+        if (
+          this.fields[field] &&
+          this.fields[field].type === FieldType.Captcha
+        ) {
+          this.fields[field].reset?.();
+        }
       }
     },
 
@@ -64,6 +74,15 @@ function setFormContext<T extends Fields>(name: string) {
       }
 
       return values;
+    },
+
+    setErrors(errors) {
+      for (const key in errors) {
+        const error = errors[key];
+        const fieldKey = error.path[0].toString();
+
+        if (this.fields[fieldKey]) this.fields[fieldKey].error = error.message;
+      }
     },
   });
 

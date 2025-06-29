@@ -8,6 +8,7 @@ function createClientRoute<T>(
   return (ctx) => {
     const ky = kyFactory.create({
       fetch: ctx?.fetch,
+      throwHttpErrors: false,
     });
 
     return factory(ky, ctx);

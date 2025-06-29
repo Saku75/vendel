@@ -6,35 +6,36 @@
 
   import { apiClient } from "$lib/api/client";
   import CaptchaInput from "$lib/components/form/components/captcha-input.svelte";
-  import FormSubmit from "$lib/components/form/components/form-submit.svelte";
   import TextInput from "$lib/components/form/components/text-input.svelte";
+  import FormSubmit from "$lib/components/form/components/utils/form-submit.svelte";
   import { setFormContext } from "$lib/components/form/context.svelte";
   import { FieldType } from "$lib/components/form/enums/field/type";
   import Form from "$lib/components/form/form.svelte";
   import type {
     CaptchaField,
     Fields,
+    Require,
     TextField,
   } from "$lib/components/form/types/field";
 
   interface SignInForm extends Fields {
-    email: TextField;
-    password: TextField;
+    email: Require<TextField>;
+    password: Require<TextField>;
 
-    captcha: CaptchaField;
+    captcha: Require<CaptchaField>;
   }
 
   const formContext = setFormContext<SignInForm>("signIn");
 
   async function onsubmit() {
-    const { email, password, captcha } = formContext.getValues();
+    const formValues = formContext.getValues();
 
-    await apiClient.auth.signIn({
-      email: email as string,
-      password: password as string,
+    const response = await apiClient.auth.signIn(formValues);
 
-      captcha: captcha as string,
-    });
+    if (!response.ok) {
+      formContext.setErrors(response.errors);
+      return;
+    }
 
     await goto("/");
   }
