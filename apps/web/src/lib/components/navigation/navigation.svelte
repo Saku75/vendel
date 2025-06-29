@@ -1,7 +1,13 @@
 <script lang="ts">
   import HeaderLink from "$lib/components/layout/header/header-link.svelte";
-  import { navigationStore } from "$lib/stores/navigation.svelte";
+  import {
+    type NavigationItem,
+    navigationStore,
+  } from "$lib/stores/navigation.svelte";
   import cn from "$lib/utils/cn";
+
+  import Authenticated from "../utils/auth/authenticated.svelte";
+  import Unauthenticated from "../utils/auth/unauthenticated.svelte";
 
   interface Props {
     type?: "list" | "bar";
@@ -9,6 +15,22 @@
 
   const { type = "list" }: Props = $props();
 </script>
+
+{#snippet navigationItem({ text, href, target, Icon }: NavigationItem)}
+  <li class="contents">
+    <HeaderLink {href} {target} class="h-10 gap-1">
+      {#if Icon}
+        <Icon
+          class={cn({
+            "h-5.5 w-5.5": type === "list",
+            "h-4.5 w-4.5": type === "bar",
+          })}
+        />
+      {/if}
+      {text}
+    </HeaderLink>
+  </li>
+{/snippet}
 
 <nav
   class={cn("flex justify-between gap-1", {
@@ -21,20 +43,20 @@
         "flex-col": type === "list",
       })}
     >
-      {#each items as { text, href, target, Icon } (href)}
-        <li class="contents">
-          <HeaderLink {href} {target} class="h-10 gap-1">
-            {#if Icon}
-              <Icon
-                class={cn({
-                  "h-5.5 w-5.5": type === "list",
-                  "h-4.5 w-4.5": type === "bar",
-                })}
-              />
-            {/if}
-            {text}
-          </HeaderLink>
-        </li>
+      {#each items as item (item.href)}
+        {#if item.showWhen}
+          {#if item.showWhen.authenticated}
+            <Authenticated role={item.showWhen.role}>
+              {@render navigationItem(item)}
+            </Authenticated>
+          {:else}
+            <Unauthenticated>
+              {@render navigationItem(item)}
+            </Unauthenticated>
+          {/if}
+        {:else}
+          {@render navigationItem(item)}
+        {/if}
       {/each}
     </ul>
     {#if type === "list" && i !== navigationStore.length - 1}
