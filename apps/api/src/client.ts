@@ -33,6 +33,8 @@ type Client = typeof client;
 export { createClient };
 export type { Client };
 
+export { AuthRole } from "$lib/enums/auth/role";
+
 export type {
   SignInFinishRequest,
   SignInSession,

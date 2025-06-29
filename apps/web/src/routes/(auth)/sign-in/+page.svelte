@@ -17,6 +17,7 @@
     Require,
     TextField,
   } from "$lib/components/form/types/field";
+  import { authStore } from "$lib/stores/auth.svelte";
 
   interface SignInForm extends Fields {
     email: Require<TextField>;
@@ -37,7 +38,12 @@
       return;
     }
 
-    await goto("/");
+    await Promise.all([
+      apiClient.auth
+        .whoAmI()
+        .then((value) => (authStore.auth = value.ok ? value.data : undefined)),
+      goto("/"),
+    ]);
   }
 </script>
 

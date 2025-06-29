@@ -21,6 +21,7 @@
     Require,
     TextField,
   } from "$lib/components/form/types/field";
+  import { authStore } from "$lib/stores/auth.svelte";
 
   interface SignUpForm extends Fields {
     firstName: Require<TextField>;
@@ -46,7 +47,12 @@
       return;
     }
 
-    await goto("/");
+    await Promise.all([
+      apiClient.auth
+        .whoAmI()
+        .then((value) => (authStore.auth = value.ok ? value.data : undefined)),
+      goto("/"),
+    ]);
   }
 </script>
 
