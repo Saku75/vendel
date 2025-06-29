@@ -48,6 +48,12 @@
         "types": "./dist/client.d.ts",
         "default": "./dist/client.js"
       }
+    },
+    "./schema": {
+      "import": {
+        "types": "./dist/lib/database/schema/*.d.ts",
+        "default": "./dist/lib/database/schema/*.js"
+      }
     }
   }
 }

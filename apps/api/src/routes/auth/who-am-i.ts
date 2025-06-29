@@ -8,10 +8,18 @@ import { removeAuthTokens } from "./utils/tokens";
 
 const whoAmIRoute = app();
 
-type WhoAmIResponse = Omit<
-  typeof users.$inferSelect,
-  "password" | "clientSalt" | "serverSalt"
->;
+type WhoAmIResponse = {
+  user: Omit<
+    typeof users.$inferSelect,
+    "password" | "clientSalt" | "serverSalt"
+  >;
+  token: {
+    valid: boolean;
+    expired: boolean;
+
+    expiresAt: number;
+  };
+};
 
 whoAmIRoute.get("/", async (c) => {
   if (!c.var.auth)
@@ -48,7 +56,14 @@ whoAmIRoute.get("/", async (c) => {
   return c.json({
     ok: true,
     status: 200,
-    data: user[0],
+    data: {
+      user: user[0],
+      token: {
+        valid: c.var.auth.tokens.auth.valid,
+        expired: c.var.auth.tokens.auth.expired,
+        expiresAt: c.var.auth.tokens.auth.payload.expiresAt,
+      },
+    },
   } satisfies Ok<WhoAmIResponse>);
 });
 
