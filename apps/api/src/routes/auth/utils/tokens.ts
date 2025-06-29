@@ -45,7 +45,7 @@ function cookieOptions(
     path:
       c.env.MODE !== "local" && url.origin === c.env.API_ORIGIN
         ? `${options.path || "/"}`
-        : `/api${options.path}`,
+        : `/api${options.path || ""}`,
   };
 }
 
@@ -93,7 +93,7 @@ async function setAuthTokens(
       id: userId,
       role: userRole,
     } satisfies AuthSessionUser),
-    { expiration: refreshToken[0].expiresAt.valueOf() },
+    { expiration: refreshToken[0].expiresAt.valueOf() / 1000 },
   );
 
   setCookie(
