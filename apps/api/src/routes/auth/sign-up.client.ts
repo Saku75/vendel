@@ -1,8 +1,8 @@
 import { base64urlnopad } from "@scure/base";
 
 import { createClientRoute } from "$lib/client/create-route";
-import { getClientUrl } from "$lib/client/get-url";
-import { handleApiResponse } from "$lib/client/handle-response";
+import { getClientUrl } from "$lib/client/utils/get-url";
+import { handleApiResponse } from "$lib/client/utils/handle-api-response";
 
 import type {
   SignUpFinishRequest,
@@ -11,7 +11,7 @@ import type {
 } from "./sign-up";
 import { scrypt } from "./utils/scrypt";
 
-const createSignUpClient = createClientRoute((ky, ctx) => {
+const createSignUpClient = createClientRoute((context, fetch) => {
   return async function signUp(data: {
     firstName: string;
     middleName?: string;
@@ -23,14 +23,15 @@ const createSignUpClient = createClientRoute((ky, ctx) => {
   }) {
     const { firstName, middleName, lastName, email, password, captcha } = data;
 
-    const startRes = await ky.post(getClientUrl("/auth/sign-up/start", ctx), {
-      json: {
+    const startRes = await fetch(getClientUrl(context, "/auth/sign-up/start"), {
+      method: "post",
+      body: JSON.stringify({
         firstName,
         middleName,
         lastName,
         email,
         captcha,
-      } satisfies SignUpStartRequest,
+      } satisfies SignUpStartRequest),
     });
 
     const startJson = await handleApiResponse<SignUpStartResponse>(startRes);
@@ -38,13 +39,17 @@ const createSignUpClient = createClientRoute((ky, ctx) => {
 
     const passwordHash = await scrypt(password, startJson.data.clientSalt);
 
-    const finishRes = await ky.post(getClientUrl("/auth/sign-up/finish", ctx), {
-      json: {
-        sessionId: startJson.data.sessionId,
-        passwordClientHash: base64urlnopad.encode(passwordHash),
-        captcha,
-      } satisfies SignUpFinishRequest,
-    });
+    const finishRes = await fetch(
+      getClientUrl(context, "/auth/sign-up/finish"),
+      {
+        method: "post",
+        body: JSON.stringify({
+          sessionId: startJson.data.sessionId,
+          passwordClientHash: base64urlnopad.encode(passwordHash),
+          captcha,
+        } satisfies SignUpFinishRequest),
+      },
+    );
 
     return await handleApiResponse(finishRes);
   };

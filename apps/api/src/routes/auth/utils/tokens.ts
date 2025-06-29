@@ -34,18 +34,13 @@ function cookieOptions(
   c: Context<HonoEnv>,
   options: CookieOptions,
 ): CookieOptions {
-  const url = new URL(c.req.url);
-
   return {
     domain: c.env.MODE !== "local" ? ".vendel.dk" : undefined,
     httpOnly: true,
     secure: c.env.MODE !== "local",
     sameSite: "strict",
     ...options,
-    path:
-      c.env.MODE !== "local" && url.origin === c.env.API_ORIGIN
-        ? `${options.path || "/"}`
-        : `/api${options.path || ""}`,
+    path: "/",
   };
 }
 
@@ -81,7 +76,6 @@ async function setAuthTokens(
     ),
     cookieOptions(c, {
       expires: refreshToken[0].expiresAt,
-      path: "/auth/refresh",
     }),
   );
 

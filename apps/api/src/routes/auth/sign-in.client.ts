@@ -1,8 +1,8 @@
 import { base64urlnopad } from "@scure/base";
 
 import { createClientRoute } from "$lib/client/create-route";
-import { getClientUrl } from "$lib/client/get-url";
-import { handleApiResponse } from "$lib/client/handle-response";
+import { getClientUrl } from "$lib/client/utils/get-url";
+import { handleApiResponse } from "$lib/client/utils/handle-api-response";
 
 import type {
   SignInFinishRequest,
@@ -11,7 +11,7 @@ import type {
 } from "./sign-in";
 import { scrypt } from "./utils/scrypt";
 
-const createSignInClient = createClientRoute((ky, ctx) => {
+const createSignInClient = createClientRoute((context, fetch) => {
   return async function signIn(data: {
     email: string;
     password: string;
@@ -19,8 +19,9 @@ const createSignInClient = createClientRoute((ky, ctx) => {
   }) {
     const { email, password, captcha } = data;
 
-    const startRes = await ky.post(getClientUrl("/auth/sign-in/start", ctx), {
-      json: { email, captcha } satisfies SignInStartRequest,
+    const startRes = await fetch(getClientUrl(context, "/auth/sign-in/start"), {
+      method: "post",
+      body: JSON.stringify({ email, captcha } satisfies SignInStartRequest),
     });
 
     const startJson = await handleApiResponse<SignInStartResponse>(startRes);
@@ -28,13 +29,17 @@ const createSignInClient = createClientRoute((ky, ctx) => {
 
     const passwordHash = await scrypt(password, startJson.data.clientSalt);
 
-    const finishRes = await ky.post(getClientUrl("/auth/sign-in/finish", ctx), {
-      json: {
-        sessionId: startJson.data.sessionId,
-        passwordClientHash: base64urlnopad.encode(passwordHash),
-        captcha,
-      } satisfies SignInFinishRequest,
-    });
+    const finishRes = await fetch(
+      getClientUrl(context, "/auth/sign-in/finish"),
+      {
+        method: "post",
+        body: JSON.stringify({
+          sessionId: startJson.data.sessionId,
+          passwordClientHash: base64urlnopad.encode(passwordHash),
+          captcha,
+        } satisfies SignInFinishRequest),
+      },
+    );
 
     return await handleApiResponse(finishRes);
   };

@@ -1,5 +1,3 @@
-import ky from "ky";
-
 class Captcha {
   private readonly key: string;
   private readonly remoteIp?: string;
@@ -10,15 +8,19 @@ class Captcha {
   }
 
   public async verify(token: string, idempotencyKey?: string) {
-    const result = await ky.post(
+    const result = await fetch(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
       {
-        json: {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           secret: this.key,
           response: token,
           remoteip: this.remoteIp,
           idempotency_key: idempotencyKey,
-        },
+        }),
       },
     );
 
