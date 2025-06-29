@@ -126,15 +126,18 @@ importers:
       '@app/api':
         specifier: workspace:*
         version: link:../api
-      '@lucide/svelte':
-        specifier: ^0.523.0
-        version: 0.523.0(svelte@5.34.8)
+      '@package/validators':
+        specifier: workspace:*
+        version: link:../../packages/validators
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
+      zod:
+        specifier: ^3.25.67
+        version: 3.25.67
     devDependencies:
       '@fontsource-variable/inter':
         specifier: ^5.2.6
@@ -142,6 +145,9 @@ importers:
       '@fontsource-variable/playwrite-dk-loopet':
         specifier: ^5.2.6
         version: 5.2.6
+      '@lucide/svelte':
+        specifier: ^0.523.0
+        version: 0.523.0(svelte@5.34.8)
       '@package/eslint':
         specifier: workspace:*
         version: link:../../packages/eslint

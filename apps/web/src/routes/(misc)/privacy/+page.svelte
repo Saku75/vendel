@@ -1,4 +1,4 @@
-<main class="mx-auto flex h-full w-full max-w-3xl flex-col gap-6">
+<main class="mx-auto flex h-full w-full max-w-3xl flex-col gap-6 px-2">
   <div class="flex flex-col gap-2">
     <h1 class="font-sans text-3xl font-bold">
       Privatlivspolitik for Vendel.dk

@@ -1,45 +1,66 @@
 <script lang="ts">
-  import { Turnstile } from "svelte-turnstile";
+  import { emailValidator } from "@package/validators/email";
+  import { passwordValidator } from "@package/validators/password";
 
   import { goto } from "$app/navigation";
 
   import { apiClient } from "$lib/api/client";
+  import CaptchaInput from "$lib/components/form/components/captcha-input.svelte";
+  import FormSubmit from "$lib/components/form/components/form-submit.svelte";
+  import TextInput from "$lib/components/form/components/text-input.svelte";
+  import { setFormContext } from "$lib/components/form/context.svelte";
+  import { FieldType } from "$lib/components/form/enums/field/type";
+  import Form from "$lib/components/form/form.svelte";
+  import type {
+    CaptchaField,
+    Fields,
+    TextField,
+  } from "$lib/components/form/types/field";
 
-  import type { PageProps } from "./$types";
+  interface SignInForm extends Fields {
+    email: TextField;
+    password: TextField;
 
-  let { data }: PageProps = $props();
+    captcha: CaptchaField;
+  }
 
-  let reset = $state<() => void>();
+  const formContext = setFormContext<SignInForm>("signIn");
 
-  async function handleSubmit(event: SubmitEvent) {
-    event.preventDefault();
-    const form = event.currentTarget as HTMLFormElement;
-    const formData = new FormData(form);
+  async function onsubmit() {
+    const { email, password, captcha } = formContext.getValues();
 
-    const data: {
-      email: string;
-      password: string;
-      captcha: string;
-    } = {
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
-      captcha: formData.get("cf-turnstile-response") as string,
-    };
+    await apiClient.auth.signIn({
+      email: email as string,
+      password: password as string,
 
-    await apiClient.auth.signIn(data);
+      captcha: captcha as string,
+    });
+
     await goto("/");
   }
 </script>
 
-<form novalidate onsubmit={handleSubmit}>
-  <input type="email" name="email" required />
-  <input type="password" name="password" required />
+<Form name="signIn" class="mx-auto w-full max-w-xs items-center" {onsubmit}>
+  <h1 class="mb-4 text-4xl">Log ind</h1>
 
-  <Turnstile
-    siteKey={data.config.turnstileSiteKey}
-    action="auth_sign-up"
-    bind:reset
+  <TextInput
+    key="email"
+    type={FieldType.Email}
+    label="Email"
+    autocomplete="email"
+    validator={emailValidator}
+    required
+  />
+  <TextInput
+    key="password"
+    type={FieldType.Password}
+    label="Adgangskode"
+    autocomplete="current-password"
+    validator={passwordValidator}
+    required
   />
 
-  <button type="submit">Submit</button>
-</form>
+  <CaptchaInput key="captcha" />
+
+  <FormSubmit label="Log ind" />
+</Form>
