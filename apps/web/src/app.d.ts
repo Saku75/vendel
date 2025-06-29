@@ -7,6 +7,9 @@ declare global {
       cf: CfProperties;
       ctx: ExecutionContext;
     }
+    interface Locals {
+      api: import("@app/api/client").Client;
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 <script lang="ts">
   import Footer from "$lib/components/layout/footer.svelte";
   import Header from "$lib/components/layout/header/header.svelte";
+  import { authStore } from "$lib/stores/auth.svelte";
   import { configStore } from "$lib/stores/config.svelte";
   import { layoutStore } from "$lib/stores/layout.svelte";
 
@@ -9,9 +10,12 @@
 
   const { data, children }: LayoutProps = $props();
 
-  layoutStore.theme = data.config.themePreference;
+  authStore.auth = data.auth;
+
   configStore.version = data.config.version;
   configStore.turnstileSiteKey = data.config.turnstileSiteKey;
+
+  layoutStore.theme = data.config.themePreference;
 </script>
 
 <svelte:window
