@@ -50,6 +50,7 @@
     theme={layoutStore.theme !== "system" ? layoutStore.theme : "auto"}
     siteKey={configStore.turnstileSiteKey}
     {action}
+    bind:reset={fieldContext.reset}
     on:callback={(event) => (fieldContext.value = event.detail.token)}
   />
 

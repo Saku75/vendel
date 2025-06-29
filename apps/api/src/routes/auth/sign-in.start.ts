@@ -57,18 +57,7 @@ const signInStartRoute = app().post("/", async (c) => {
 
   const sessionId = createId();
 
-  if (user.length) {
-    await c.env.KV.put(
-      signInSessionKey(sessionId),
-      JSON.stringify({
-        userExists: true,
-        userId: user[0].id,
-        serverSalt: user[0].serverSalt,
-        captchaIdempotencyKey,
-      } satisfies SignInSession),
-      { expirationTtl: 60 },
-    );
-  } else {
+  if (!user.length) {
     await c.env.KV.put(
       signInSessionKey(sessionId),
       JSON.stringify({
@@ -78,7 +67,30 @@ const signInStartRoute = app().post("/", async (c) => {
       } satisfies SignInSession),
       { expirationTtl: 60 },
     );
+
+    return c.json(
+      {
+        ok: true,
+        status: 200,
+        data: {
+          sessionId,
+          clientSalt: bytesToHex(randomBytes(32)),
+        },
+      } satisfies Ok<SignInStartResponse>,
+      200,
+    );
   }
+
+  await c.env.KV.put(
+    signInSessionKey(sessionId),
+    JSON.stringify({
+      userExists: true,
+      userId: user[0].id,
+      serverSalt: user[0].serverSalt,
+      captchaIdempotencyKey,
+    } satisfies SignInSession),
+    { expirationTtl: 60 },
+  );
 
   return c.json(
     {
@@ -86,7 +98,7 @@ const signInStartRoute = app().post("/", async (c) => {
       status: 200,
       data: {
         sessionId,
-        clientSalt: user[0].clientSalt || bytesToHex(randomBytes(32)),
+        clientSalt: user[0].clientSalt,
       },
     } satisfies Ok<SignInStartResponse>,
     200,

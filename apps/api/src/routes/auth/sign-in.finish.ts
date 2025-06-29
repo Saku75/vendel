@@ -86,7 +86,7 @@ const signInFinishRoute = app().post("/", async (c) => {
     c.env.KV.delete(signInSessionKey(data.sessionId)),
   ]);
 
-  if (!user.length && !session.userExists) {
+  if (!user.length || !session.userExists) {
     return c.json(
       {
         ok: false,

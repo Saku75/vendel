@@ -96,11 +96,14 @@
 >
   <span class="flex items-center gap-1 px-4">
     {fieldContext.label}
-    {#if fieldContext.required && !formContext.majorityRequired}
-      <span class="text-sm text-red-700 dark:text-red-500">*</span>
-    {/if}
-    {#if !fieldContext.required && formContext.majorityRequired}
-      <span class="text-sm text-stone-600 dark:text-stone-400">(Valgfri)</span>
+    {#if formContext.majorityRequired !== undefined}
+      {#if fieldContext.required && !formContext.majorityRequired}
+        <span class="text-sm text-red-700 dark:text-red-500">*</span>
+      {/if}
+      {#if !fieldContext.required && formContext.majorityRequired}
+        <span class="text-sm text-stone-600 dark:text-stone-400">(Valgfri)</span
+        >
+      {/if}
     {/if}
   </span>
 

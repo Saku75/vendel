@@ -37,6 +37,8 @@ interface CaptchaField
   value?: string;
 
   action?: string;
+
+  reset?: () => void;
 }
 
 type Field = TextField | CaptchaField;
@@ -49,11 +51,16 @@ type FieldValues<T extends Fields> = {
   [K in keyof T]: T[K]["value"];
 };
 
+type Require<T extends Field> = Omit<T, "value"> & {
+  value: NonNullable<T["value"]>;
+};
+
 export type {
   CaptchaField,
   CommonField,
   Field,
   Fields,
   FieldValues,
+  Require,
   TextField,
 };
