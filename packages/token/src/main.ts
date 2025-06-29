@@ -21,8 +21,8 @@ class Token {
     this.defaultOptions = defaultOptions;
   }
 
-  public create<T extends TokenPayloadData = TokenPayloadData>(
-    data?: T,
+  public create<T extends TokenPayloadData = null>(
+    data: T,
     options?: TokenOptions,
   ): string {
     const version =
@@ -49,7 +49,7 @@ class Token {
 
     return `${version}.${base64urlnopad.encode(nonce)}.${base64urlnopad.encode(encryptedPayload)}.${base64urlnopad.encode(signature)}`;
   }
-  public read<T extends TokenPayloadData = TokenPayloadData>(
+  public read<T extends TokenPayloadData = null>(
     token: string,
   ): TokenReadResponse<T> {
     if (!/^v\d(\.[A-Za-z0-9_-]+){3}$/.test(token))
@@ -76,11 +76,15 @@ class Token {
     return { valid, expired, payload };
   }
 
-  private encode(payload: TokenPayload): Uint8Array {
+  private encode<T extends TokenPayloadData>(
+    payload: TokenPayload<T>,
+  ): Uint8Array {
     const json = JSON.stringify({ ...payload });
     return utf8ToBytes(json);
   }
-  private decode(payload: Uint8Array): TokenPayload {
+  private decode<T extends TokenPayloadData>(
+    payload: Uint8Array,
+  ): TokenPayload<T> {
     const json = bytesToUtf8(payload);
     return JSON.parse(json);
   }

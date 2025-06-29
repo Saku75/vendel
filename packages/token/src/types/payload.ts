@@ -7,14 +7,14 @@ type TokenPayloadData =
   | TokenPayloadData[]
   | { [key: string | number]: TokenPayloadData };
 
-type TokenPayload<T extends TokenPayloadData = TokenPayloadData> = {
+type TokenPayload<T extends TokenPayloadData = null> = {
   issuer?: string;
   purpose?: string;
 
   issuedAt: number;
   expiresAt: number;
 
-  data?: T;
+  data: T;
 };
 
 export type { TokenPayload, TokenPayloadData };

@@ -12,7 +12,7 @@ import { app } from "$lib/utils/app";
 
 import { SignInSession, signInSessionKey } from "./sign-in";
 import { scrypt } from "./utils/scrypt";
-import { setAuthSession } from "./utils/session";
+import { setAuthTokens } from "./utils/tokens";
 
 const signInFinishSchema = z.object({
   sessionId: idValidator,
@@ -74,7 +74,7 @@ const signInFinishRoute = app().post("/", async (c) => {
   const [user] = await Promise.all([
     session.userExists
       ? c.var.database
-          .select({ id: users.id })
+          .select({ id: users.id, role: users.role })
           .from(users)
           .where(
             and(
@@ -82,7 +82,7 @@ const signInFinishRoute = app().post("/", async (c) => {
               eq(users.password, Buffer.from(passwordServerHash)),
             ),
           )
-      : c.var.database.select({ id: users.id }).from(users),
+      : c.var.database.select({ id: users.id, role: users.role }).from(users),
     c.env.KV.delete(signInSessionKey(data.sessionId)),
   ]);
 
@@ -108,7 +108,7 @@ const signInFinishRoute = app().post("/", async (c) => {
     );
   }
 
-  await setAuthSession(c, user[0].id);
+  await setAuthTokens(c, user[0].id, user[0].role);
 
   return c.json(
     {
