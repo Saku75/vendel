@@ -3,12 +3,11 @@ import {
   ServerErrorStatusCode,
 } from "hono/utils/http-status";
 import { JSONValue } from "hono/utils/types";
-import type { KyResponse } from "ky";
 
 import type { Result } from "$lib/types/result";
 
 async function handleApiResponse<T extends JSONValue = JSONValue>(
-  res: KyResponse,
+  res: Response,
 ): Promise<Result<T>> {
   const contentType = res.headers.get("content-type") || "";
 

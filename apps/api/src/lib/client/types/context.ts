@@ -1,8 +1,9 @@
 interface ClientContext {
-  domain?: string;
   prefix?: string;
 
-  fetch?: typeof fetch;
+  headers?: HeadersInit;
+
+  fetch: typeof fetch;
 }
 
 export { ClientContext };

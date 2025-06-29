@@ -1,18 +1,9 @@
-import kyFactory from "ky";
-
-import type { ClientContext } from "./context";
+import type { ClientContext } from "./types/context";
 
 function createClientRoute<T>(
-  factory: (ky: ReturnType<typeof kyFactory.create>, ctx?: ClientContext) => T,
-): (ctx?: ClientContext) => T {
-  return (ctx) => {
-    const ky = kyFactory.create({
-      fetch: ctx?.fetch,
-      throwHttpErrors: false,
-    });
-
-    return factory(ky, ctx);
-  };
+  fn: (ctx: ClientContext, fetch: ClientContext["fetch"]) => T,
+) {
+  return fn;
 }
 
 export { createClientRoute };
