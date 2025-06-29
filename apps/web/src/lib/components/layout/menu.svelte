@@ -12,7 +12,7 @@
     children: Snippet;
   }
 
-  let { children }: Props = $props();
+  const { children }: Props = $props();
 
   $effect(() => {
     if (

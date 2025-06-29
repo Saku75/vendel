@@ -1,14 +1,17 @@
 <script lang="ts">
   import Footer from "$lib/components/layout/footer.svelte";
   import Header from "$lib/components/layout/header/header.svelte";
+  import { configStore } from "$lib/stores/config.svelte";
   import { layoutStore } from "$lib/stores/layout.svelte";
 
   import "../app.css";
   import type { LayoutProps } from "./$types";
 
-  let { data, children }: LayoutProps = $props();
+  const { data, children }: LayoutProps = $props();
 
   layoutStore.theme = data.config.themePreference;
+  configStore.version = data.config.version;
+  configStore.turnstileSiteKey = data.config.turnstileSiteKey;
 </script>
 
 <svelte:window
@@ -22,7 +25,7 @@
 
 <Header />
 
-<div class="flex flex-col justify-center px-2 py-8">
+<div class="flex flex-col justify-center py-8">
   {@render children()}
 </div>
 

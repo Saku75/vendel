@@ -8,6 +8,7 @@
   interface Props {
     from?: LayoutSize;
     to?: LayoutSize;
+
     children: Snippet;
   }
 
