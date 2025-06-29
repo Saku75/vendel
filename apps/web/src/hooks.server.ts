@@ -1,6 +1,8 @@
 import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
+import { createClient } from "@app/api/client";
+
 import { LayoutTheme } from "$lib/enums/layout/theme";
 
 const theme: Handle = async ({ event, resolve }) => {
@@ -37,4 +39,20 @@ const preload: Handle = async ({ event, resolve }) => {
   });
 };
 
-export const handle = sequence(theme, headers, preload);
+const initiateLocals: Handle = async ({ event, resolve }) => {
+  const cookieHeader = event.request.headers.get("cookie") ?? "";
+
+  event.locals = {
+    api: createClient({
+      prefix: "http://localhost:5173/api",
+      fetch: event.platform?.env.API.fetch,
+      headers: {
+        cookie: cookieHeader,
+      },
+    }),
+  };
+
+  return await resolve(event);
+};
+
+export const handle = sequence(theme, headers, preload, initiateLocals);
