@@ -11,7 +11,7 @@ const tokens = new Token({
 });
 
 it("should return valid and non-expired token by default", () => {
-  const token = tokens.create();
+  const token = tokens.create(null);
 
   expect(/^v\d(\.[A-Za-z0-9_-]+){3}$/.test(token)).toBe(true);
 
@@ -37,8 +37,8 @@ it("should return token data unmodified", () => {
 });
 
 it("should generate new nonce for every token", () => {
-  const token1 = tokens.create().split(".");
-  const token2 = tokens.create().split(".");
+  const token1 = tokens.create(null).split(".");
+  const token2 = tokens.create(null).split(".");
 
   expect(token1[1]).not.toBe(token2[1]);
   expect(token1[2]).not.toBe(token2[2]);
