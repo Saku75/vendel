@@ -14,7 +14,7 @@
   html {
     &[data-theme="light"] {
       scrollbar-color: var(--color-stone-400) var(--color-stone-100);
-      color: light;
+      color-scheme: only light;
 
       * {
         scrollbar-color: var(--color-stone-400) transparent;
@@ -23,7 +23,7 @@
 
     &[data-theme="dark"] {
       scrollbar-color: var(--color-stone-600) var(--color-stone-900);
-      color: dark;
+      color-scheme: only dark;
 
       * {
         scrollbar-color: var(--color-stone-600) transparent;
