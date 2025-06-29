@@ -16,6 +16,7 @@ const authMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
   if (authTokens.auth) {
     const authSessionUser = await c.env.KV.get<AuthSessionUser>(
       authSessionUserKey(authTokens.auth.payload.data.authTokenId),
+      { type: "json" },
     );
 
     if (authSessionUser)
