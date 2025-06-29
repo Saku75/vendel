@@ -10,6 +10,7 @@
   import { getFormContext } from "../context.svelte";
   import { FieldType } from "../enums/field/type";
   import type { CaptchaField } from "../types/field";
+  import { getValidatorMessage } from "../utils/get-validator-message";
 
   interface Props {
     readonly key: CaptchaField["key"];
@@ -56,7 +57,7 @@
 
   {#if fieldContext.error}
     <span class="px-4 text-sm text-red-700 dark:text-red-500">
-      {fieldContext.error}
+      {getValidatorMessage(fieldContext.error)}
     </span>
   {/if}
 </div>

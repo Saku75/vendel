@@ -1,27 +1,27 @@
 import { z } from "zod";
 
-import { ValidatorCodes } from "../main";
+import { ValidatorCode } from "../main";
 
 const firstNameValidator = z
   .string({
-    required_error: ValidatorCodes.Required,
-    invalid_type_error: ValidatorCodes.InvalidType,
+    required_error: ValidatorCode.Required,
+    invalid_type_error: ValidatorCode.InvalidType,
   })
-  .nonempty(ValidatorCodes.Required)
-  .max(50, ValidatorCodes.TooLong);
+  .nonempty(ValidatorCode.Required)
+  .max(50, ValidatorCode.TooLong);
 
 const middleNameValidator = z
   .string({
-    invalid_type_error: ValidatorCodes.InvalidType,
+    invalid_type_error: ValidatorCode.InvalidType,
   })
-  .max(200, ValidatorCodes.TooLong)
+  .max(200, ValidatorCode.TooLong)
   .optional();
 
 const lastNameValidator = z
   .string({
-    invalid_type_error: ValidatorCodes.InvalidType,
+    invalid_type_error: ValidatorCode.InvalidType,
   })
-  .max(50, ValidatorCodes.TooLong)
+  .max(50, ValidatorCode.TooLong)
   .optional();
 
 export { firstNameValidator, lastNameValidator, middleNameValidator };

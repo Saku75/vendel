@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { MailTemplate } from "@package/mail";
 import { TokenPurpose } from "@package/token";
-import { ValidatorCodes } from "@package/validators";
+import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
 import { idValidator } from "@package/validators/id";
 import { passwordHashValidator } from "@package/validators/password";
@@ -36,7 +36,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
       if (!session) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
-          message: ValidatorCodes.NotFound,
+          message: ValidatorCode.NotFound,
           path: ["sessionId"],
         });
         return;
@@ -50,7 +50,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
       )
         context.addIssue({
           code: z.ZodIssueCode.custom,
-          message: ValidatorCodes.Invalid,
+          message: ValidatorCode.Invalid,
           path: ["captcha"],
         });
     })

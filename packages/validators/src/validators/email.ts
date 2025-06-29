@@ -1,14 +1,14 @@
 import { z } from "zod";
 
-import { ValidatorCodes } from "../main";
+import { ValidatorCode } from "../main";
 
 const emailValidator = z
   .string({
-    required_error: ValidatorCodes.Required,
-    invalid_type_error: ValidatorCodes.InvalidType,
+    required_error: ValidatorCode.Required,
+    invalid_type_error: ValidatorCode.InvalidType,
   })
-  .nonempty(ValidatorCodes.Required)
-  .max(320, ValidatorCodes.TooLong)
-  .email(ValidatorCodes.InvalidFormat);
+  .nonempty(ValidatorCode.Required)
+  .max(320, ValidatorCode.TooLong)
+  .email(ValidatorCode.InvalidFormat);
 
 export { emailValidator };

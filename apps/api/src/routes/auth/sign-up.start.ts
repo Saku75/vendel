@@ -3,7 +3,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { ValidatorCodes } from "@package/validators";
+import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
 import { emailValidator } from "@package/validators/email";
 import {
@@ -41,14 +41,14 @@ const signUpStartRoute = app().post("/", async (c) => {
       if (await c.var.database.$count(users, eq(users.email, values.email)))
         context.addIssue({
           code: z.ZodIssueCode.custom,
-          message: ValidatorCodes.AlreadyExists,
+          message: ValidatorCode.AlreadyExists,
           path: ["email"],
         });
 
       if (!(await c.var.captcha.verify(values.captcha, captchaIdempotencyKey)))
         context.addIssue({
           code: z.ZodIssueCode.custom,
-          message: ValidatorCodes.Invalid,
+          message: ValidatorCode.Invalid,
           path: ["captcha"],
         });
     })

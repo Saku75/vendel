@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { ValidatorCodes } from "@package/validators";
+import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
 import { idValidator } from "@package/validators/id";
 import { passwordHashValidator } from "@package/validators/password";
@@ -34,7 +34,7 @@ const signInFinishRoute = app().post("/", async (c) => {
       if (!session) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
-          message: ValidatorCodes.NotFound,
+          message: ValidatorCode.NotFound,
           path: ["sessionId"],
         });
         return;
@@ -48,7 +48,7 @@ const signInFinishRoute = app().post("/", async (c) => {
       )
         context.addIssue({
           code: z.ZodIssueCode.custom,
-          message: ValidatorCodes.Invalid,
+          message: ValidatorCode.Invalid,
           path: ["captcha"],
         });
     })
@@ -94,12 +94,12 @@ const signInFinishRoute = app().post("/", async (c) => {
         errors: [
           {
             code: z.ZodIssueCode.custom,
-            message: ValidatorCodes.Invalid,
+            message: ValidatorCode.Invalid,
             path: ["email"],
           },
           {
             code: z.ZodIssueCode.custom,
-            message: ValidatorCodes.Invalid,
+            message: ValidatorCode.Invalid,
             path: ["password"],
           },
         ],

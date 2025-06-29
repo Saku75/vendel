@@ -2,6 +2,8 @@
   import { onDestroy } from "svelte";
   import type { FullAutoFill } from "svelte/elements";
 
+  import type { ValidatorCode } from "@package/validators";
+
   import cn from "$lib/utils/cn";
 
   import { getFormConfig } from "../config.svelte";
@@ -9,6 +11,7 @@
   import { FieldOrientation } from "../enums/field/orientation";
   import { FieldType } from "../enums/field/type";
   import type { TextField } from "../types/field";
+  import { getValidatorMessage } from "../utils/get-validator-message";
 
   interface Props {
     readonly key: TextField["key"];
@@ -74,7 +77,7 @@
       fieldContext.error = undefined;
     } else {
       fieldContext.isValid = false;
-      fieldContext.error = result.error.issues[0].message;
+      fieldContext.error = result.error.issues[0].message as ValidatorCode;
     }
   });
 
@@ -121,7 +124,7 @@
 
   {#if fieldContext.error && fieldContext.isTouched}
     <span class="px-4 text-sm text-red-700 dark:text-red-500">
-      {fieldContext.error}
+      {getValidatorMessage(fieldContext.error)}
     </span>
   {/if}
 </label>
