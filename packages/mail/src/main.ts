@@ -1,4 +1,4 @@
-import { Resend } from "resend";
+import type { CreateEmailOptions, CreateEmailResponse } from "resend";
 
 import { MailTemplate } from "./enums/template";
 import { templateConfirmEmail } from "./templates/confirm-email";
@@ -13,7 +13,7 @@ import {
 } from "./types/options";
 
 class Mail {
-  private readonly resend: Resend;
+  private readonly key: string;
   private readonly builtInPlaceholderValues: MailTemplateBuiltInPlaceholders;
   private readonly dev?: boolean;
 
@@ -22,7 +22,7 @@ class Mail {
     builtInPlaceholderValues: MailTemplateBuiltInPlaceholders,
     dev?: boolean,
   ) {
-    this.resend = new Resend(key);
+    this.key = key;
     this.builtInPlaceholderValues = builtInPlaceholderValues;
     this.dev = dev;
   }
@@ -61,13 +61,26 @@ class Mail {
       return;
     }
 
-    return await this.resend.emails.send({
-      from: `${from.name} <${from.address}>`,
-      to: `${to.name} <${to.address}>`,
-      subject,
-      html,
-      text,
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${this.key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: `${from.name} <${from.address}>`,
+        to: `${to.name} <${to.address}>`,
+        subject: subject,
+        html: html,
+        text: text,
+      } satisfies CreateEmailOptions),
     });
+
+    if (!res.ok) {
+      throw new Error(`Failed to send email: ${await res.text()}`);
+    }
+
+    return res.json() as Promise<CreateEmailResponse>;
   }
 
   private async handleTemplateMail(mail: MailOptionsWithTemplateMail) {

@@ -7,14 +7,12 @@
     "build": "tsup",
     "lint": "eslint ."
   },
-  "dependencies": {
-    "resend": "^4.6.0"
-  },
   "devDependencies": {
     "@package/eslint": "workspace:*",
     "@package/typescript": "workspace:*",
     "@types/node": "^24.0.4",
     "eslint": "^9.29.0",
+    "resend": "^4.6.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   },
