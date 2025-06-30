@@ -20,6 +20,7 @@
   "placement": { "mode": "smart" },
 
   "vars": {
+    "MODE": "local",
     "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
   },
 
@@ -28,6 +29,7 @@
   "env": {
     "dev": {
       "vars": {
+        "MODE": "dev",
         "TURNSTILE_SITE_KEY": "0x4AAAAAABh5FlLMz6Dpndqg"
       },
 
@@ -44,6 +46,7 @@
 
     "prod": {
       "vars": {
+        "MODE": "prod",
         "TURNSTILE_SITE_KEY": "0x4AAAAAABh5GKQ74cdhLL-d"
       },
 

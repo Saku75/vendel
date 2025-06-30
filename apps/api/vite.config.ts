@@ -1,3 +1,4 @@
+import { cloudflare } from "@cloudflare/vite-plugin";
 import {
   defineWorkersConfig,
   readD1Migrations,
@@ -9,12 +10,12 @@ const migrationsPath = path.join(__dirname, "./src/lib/database/migrations");
 const migrations = await readD1Migrations(migrationsPath);
 
 export default defineWorkersConfig({
-  plugins: [tsconfigPaths()],
+  plugins: [tsconfigPaths(), cloudflare()],
+
   test: {
     setupFiles: ["./src/lib/test/setup/database.ts"],
     poolOptions: {
       workers: {
-        wrangler: { configPath: "./wrangler.json" },
         miniflare: {
           bindings: { TEST_MIGRATIONS: migrations },
         },

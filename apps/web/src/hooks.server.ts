@@ -44,7 +44,7 @@ const initiateLocals: Handle = async ({ event, resolve }) => {
 
   event.locals = {
     api: createClient({
-      prefix: "http://localhost:5173/api",
+      prefix: `${event.url.origin}/api`,
       fetch: event.platform?.env.API.fetch,
       headers: {
         cookie: cookieHeader,

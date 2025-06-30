@@ -7,8 +7,10 @@
     "dev": "pnpm --filter @app/api --parallel \"/^dev:.*/\"",
     "dev:tsc": "tsc -w -p ./tsconfig.build.json",
     "dev:tsc-alias": "tsc-alias -w -p ./tsconfig.build.json",
-    "dev:wrangler": "wrangler dev",
-    "build": "tsc -p ./tsconfig.build.json && tsc-alias -p ./tsconfig.build.json",
+    "dev:vite": "vite dev --host",
+    "build": "pnpm --filter @app/api --parallel \"/^build:.*/\"",
+    "build:tsc": "tsc -p ./tsconfig.build.json && tsc-alias -p ./tsconfig.build.json",
+    "build:vite": "vite build",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings src/worker-env.d.ts",
     "lint": "eslint .",
@@ -28,6 +30,7 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.7.5",
     "@cloudflare/vitest-pool-workers": "^0.8.47",
     "@package/eslint": "workspace:*",
     "@package/typescript": "workspace:*",
@@ -36,6 +39,7 @@
     "eslint": "^9.29.0",
     "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3",
+    "vite": "^6.3.5",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
     "wrangler": "^4.22.0"
@@ -43,14 +47,14 @@
   "exports": {
     "./client": {
       "import": {
-        "types": "./dist/client.d.ts",
-        "default": "./dist/client.js"
+        "types": "./dist/tsc/lib/client/index.d.ts",
+        "default": "./dist/tsc/lib/client/index.js"
       }
     },
     "./schema": {
       "import": {
-        "types": "./dist/lib/database/schema/*.d.ts",
-        "default": "./dist/lib/database/schema/*.js"
+        "types": "./dist/tsc/lib/database/schema/*.d.ts",
+        "default": "./dist/tsc/lib/database/schema/*.js"
       }
     }
   }

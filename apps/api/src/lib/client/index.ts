@@ -1,13 +1,14 @@
-import type { ClientContext } from "$lib/client/types/context";
-
 import { createAuthClient } from "$routes/auth/index.client";
+
+import type { ClientContext } from "./types/context";
 
 const createClient = (context?: Partial<ClientContext>) => {
   const defaultContext: ClientContext = {
-    fetch: globalThis.fetch,
+    fetch: fetch,
   };
-
   const mergedContext: ClientContext = { ...defaultContext, ...context };
+
+  mergedContext.fetch.bind(this);
 
   const customFetch: typeof fetch = (input, init = {}) => {
     const mergedHeaders: HeadersInit = {
