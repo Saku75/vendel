@@ -4,7 +4,7 @@ import { handleApiResponse } from "$lib/client/utils/handle-api-response";
 
 import { WhoAmIResponse } from "./who-am-i";
 
-const createWhoAmIClient = createClientRoute((context, fetch) => {
+const createWhoAmIClient = createClientRoute(({ context, fetch }) => {
   return async function whoAmI() {
     const res = await fetch(getClientUrl(context, "/auth/whoami"));
 

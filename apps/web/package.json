@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev --host",
     "build": "vite build",
-    "deploy": "wrangler deploy --minify",
+    "deploy": "wrangler deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings src/worker-env.d.ts",
     "lint": "eslint .",
     "prepare": "svelte-kit sync || echo ''"

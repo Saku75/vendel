@@ -13,7 +13,8 @@
     },
     "build": {
       "dependsOn": ["cf-typegen", "^build"],
-      "outputs": ["./dist/**", "./.svelte-kit/**"]
+      "outputs": ["./dist/**", "./.svelte-kit/**"],
+      "env": ["CLOUDFLARE_ENV"]
     },
 
     "deploy": {
@@ -29,10 +30,10 @@
       "dependsOn": ["build"]
     },
     "test": {
-      "dependsOn": ["build"]
+      "dependsOn": ["^build"]
     },
     "test:watch": {
-      "dependsOn": ["build"]
+      "dependsOn": ["^build"]
     },
 
     "db:apply": {

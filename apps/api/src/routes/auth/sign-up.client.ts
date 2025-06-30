@@ -11,7 +11,7 @@ import type {
 } from "./sign-up";
 import { scrypt } from "./utils/scrypt";
 
-const createSignUpClient = createClientRoute((context, fetch) => {
+const createSignUpClient = createClientRoute(({ context, fetch }) => {
   return async function signUp(data: {
     firstName: string;
     middleName?: string;

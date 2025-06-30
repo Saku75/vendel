@@ -5,11 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter @app/api --parallel \"/^dev:.*/\"",
-    "dev:tsc": "tsc -w -p ./tsconfig.build.json",
-    "dev:tsc-alias": "tsc-alias -w -p ./tsconfig.build.json",
+    "dev:tsup": "tsup --watch",
     "dev:wrangler": "wrangler dev",
-    "build": "tsc -p ./tsconfig.build.json && tsc-alias -p ./tsconfig.build.json",
-    "deploy": "wrangler deploy --minify",
+    "build": "tsup",
+    "deploy": "wrangler deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings src/worker-env.d.ts",
     "lint": "eslint .",
     "test:watch": "vitest",
@@ -35,6 +34,7 @@
     "drizzle-kit": "^0.31.2",
     "eslint": "^9.29.0",
     "tsc-alias": "^1.8.16",
+    "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
@@ -43,8 +43,8 @@
   "exports": {
     "./client": {
       "import": {
-        "types": "./dist/client.d.ts",
-        "default": "./dist/client.js"
+        "types": "./dist/lib/client/index.d.ts",
+        "default": "./dist/lib/client/index.js"
       }
     },
     "./schema": {
