@@ -8,7 +8,6 @@ export default defineConfig({
   ],
 
   outDir: "dist",
-  clean: true,
 
   target: "esnext",
   format: ["esm"],
