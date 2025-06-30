@@ -11,7 +11,7 @@ import type {
 } from "./sign-in";
 import { scrypt } from "./utils/scrypt";
 
-const createSignInClient = createClientRoute((context, fetch) => {
+const createSignInClient = createClientRoute(({ context, fetch }) => {
   return async function signIn(data: {
     email: string;
     password: string;

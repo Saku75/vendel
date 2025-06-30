@@ -8,6 +8,9 @@
   "workers_dev": false,
   "preview_urls": false,
 
+  "no_bundle": false,
+  "minify": true,
+
   "main": "./src/main.ts",
   "assets": {
     "binding": "ASSETS",

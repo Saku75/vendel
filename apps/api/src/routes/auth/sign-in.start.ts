@@ -1,7 +1,7 @@
 import { bytesToHex, randomBytes } from "@noble/hashes/utils";
 import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
-import { z } from "zod";
+import { type z, object, ZodIssueCode } from "zod";
 
 import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
@@ -17,7 +17,7 @@ import {
   SignInStartResponse,
 } from "./sign-in";
 
-const signInStartSchema = z.object({
+const signInStartSchema = object({
   email: emailValidator,
 
   captcha: captchaValidator,
@@ -31,7 +31,7 @@ const signInStartRoute = app().post("/", async (c) => {
     .superRefine(async (values, context) => {
       if (!(await c.var.captcha.verify(values.captcha, captchaIdempotencyKey)))
         context.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: ZodIssueCode.custom,
           message: ValidatorCode.Invalid,
           path: ["captcha"],
         });

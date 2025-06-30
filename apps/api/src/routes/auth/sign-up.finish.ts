@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { z } from "zod";
+import { type z, object, ZodIssueCode } from "zod";
 
 import { MailTemplate } from "@package/mail";
 import { TokenPurpose } from "@package/token";
@@ -16,7 +16,7 @@ import { SignUpSession, signUpSessionKey } from "./sign-up";
 import { scrypt } from "./utils/scrypt";
 import { setAuthTokens } from "./utils/tokens";
 
-const signUpFinishSchema = z.object({
+const signUpFinishSchema = object({
   sessionId: idValidator,
 
   passwordClientHash: passwordHashValidator,
@@ -35,7 +35,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
     .superRefine(async (values, context) => {
       if (!session) {
         context.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: ZodIssueCode.custom,
           message: ValidatorCode.NotFound,
           path: ["sessionId"],
         });
@@ -49,7 +49,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
         ))
       )
         context.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: ZodIssueCode.custom,
           message: ValidatorCode.Invalid,
           path: ["captcha"],
         });
