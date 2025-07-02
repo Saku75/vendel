@@ -3,8 +3,8 @@
 
   import NavigationButton from "$lib/components/navigation/navigation-button.svelte";
   import Navigation from "$lib/components/navigation/navigation.svelte";
-  import ThemeButton from "$lib/components/theme-selector/theme-button.svelte";
-  import Theme from "$lib/components/theme-selector/theme.svelte";
+  import ThemeButton from "$lib/components/theme/theme-button.svelte";
+  import Theme from "$lib/components/theme/theme.svelte";
   import WidthLimiter from "$lib/components/utils/width-limiter.svelte";
   import { LayoutMenuContent } from "$lib/enums/layout/menu/content";
   import { LayoutSize } from "$lib/enums/layout/size";
