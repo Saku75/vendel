@@ -1,6 +1,6 @@
 <script lang="ts">
   import Footer from "$lib/components/layout/footer.svelte";
-  import Header from "$lib/components/layout/header/header.svelte";
+  import Header from "$lib/components/layout/header.svelte";
   import { authStore } from "$lib/stores/auth.svelte";
   import { configStore } from "$lib/stores/config.svelte";
   import { layoutStore } from "$lib/stores/layout.svelte";

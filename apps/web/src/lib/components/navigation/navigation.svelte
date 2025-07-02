@@ -1,11 +1,12 @@
 <script lang="ts">
-  import HeaderLink from "$lib/components/layout/header/header-link.svelte";
   import {
     type NavigationItem,
     navigationStore,
   } from "$lib/stores/navigation.svelte";
   import cn from "$lib/utils/cn";
 
+  import { InteractionEmphasis } from "../common/interactions/enums/emphasis";
+  import Link from "../common/interactions/link.svelte";
   import Authenticated from "../utils/auth/authenticated.svelte";
   import Unauthenticated from "../utils/auth/unauthenticated.svelte";
 
@@ -18,7 +19,12 @@
 
 {#snippet navigationItem({ text, href, target, Icon }: NavigationItem)}
   <li class="contents">
-    <HeaderLink {href} {target} class="h-10 gap-1">
+    <Link
+      emphasis={InteractionEmphasis.Header}
+      {href}
+      {target}
+      class="h-10 w-auto gap-1"
+    >
       {#if Icon}
         <Icon
           class={cn({
@@ -28,7 +34,7 @@
         />
       {/if}
       {text}
-    </HeaderLink>
+    </Link>
   </li>
 {/snippet}
 
