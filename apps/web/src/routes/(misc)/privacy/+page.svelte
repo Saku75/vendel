@@ -1,3 +1,7 @@
+<script>
+  import Link from "$lib/components/common/interactions/link.svelte";
+</script>
+
 <main class="mx-auto flex h-full w-full max-w-3xl flex-col gap-6 px-2">
   <div class="flex flex-col gap-2">
     <h1 class="font-sans text-3xl font-bold">
@@ -69,8 +73,8 @@
       Hvis du har spørgsmål om dine data eller denne politik, er du altid
       velkommen til at kontakte os på:
     </p>
-    <a href="mailto:privay@support.vendel.dk" class="max-w-fit underline">
+    <Link href="mailto:privay@support.vendel.dk">
       privacy@support.vendel.dk
-    </a>
+    </Link>
   </section>
 </main>

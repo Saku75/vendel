@@ -4,7 +4,8 @@
   import { LayoutTheme } from "$lib/enums/layout/theme";
   import { layoutStore } from "$lib/stores/layout.svelte";
 
-  import HeaderButton from "../layout/header/header-button.svelte";
+  import Button from "../common/interactions/button.svelte";
+  import { InteractionEmphasis } from "../common/interactions/enums/emphasis";
 
   type ThemeItem = {
     name: string;
@@ -34,8 +35,9 @@
 <ul class="flex flex-col gap-1">
   {#each themes as { name, theme, Icon } (theme)}
     <li class="contents">
-      <HeaderButton
-        class="h-10 gap-1"
+      <Button
+        emphasis={InteractionEmphasis.Header}
+        class="h-10 w-auto gap-1"
         onclick={() => (
           (layoutStore.theme = theme),
           (layoutStore.menu.open = false)
@@ -43,7 +45,7 @@
       >
         <Icon class="h-5.5 w-5.5" />
         {name}
-      </HeaderButton>
+      </Button>
     </li>
   {/each}
 </ul>

@@ -9,7 +9,8 @@
   import { LayoutTheme } from "$lib/enums/layout/theme";
   import { layoutStore } from "$lib/stores/layout.svelte";
 
-  import HeaderButton from "../layout/header/header-button.svelte";
+  import Button from "../common/interactions/button.svelte";
+  import { InteractionEmphasis } from "../common/interactions/enums/emphasis";
 
   $effect(() => {
     if (layoutStore.theme != LayoutTheme.System) {
@@ -40,7 +41,8 @@
   });
 </script>
 
-<HeaderButton
+<Button
+  emphasis={InteractionEmphasis.Header}
   class="w-10 justify-center justify-self-end p-0"
   aria-label={layoutStore.menu.open ? "Luk tema menu" : "Åben tema menu"}
   onclick={() => layoutStore.menu.toggle(LayoutMenuContent.Theme)}
@@ -58,4 +60,4 @@
       <Moon class="h-7 w-7" />
     {/if}
   {/if}
-</HeaderButton>
+</Button>

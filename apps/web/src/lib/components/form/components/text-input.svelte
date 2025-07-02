@@ -111,7 +111,7 @@
   </span>
 
   <input
-    class="rounded-full bg-inherit px-4"
+    class="rounded-[1.25rem] bg-inherit px-4"
     id={fieldId}
     type={fieldContext.type}
     required={fieldContext.required}

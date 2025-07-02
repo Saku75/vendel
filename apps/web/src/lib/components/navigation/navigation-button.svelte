@@ -5,10 +5,12 @@
   import { LayoutMenuContent } from "$lib/enums/layout/menu/content";
   import { layoutStore } from "$lib/stores/layout.svelte";
 
-  import HeaderButton from "../layout/header/header-button.svelte";
+  import Button from "../common/interactions/button.svelte";
+  import { InteractionEmphasis } from "../common/interactions/enums/emphasis";
 </script>
 
-<HeaderButton
+<Button
+  emphasis={InteractionEmphasis.Header}
   class="w-10 justify-center justify-self-end p-0"
   aria-label={layoutStore.menu.open
     ? "Luk navigations menu"
@@ -20,4 +22,4 @@
   {:else}
     <Menu class="h-7 w-7" />
   {/if}
-</HeaderButton>
+</Button>
