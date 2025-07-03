@@ -3,13 +3,13 @@ import { base64urlnopad } from "@scure/base";
 import { createClientRoute } from "$lib/client/create-route";
 import { getClientUrl } from "$lib/client/utils/get-url";
 import { handleApiResponse } from "$lib/client/utils/handle-api-response";
+import { scrypt } from "$lib/utils/scrypt";
 
 import type {
   SignUpFinishRequest,
   SignUpStartRequest,
   SignUpStartResponse,
 } from "./sign-up";
-import { scrypt } from "./utils/scrypt";
 
 const createSignUpClient = createClientRoute(({ context, fetch }) => {
   return async function signUp(data: {

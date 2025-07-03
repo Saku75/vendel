@@ -11,10 +11,10 @@ import { passwordHashValidator } from "@package/validators/password";
 import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
+import { signIn } from "$lib/utils/auth/flows/sign-in";
+import { scrypt } from "$lib/utils/scrypt";
 
-import { SignUpSession, signUpSessionKey } from "./sign-up";
-import { scrypt } from "./utils/scrypt";
-import { setAuthTokens } from "./utils/tokens";
+import { getSignUpSession, unsetSignUpSession } from "./sign-up";
 
 const signUpFinishSchema = object({
   sessionId: idValidator,
@@ -26,10 +26,7 @@ const signUpFinishSchema = object({
 
 const signUpFinishRoute = app().post("/", async (c) => {
   const body = await c.req.json<z.infer<typeof signUpFinishSchema>>();
-  const session = await c.env.KV.get<SignUpSession>(
-    signUpSessionKey(body.sessionId),
-    { type: "json" },
-  );
+  const session = await getSignUpSession(c, body.sessionId);
 
   const parsedBody = await signUpFinishSchema
     .superRefine(async (values, context) => {
@@ -85,7 +82,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
         firstName: users.firstName,
         email: users.email,
       }),
-    c.env.KV.delete(signUpSessionKey(data.sessionId)),
+    unsetSignUpSession(c, data.sessionId),
   ]);
   const { id: userId, firstName, email } = user[0];
 
@@ -110,7 +107,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
     },
   });
 
-  await setAuthTokens(c, userId, null);
+  await signIn(c, { userId, userRole: null });
 
   return c.json(
     {

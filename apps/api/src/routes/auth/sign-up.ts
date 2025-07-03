@@ -1,6 +1,7 @@
 import { type z } from "zod";
 
 import { app } from "$lib/server";
+import { useKV } from "$lib/utils/kv";
 
 import { signUpFinishRoute, signUpFinishSchema } from "./sign-up.finish";
 import { signUpStartRoute, signUpStartSchema } from "./sign-up.start";
@@ -23,11 +24,12 @@ type SignUpSession = {
   captchaIdempotencyKey: string;
 };
 
-function signUpSessionKey(sessionId: string) {
-  return `auth:sign-up:session:${sessionId}`;
-}
+const [getSignUpSession, setSignUpSession, unsetSignUpSession] =
+  useKV<SignUpSession>({
+    prefix: "auth:sign-up",
+  });
 
-export { signUpRoutes, signUpSessionKey };
+export { getSignUpSession, setSignUpSession, signUpRoutes, unsetSignUpSession };
 export type {
   SignUpFinishRequest,
   SignUpSession,
