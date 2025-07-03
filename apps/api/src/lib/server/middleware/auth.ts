@@ -1,8 +1,8 @@
 import { createMiddleware } from "hono/factory";
 
+import { HonoEnv } from "$lib/server";
 import { AuthSessionUser } from "$lib/types/auth/session";
 import { AuthTokens } from "$lib/types/auth/tokens";
-import { HonoEnv } from "$lib/utils/app";
 
 import { getAuthTokens, removeAuthTokens } from "$routes/auth/utils/tokens";
 

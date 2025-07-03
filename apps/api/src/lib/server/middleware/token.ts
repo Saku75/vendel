@@ -3,7 +3,7 @@ import { createMiddleware } from "hono/factory";
 
 import { Token } from "@package/token";
 
-import { HonoEnv } from "$lib/utils/app";
+import { HonoEnv } from "$lib/server";
 
 const tokenMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
   const { TOKEN_ENCRYPTION_KEY, TOKEN_SIGNING_KEY } = c.env;

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@noble/hashes": "^1.8.0",
+    "@package/captcha": "workspace:*",
     "@package/mail": "workspace:*",
     "@package/token": "workspace:*",
     "@package/validators": "workspace:*",
@@ -49,8 +50,8 @@
     },
     "./schema": {
       "import": {
-        "types": "./dist/lib/database/schema/*.d.ts",
-        "default": "./dist/lib/database/schema/*.js"
+        "types": "./dist/lib/server/database/schema/*.d.ts",
+        "default": "./dist/lib/server/database/schema/*.js"
       }
     }
   }

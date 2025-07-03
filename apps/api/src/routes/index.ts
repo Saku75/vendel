@@ -1,5 +1,5 @@
+import { app } from "$lib/server";
 import { Ok } from "$lib/types/result";
-import { app } from "$lib/utils/app";
 
 import { authRoutes } from "./auth";
 

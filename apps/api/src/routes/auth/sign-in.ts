@@ -1,6 +1,6 @@
 import { type z } from "zod";
 
-import { app } from "$lib/utils/app";
+import { app } from "$lib/server";
 
 import { signInFinishRoute, signInFinishSchema } from "./sign-in.finish";
 import { signInStartRoute, signInStartSchema } from "./sign-in.start";

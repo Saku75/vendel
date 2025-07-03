@@ -6,9 +6,9 @@ import { captchaValidator } from "@package/validators/captcha";
 import { idValidator } from "@package/validators/id";
 import { passwordHashValidator } from "@package/validators/password";
 
-import { users } from "$lib/database/schema/users";
+import { app } from "$lib/server";
+import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
-import { app } from "$lib/utils/app";
 
 import { SignInSession, signInSessionKey } from "./sign-in";
 import { scrypt } from "./utils/scrypt";

@@ -12,9 +12,9 @@ import {
   middleNameValidator,
 } from "@package/validators/name";
 
-import { users } from "$lib/database/schema/users";
+import { app } from "$lib/server";
+import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
-import { app } from "$lib/utils/app";
 
 import {
   SignUpSession,

@@ -1,8 +1,9 @@
 import { getConnInfo } from "hono/cloudflare-workers";
 import { createMiddleware } from "hono/factory";
 
-import { HonoEnv } from "$lib/utils/app";
-import { Captcha } from "$lib/utils/captcha";
+import { Captcha } from "@package/captcha";
+
+import { HonoEnv } from "$lib/server";
 
 const captchaMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
   c.set(
