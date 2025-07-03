@@ -24,21 +24,21 @@
     "@scure/base": "^1.2.6",
     "drizzle-orm": "^0.44.2",
     "hono": "^4.8.3",
-    "zod": "^3.25.67"
+    "zod": "^3.25.71"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.8.47",
+    "@cloudflare/vitest-pool-workers": "^0.8.49",
     "@package/eslint": "workspace:*",
     "@package/typescript": "workspace:*",
-    "@types/node": "^24.0.4",
-    "drizzle-kit": "^0.31.2",
-    "eslint": "^9.29.0",
+    "@types/node": "^24.0.10",
+    "drizzle-kit": "^0.31.4",
+    "eslint": "^9.30.1",
     "tsc-alias": "^1.8.16",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
-    "wrangler": "^4.22.0"
+    "wrangler": "^4.23.0"
   },
   "exports": {
     "./client": {
