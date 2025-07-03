@@ -57,7 +57,7 @@
           "binding": "DB",
           "database_name": "vendel-dev",
           "database_id": "9680e4a3-baeb-48db-a1b5-42d0e129fc8a",
-          "migrations_dir": "./src/lib/database/migrations"
+          "migrations_dir": "./src/lib/server/database/migrations"
         }
       ],
 
