@@ -10,8 +10,8 @@
   "devDependencies": {
     "@package/eslint": "workspace:*",
     "@package/typescript": "workspace:*",
-    "@types/node": "^24.0.4",
-    "eslint": "^9.29.0",
+    "@types/node": "^24.0.10",
+    "eslint": "^9.30.1",
     "resend": "^4.6.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
