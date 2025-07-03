@@ -12,6 +12,8 @@ concurrency:
 jobs:
   call-ci:
     uses: ./.github/workflows/ci.yaml
+    permissions:
+      contents: read
     secrets:
       TOKEN_ENCRYPTION_KEY: ${{ secrets.TOKEN_ENCRYPTION_KEY }}
       TOKEN_SIGNING_KEY: ${{ secrets.TOKEN_SIGNING_KEY }}
@@ -21,6 +23,8 @@ jobs:
   deploy-prod:
     needs: call-ci
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
