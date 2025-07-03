@@ -4,7 +4,8 @@ export default defineConfig({
   entry: [
     "./src/main.ts",
     "./src/lib/client/index.ts",
-    "./src/lib/server/database/schema/*",
+    "./src/lib/enums/index.ts",
+    "./src/lib/types/index.ts",
   ],
 
   outDir: "dist",
