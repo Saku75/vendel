@@ -4,7 +4,7 @@ import { AuthSessionUser } from "$lib/types/auth/session";
 import { AuthTokens } from "$lib/types/auth/tokens";
 import { HonoEnv } from "$lib/utils/app";
 
-import { getAuthTokens } from "$routes/auth/utils/tokens";
+import { getAuthTokens, removeAuthTokens } from "$routes/auth/utils/tokens";
 
 function authSessionUserKey(sessionId: string) {
   return `auth:session:${sessionId}`;
@@ -19,11 +19,14 @@ const authMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
       { type: "json" },
     );
 
-    if (authSessionUser)
+    if (authSessionUser) {
       c.set("auth", {
         tokens: authTokens as AuthTokens,
         user: authSessionUser,
       });
+    } else {
+      removeAuthTokens(c);
+    }
   }
 
   await next();
