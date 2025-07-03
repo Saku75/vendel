@@ -3,12 +3,12 @@ import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
-import { authMiddleware } from "$lib/middleware/auth";
-import { captchaMiddleware } from "$lib/middleware/captcha";
-import { databaseMiddleware } from "$lib/middleware/database";
-import { mailMiddleware } from "$lib/middleware/mail";
-import { tokenMiddleware } from "$lib/middleware/token";
-import { app } from "$lib/utils/app";
+import { app } from "$lib/server";
+import { authMiddleware } from "$lib/server/middleware/auth";
+import { captchaMiddleware } from "$lib/server/middleware/captcha";
+import { databaseMiddleware } from "$lib/server/middleware/database";
+import { mailMiddleware } from "$lib/server/middleware/mail";
+import { tokenMiddleware } from "$lib/server/middleware/token";
 
 import { routes } from "./routes";
 

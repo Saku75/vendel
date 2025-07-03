@@ -1,4 +1,4 @@
-import { app } from "$lib/utils/app";
+import { app } from "$lib/server";
 
 import { signInRoutes } from "./sign-in";
 import { signUpRoutes } from "./sign-up";

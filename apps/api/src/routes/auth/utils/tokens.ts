@@ -5,17 +5,17 @@ import { CookieOptions } from "hono/utils/cookie";
 
 import { TokenPurpose } from "@package/token";
 
-import { refreshTokenFamilies } from "$lib/database/schema/refresh-token-families";
-import { refreshTokens } from "$lib/database/schema/refresh-tokens";
 import { AuthRole } from "$lib/enums/auth/role";
-import { authSessionUserKey } from "$lib/middleware/auth";
+import { HonoEnv } from "$lib/server";
+import { refreshTokenFamilies } from "$lib/server/database/schema/refresh-token-families";
+import { refreshTokens } from "$lib/server/database/schema/refresh-tokens";
+import { authSessionUserKey } from "$lib/server/middleware/auth";
 import { AuthSessionUser } from "$lib/types/auth/session";
 import {
   AuthTokenData,
   AuthTokens,
   RefreshTokenData,
 } from "$lib/types/auth/tokens";
-import { HonoEnv } from "$lib/utils/app";
 
 function cookieName(
   name: string,

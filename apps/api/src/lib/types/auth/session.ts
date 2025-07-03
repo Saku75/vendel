@@ -1,4 +1,4 @@
-import { users } from "$lib/database/schema/users";
+import { users } from "$lib/server/database/schema/users";
 
 import { AuthTokens } from "./tokens";
 

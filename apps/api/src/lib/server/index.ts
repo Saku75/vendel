@@ -2,13 +2,12 @@ import { DrizzleD1Database } from "drizzle-orm/d1";
 import { Hono } from "hono";
 import { HonoOptions } from "hono/hono-base";
 
+import { Captcha } from "@package/captcha";
 import { Mail } from "@package/mail";
 import { Token } from "@package/token";
 
 import { AuthSession } from "$lib/types/auth/session";
 import { Err } from "$lib/types/result";
-
-import { Captcha } from "./captcha";
 
 type HonoEnv = {
   Bindings: CloudflareBindings;

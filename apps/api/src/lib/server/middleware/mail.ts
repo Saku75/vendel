@@ -2,7 +2,7 @@ import { createMiddleware } from "hono/factory";
 
 import { Mail } from "@package/mail";
 
-import { HonoEnv } from "$lib/utils/app";
+import { HonoEnv } from "$lib/server";
 
 const mailMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
   const { RESEND_API_KEY, CORS_ORIGINS } = c.env;
