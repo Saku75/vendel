@@ -1,4 +1,4 @@
-import type { WhoAmIResponse } from "@app/api/client";
+import type { WhoAmIResponse } from "@app/api/types";
 
 type AuthStore = { auth?: WhoAmIResponse };
 

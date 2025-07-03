@@ -48,10 +48,16 @@
         "default": "./dist/lib/client/index.js"
       }
     },
-    "./schema": {
+    "./enums": {
       "import": {
-        "types": "./dist/lib/server/database/schema/*.d.ts",
-        "default": "./dist/lib/server/database/schema/*.js"
+        "types": "./dist/lib/enums/index.d.ts",
+        "default": "./dist/lib/enums/index.js"
+      }
+    },
+    "./types": {
+      "import": {
+        "types": "./dist/lib/types/index.d.ts",
+        "default": "./dist/lib/types/index.js"
       }
     }
   }

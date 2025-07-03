@@ -1,7 +1,7 @@
 import { Gift, LogIn, LogOut, UserPlus, type Icon } from "@lucide/svelte";
 import type { HTMLAttributeAnchorTarget } from "svelte/elements";
 
-import type { AuthRole } from "@app/api/client";
+import type { AuthRole } from "@app/api/enums";
 
 type ShowWhenUnauthenticated = {
   authenticated: false;

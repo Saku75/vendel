@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  import type { AuthRole } from "@app/api/client";
+  import type { AuthRole } from "@app/api/enums";
 
   import { authStore } from "$lib/stores/auth.svelte";
 
