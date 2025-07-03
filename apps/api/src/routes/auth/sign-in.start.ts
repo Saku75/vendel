@@ -11,11 +11,7 @@ import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
 
-import {
-  SignInSession,
-  signInSessionKey,
-  SignInStartResponse,
-} from "./sign-in";
+import { setSignInSession, SignInStartResponse } from "./sign-in";
 
 const signInStartSchema = object({
   email: emailValidator,
@@ -58,13 +54,14 @@ const signInStartRoute = app().post("/", async (c) => {
   const sessionId = createId();
 
   if (!user.length) {
-    await c.env.KV.put(
-      signInSessionKey(sessionId),
-      JSON.stringify({
+    await setSignInSession(
+      c,
+      sessionId,
+      {
         userExists: false,
         serverSalt: bytesToHex(randomBytes(32)),
         captchaIdempotencyKey,
-      } satisfies SignInSession),
+      },
       { expirationTtl: 60 },
     );
 
@@ -81,14 +78,15 @@ const signInStartRoute = app().post("/", async (c) => {
     );
   }
 
-  await c.env.KV.put(
-    signInSessionKey(sessionId),
-    JSON.stringify({
+  await setSignInSession(
+    c,
+    sessionId,
+    {
       userExists: true,
       userId: user[0].id,
       serverSalt: user[0].serverSalt,
       captchaIdempotencyKey,
-    } satisfies SignInSession),
+    },
     { expirationTtl: 60 },
   );
 

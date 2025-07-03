@@ -1,35 +1,37 @@
 import { createMiddleware } from "hono/factory";
 
+import { AuthStatus } from "$lib/enums";
 import { HonoEnv } from "$lib/server";
-import { AuthSessionUser } from "$lib/types/auth/session";
-import { AuthTokens } from "$lib/types/auth/tokens";
-
-import { getAuthTokens, removeAuthTokens } from "$routes/auth/utils/tokens";
-
-function authSessionUserKey(sessionId: string) {
-  return `auth:session:${sessionId}`;
-}
+import {
+  deleteAuthCookie,
+  deleteAuthRefreshCookie,
+  getAuthCookie,
+} from "$lib/utils/auth/cookies";
 
 const authMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
-  const authTokens = getAuthTokens(c);
+  const authCookie = getAuthCookie(c);
 
-  if (authTokens.auth) {
-    const authSessionUser = await c.env.KV.get<AuthSessionUser>(
-      authSessionUserKey(authTokens.auth.payload.data.authTokenId),
-      { type: "json" },
-    );
+  if (authCookie && authCookie.valid) {
+    const { refreshToken, user } = authCookie.payload.data;
 
-    if (authSessionUser) {
-      c.set("auth", {
-        tokens: authTokens as AuthTokens,
-        user: authSessionUser,
-      });
-    } else {
-      removeAuthTokens(c);
+    c.set("auth", {
+      status: authCookie.expired
+        ? AuthStatus.Expired
+        : AuthStatus.Authenticated,
+      authToken: { expiresAt: authCookie.payload.expiresAt },
+      refreshToken,
+      user,
+    });
+  } else {
+    if (authCookie && !authCookie.valid) {
+      deleteAuthCookie(c);
+      deleteAuthRefreshCookie(c);
     }
+
+    c.set("auth", { status: AuthStatus.Unauthenticated });
   }
 
   await next();
 });
 
-export { authMiddleware, authSessionUserKey };
+export { authMiddleware };

@@ -6,14 +6,14 @@ import { Captcha } from "@package/captcha";
 import { Mail } from "@package/mail";
 import { Token } from "@package/token";
 
-import { AuthSession } from "$lib/types/auth/session";
+import { Auth } from "$lib/types/auth";
 import { Err } from "$lib/types/result";
 
 type HonoEnv = {
   Bindings: CloudflareBindings;
 
   Variables: {
-    auth?: AuthSession;
+    auth: Auth;
     captcha: Captcha;
     database: DrizzleD1Database;
     token: Token;

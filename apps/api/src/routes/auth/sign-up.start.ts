@@ -16,11 +16,7 @@ import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
 
-import {
-  SignUpSession,
-  signUpSessionKey,
-  SignUpStartResponse,
-} from "./sign-up";
+import { setSignUpSession, SignUpStartResponse } from "./sign-up";
 
 const signUpStartSchema = object({
   firstName: firstNameValidator,
@@ -84,13 +80,14 @@ const signUpStartRoute = app().post("/", async (c) => {
 
   const sessionId = createId();
 
-  await c.env.KV.put(
-    signUpSessionKey(sessionId),
-    JSON.stringify({
+  await setSignUpSession(
+    c,
+    sessionId,
+    {
       userId,
       serverSalt,
       captchaIdempotencyKey,
-    } satisfies SignUpSession),
+    },
     { expirationTtl: 60 },
   );
 

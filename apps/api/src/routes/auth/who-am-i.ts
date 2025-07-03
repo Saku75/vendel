@@ -1,28 +1,26 @@
-import { eq, getTableColumns } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
+import { AuthStatus } from "$lib/enums";
 import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
+import { User } from "$lib/types";
 import { Err, Ok } from "$lib/types/result";
-
-import { removeAuthTokens } from "./utils/tokens";
+import { signOut } from "$lib/utils/auth/flows/sign-out";
 
 const whoAmIRoute = app();
 
 type WhoAmIResponse = {
   user: Omit<
-    typeof users.$inferSelect,
-    "password" | "clientSalt" | "serverSalt"
+    User,
+    "password" | "clientSalt" | "serverSalt" | "createdAt" | "updatedAt"
   >;
-  token: {
-    valid: boolean;
-    expired: boolean;
-
+  session: {
     expiresAt: number;
   };
 };
 
 whoAmIRoute.get("/", async (c) => {
-  if (!c.var.auth)
+  if (c.var.auth.status !== AuthStatus.Authenticated)
     return c.json(
       {
         ok: false,
@@ -32,16 +30,23 @@ whoAmIRoute.get("/", async (c) => {
       401,
     );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password, clientSalt, serverSalt, ...rest } = getTableColumns(users);
-
   const user = await c.var.database
-    .select({ ...rest })
+    .select({
+      id: users.id,
+      firstName: users.firstName,
+      middleName: users.middleName,
+      lastName: users.lastName,
+      email: users.email,
+      emailVerified: users.emailVerified,
+      role: users.role,
+      approved: users.approved,
+      approvedBy: users.approvedBy,
+    })
     .from(users)
     .where(eq(users.id, c.var.auth.user.id));
 
   if (!user.length) {
-    removeAuthTokens(c);
+    await signOut(c, c.var.auth.refreshToken.family);
 
     return c.json(
       {
@@ -58,10 +63,8 @@ whoAmIRoute.get("/", async (c) => {
     status: 200,
     data: {
       user: user[0],
-      token: {
-        valid: c.var.auth.tokens.auth.valid,
-        expired: c.var.auth.tokens.auth.expired,
-        expiresAt: c.var.auth.tokens.auth.payload.expiresAt,
+      session: {
+        expiresAt: c.var.auth.authToken.expiresAt,
       },
     },
   } satisfies Ok<WhoAmIResponse>);

@@ -1,12 +1,11 @@
-import { users } from "$lib/server/database/schema/users";
-
-import { AuthTokens } from "./tokens";
-
-type AuthSessionUser = Pick<typeof users.$inferSelect, "id" | "role">;
+import { AuthRefreshTokenData, AuthTokenData } from "./token";
 
 interface AuthSession {
-  tokens: AuthTokens;
-  user: AuthSessionUser;
+  refreshToken: AuthRefreshTokenData & {
+    used: boolean;
+  };
+
+  user: AuthTokenData["user"];
 }
 
-export type { AuthSession, AuthSessionUser };
+export { AuthSession };

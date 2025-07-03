@@ -9,10 +9,10 @@ import { passwordHashValidator } from "@package/validators/password";
 import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
+import { signIn } from "$lib/utils/auth/flows/sign-in";
+import { scrypt } from "$lib/utils/scrypt";
 
-import { SignInSession, signInSessionKey } from "./sign-in";
-import { scrypt } from "./utils/scrypt";
-import { setAuthTokens } from "./utils/tokens";
+import { getSignInSession, unsetSignInSession } from "./sign-in";
 
 const signInFinishSchema = object({
   sessionId: idValidator,
@@ -24,10 +24,7 @@ const signInFinishSchema = object({
 
 const signInFinishRoute = app().post("/", async (c) => {
   const body = await c.req.json<z.infer<typeof signInFinishSchema>>();
-  const session = await c.env.KV.get<SignInSession>(
-    signInSessionKey(body.sessionId),
-    { type: "json" },
-  );
+  const session = await getSignInSession(c, body.sessionId);
 
   const parsedBody = await signInFinishSchema
     .superRefine(async (values, context) => {
@@ -83,7 +80,7 @@ const signInFinishRoute = app().post("/", async (c) => {
             ),
           )
       : c.var.database.select({ id: users.id, role: users.role }).from(users),
-    c.env.KV.delete(signInSessionKey(data.sessionId)),
+    unsetSignInSession(c, data.sessionId),
   ]);
 
   if (!user.length || !session.userExists) {
@@ -108,7 +105,7 @@ const signInFinishRoute = app().post("/", async (c) => {
     );
   }
 
-  await setAuthTokens(c, user[0].id, user[0].role);
+  await signIn(c, { userId: user[0].id, userRole: user[0].role });
 
   return c.json(
     {
