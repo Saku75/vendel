@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  import type { AuthRole } from "@app/api/enums";
+  import { AuthStatus, type AuthRole } from "@app/api/enums";
 
   import { authStore } from "$lib/stores/auth.svelte";
 
@@ -14,14 +14,13 @@
   const { role, children }: Props = $props();
 
   const show = $derived.by(() => {
-    if (!authStore.auth) return false;
-    if (!role && authStore.auth) return true;
+    if (authStore.status === AuthStatus.Unauthenticated) return false;
+    if (!role && authStore.status === AuthStatus.Authenticated) return true;
 
-    if (role && !authStore.auth.user.role) return false;
+    if (role && !authStore.user!.role) return false;
     if (
       role &&
-      (role !== authStore.auth.user.role ||
-        !role.includes(authStore.auth.user.role))
+      (role !== authStore.user!.role || !role.includes(authStore.user!.role))
     )
       return false;
 

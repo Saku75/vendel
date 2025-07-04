@@ -16,6 +16,6 @@ export const load: LayoutServerLoad = async ({ platform, cookies, locals }) => {
       version: npm_package_version,
       turnstileSiteKey: platform!.env.TURNSTILE_SITE_KEY,
     },
-    auth: whoAmI.ok ? whoAmI.data : undefined,
+    whoAmI: whoAmI.ok ? whoAmI.data : undefined,
   };
 };
