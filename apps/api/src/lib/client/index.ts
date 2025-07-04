@@ -8,20 +8,25 @@ const createClient = (context?: Partial<ClientContext>) => {
   };
   const mergedContext: ClientContext = { ...defaultContext, ...context };
 
-  const customFetch: typeof fetch =
-    context?.headers && Object.keys(context.headers).length > 0
-      ? (input, init = {}) => {
-          const mergedHeaders: HeadersInit = {
-            ...context.headers,
-            ...(init.headers || {}),
-          };
+  const customFetch: typeof fetch = async (input, init = {}) => {
+    const mergedHeaders: HeadersInit = {
+      ...(context?.headers || {}),
+      ...(init.headers || {}),
+    };
 
-          return mergedContext.fetch(input, {
-            ...init,
-            headers: mergedHeaders,
-          });
-        }
-      : mergedContext.fetch;
+    const finalInit = {
+      ...init,
+      headers: mergedHeaders,
+    };
+
+    const res = await mergedContext.fetch(input, finalInit);
+
+    if (mergedContext.hooks?.afterRequest) {
+      await mergedContext.hooks.afterRequest(res, input, finalInit);
+    }
+
+    return res;
+  };
 
   return {
     auth: createAuthClient({ context: mergedContext, fetch: customFetch }),

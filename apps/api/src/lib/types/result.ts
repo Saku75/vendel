@@ -6,7 +6,7 @@ import {
 import { JSONValue } from "hono/utils/types";
 import { ZodIssue } from "zod";
 
-type Ok<T extends JSONValue = JSONValue> = {
+type Ok<T extends JSONValue | undefined = undefined> = {
   ok: true;
   status: SuccessStatusCode;
   message?: string;
@@ -20,6 +20,6 @@ type Err = {
   errors?: ZodIssue[];
 };
 
-type Result<T extends JSONValue = JSONValue> = Ok<T> | Err;
+type Result<T extends JSONValue | undefined = undefined> = Ok<T> | Err;
 
 export type { Err, Ok, Result };
