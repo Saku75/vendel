@@ -6,7 +6,7 @@ import { JSONValue } from "hono/utils/types";
 
 import type { Result } from "$lib/types/result";
 
-async function handleApiResponse<T extends JSONValue = JSONValue>(
+async function handleApiResponse<T extends JSONValue | undefined = undefined>(
   res: Response,
 ): Promise<Result<T>> {
   const contentType = res.headers.get("content-type") || "";
