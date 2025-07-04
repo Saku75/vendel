@@ -46,7 +46,7 @@ whoAmIRoute.get("/", async (c) => {
     .where(eq(users.id, c.var.auth.user.id));
 
   if (!user.length) {
-    await signOut(c, c.var.auth.refreshToken.family);
+    await signOut(c, { refreshTokenId: c.var.auth.refreshToken.id });
 
     return c.json(
       {
