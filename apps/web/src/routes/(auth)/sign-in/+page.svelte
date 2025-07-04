@@ -39,10 +39,10 @@
     }
 
     await Promise.all([
-      apiClient.auth
-        .whoAmI()
-        .then((value) => (authStore.auth = value.ok ? value.data : undefined)),
-      goto("/"),
+      apiClient.auth.whoAmI().then((res) => {
+        if (res.ok) authStore.setAuthenticated(res.data!);
+      }),
+      goto("/", { invalidateAll: true }),
     ]);
   }
 </script>

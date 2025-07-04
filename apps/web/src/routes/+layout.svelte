@@ -10,7 +10,11 @@
 
   const { data, children }: LayoutProps = $props();
 
-  authStore.auth = data.auth;
+  if (data.whoAmI) {
+    authStore.setAuthenticated(data.whoAmI);
+  } else {
+    authStore.setUnauthenticated();
+  }
 
   configStore.version = data.config.version;
   configStore.turnstileSiteKey = data.config.turnstileSiteKey;
