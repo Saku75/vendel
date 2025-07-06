@@ -23,7 +23,7 @@ const authMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
       user,
     });
   } else {
-    if (authCookie && !authCookie.valid) {
+    if ((authCookie && !authCookie.valid) || authCookie === null) {
       deleteAuthCookie(c);
       deleteAuthRefreshCookie(c);
     }

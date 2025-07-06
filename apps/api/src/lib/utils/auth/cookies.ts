@@ -62,7 +62,13 @@ function getAuthCookie(c: Context<HonoEnv>) {
 
   if (!cookie) return;
 
-  return c.var.token.read<AuthTokenData>(cookie);
+  try {
+    return c.var.token.read<AuthTokenData>(cookie);
+  } catch (error) {
+    console.error(error);
+    // Return null for malformed tokens, let the middleware handle it
+    return null;
+  }
 }
 function getAuthRefreshCookie(c: Context<HonoEnv>) {
   const hostname = getNormalizedHostname(c);
@@ -74,7 +80,13 @@ function getAuthRefreshCookie(c: Context<HonoEnv>) {
 
   if (!cookie) return;
 
-  return c.var.token.read<AuthRefreshTokenData>(cookie);
+  try {
+    return c.var.token.read<AuthRefreshTokenData>(cookie);
+  } catch (error) {
+    console.error(error);
+    // Return null for malformed tokens, let the middleware handle it
+    return null;
+  }
 }
 
 function deleteAuthCookie(c: Context<HonoEnv>) {

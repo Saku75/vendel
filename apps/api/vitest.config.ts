@@ -14,7 +14,10 @@ const migrations = await readD1Migrations(migrationsPath);
 export default defineWorkersConfig({
   plugins: [tsconfigPaths()],
   test: {
-    setupFiles: ["./src/lib/test/setup/database.ts"],
+    setupFiles: [
+      "./src/lib/test/setup/01-migrations.ts",
+      "./src/lib/test/setup/02-users.ts",
+    ],
     poolOptions: {
       workers: {
         wrangler: { configPath: "./wrangler.json" },
