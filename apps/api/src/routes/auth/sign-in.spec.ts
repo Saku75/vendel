@@ -1,12 +1,15 @@
+import { eq } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 
+import { refreshTokenFamilies } from "$lib/server/database/schema/refresh-token-families";
+import { TEST_USERS } from "$lib/test/fixtures/users";
+import { testDatabase } from "$lib/test/utils/database";
 import { testFetch } from "$lib/test/utils/fetch";
-import { TEST_USERS } from "$lib/test/setup/02-users";
 import { Err, Ok } from "$lib/types/result";
+
 import { SignInStartResponse } from "./sign-in";
 
 describe("Sign In", () => {
-
   describe("POST /auth/sign-in/start", () => {
     it("should return session details for existing user", async () => {
       const user = TEST_USERS.USER_ONE;
@@ -21,8 +24,8 @@ describe("Sign In", () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json() as Ok<SignInStartResponse>;
-      
+      const data = (await response.json()) as Ok<SignInStartResponse>;
+
       expect(data).toEqual({
         ok: true,
         status: 200,
@@ -46,8 +49,8 @@ describe("Sign In", () => {
       });
 
       expect(response.status).toBe(200);
-      const data = await response.json() as Ok<SignInStartResponse>;
-      
+      const data = (await response.json()) as Ok<SignInStartResponse>;
+
       expect(data).toEqual({
         ok: true,
         status: 200,
@@ -71,8 +74,8 @@ describe("Sign In", () => {
       });
 
       expect(response.status).toBe(400);
-      const data = await response.json() as Err;
-      
+      const data = (await response.json()) as Err;
+
       expect(data.ok).toBe(false);
       expect(data.status).toBe(400);
       expect(data.errors).toEqual(
@@ -85,7 +88,7 @@ describe("Sign In", () => {
             path: ["captcha"],
             message: expect.any(String),
           }),
-        ])
+        ]),
       );
     });
 
@@ -100,8 +103,8 @@ describe("Sign In", () => {
       });
 
       expect(response.status).toBe(400);
-      const data = await response.json() as Err;
-      
+      const data = (await response.json()) as Err;
+
       expect(data.ok).toBe(false);
       expect(data.errors).toEqual(
         expect.arrayContaining([
@@ -109,7 +112,7 @@ describe("Sign In", () => {
             path: ["captcha"],
             message: expect.any(String),
           }),
-        ])
+        ]),
       );
     });
   });
@@ -128,7 +131,7 @@ describe("Sign In", () => {
         }),
       });
 
-      const startData = await startResponse.json() as Ok<SignInStartResponse>;
+      const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
       // Finish sign-in
@@ -143,8 +146,8 @@ describe("Sign In", () => {
       });
 
       expect(finishResponse.status).toBe(200);
-      const finishData = await finishResponse.json() as Ok;
-      
+      const finishData = (await finishResponse.json()) as Ok;
+
       expect(finishData).toEqual({
         ok: true,
         status: 200,
@@ -157,8 +160,23 @@ describe("Sign In", () => {
         expect.arrayContaining([
           expect.stringContaining("localhost-auth="),
           expect.stringContaining("localhost-auth-refresh="),
-        ])
+        ]),
       );
+
+      // Verify refresh token family was created in database
+      const refreshTokenFamily = await testDatabase
+        .select()
+        .from(refreshTokenFamilies)
+        .where(eq(refreshTokenFamilies.userId, user.id))
+        .limit(1);
+
+      expect(refreshTokenFamily).toHaveLength(1);
+      expect(refreshTokenFamily[0]).toMatchObject({
+        userId: user.id,
+        invalidated: false,
+      });
+      expect(refreshTokenFamily[0].id).toBeDefined();
+      expect(refreshTokenFamily[0].createdAt).toBeDefined();
     });
 
     it("should reject sign-in with wrong password", async () => {
@@ -174,7 +192,7 @@ describe("Sign In", () => {
         }),
       });
 
-      const startData = await startResponse.json() as Ok<SignInStartResponse>;
+      const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
       // Finish sign-in with wrong password
@@ -189,8 +207,8 @@ describe("Sign In", () => {
       });
 
       expect(finishResponse.status).toBe(400);
-      const finishData = await finishResponse.json() as Err;
-      
+      const finishData = (await finishResponse.json()) as Err;
+
       expect(finishData.ok).toBe(false);
       expect(finishData.errors).toEqual(
         expect.arrayContaining([
@@ -202,7 +220,7 @@ describe("Sign In", () => {
             path: ["password"],
             message: "invalid",
           }),
-        ])
+        ]),
       );
     });
 
@@ -217,7 +235,7 @@ describe("Sign In", () => {
         }),
       });
 
-      const startData = await startResponse.json() as Ok<SignInStartResponse>;
+      const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
       // Try to finish sign-in
@@ -232,8 +250,8 @@ describe("Sign In", () => {
       });
 
       expect(finishResponse.status).toBe(400);
-      const finishData = await finishResponse.json() as Err;
-      
+      const finishData = (await finishResponse.json()) as Err;
+
       expect(finishData.ok).toBe(false);
       expect(finishData.errors).toEqual(
         expect.arrayContaining([
@@ -245,7 +263,7 @@ describe("Sign In", () => {
             path: ["password"],
             message: "invalid",
           }),
-        ])
+        ]),
       );
     });
 
@@ -261,8 +279,8 @@ describe("Sign In", () => {
       });
 
       expect(response.status).toBe(400);
-      const data = await response.json() as Err;
-      
+      const data = (await response.json()) as Err;
+
       expect(data.ok).toBe(false);
       expect(data.status).toBe(400);
       expect(data.errors).toEqual(
@@ -272,7 +290,7 @@ describe("Sign In", () => {
             message: "not-found",
             path: ["sessionId"],
           }),
-        ])
+        ]),
       );
     });
 
@@ -289,7 +307,7 @@ describe("Sign In", () => {
         }),
       });
 
-      const startData = await startResponse.json() as Ok<SignInStartResponse>;
+      const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
       // Try to finish with invalid password hash format
@@ -304,8 +322,8 @@ describe("Sign In", () => {
       });
 
       expect(finishResponse.status).toBe(400);
-      const finishData = await finishResponse.json() as Err;
-      
+      const finishData = (await finishResponse.json()) as Err;
+
       expect(finishData.ok).toBe(false);
       expect(finishData.errors).toEqual(
         expect.arrayContaining([
@@ -313,7 +331,7 @@ describe("Sign In", () => {
             path: ["passwordClientHash"],
             message: "invalid-format",
           }),
-        ])
+        ]),
       );
     });
 
@@ -330,7 +348,7 @@ describe("Sign In", () => {
         }),
       });
 
-      const startData = await startResponse.json() as Ok<SignInStartResponse>;
+      const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
       // Successful sign-in
@@ -356,15 +374,15 @@ describe("Sign In", () => {
       });
 
       expect(secondFinishResponse.status).toBe(400);
-      const secondFinishData = await secondFinishResponse.json() as Err;
-      
+      const secondFinishData = (await secondFinishResponse.json()) as Err;
+
       expect(secondFinishData.errors).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             path: ["sessionId"],
             message: "not-found",
           }),
-        ])
+        ]),
       );
     });
 
@@ -381,7 +399,7 @@ describe("Sign In", () => {
         }),
       });
 
-      const startData = await startResponse.json() as Ok<SignInStartResponse>;
+      const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
       // Failed sign-in
@@ -407,15 +425,15 @@ describe("Sign In", () => {
       });
 
       expect(secondFinishResponse.status).toBe(400);
-      const secondFinishData = await secondFinishResponse.json() as Err;
-      
+      const secondFinishData = (await secondFinishResponse.json()) as Err;
+
       expect(secondFinishData.errors).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             path: ["sessionId"],
             message: "not-found",
           }),
-        ])
+        ]),
       );
     });
   });

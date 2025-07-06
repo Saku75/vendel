@@ -28,6 +28,7 @@ logs/
 *.log
 
 # Misc
+.claude
 .DS_Store
 Thumbs.db
 *.pem

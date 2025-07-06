@@ -1,7 +1,10 @@
+import { eq } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 
+import { users } from "$lib/server/database/schema/users";
+import { TEST_USERS } from "$lib/test/fixtures/users";
+import { testDatabase } from "$lib/test/utils/database";
 import { testFetch } from "$lib/test/utils/fetch";
-import { TEST_USERS } from "$lib/test/setup/02-users";
 import { Err, Ok } from "$lib/types/result";
 
 import { SignUpStartResponse } from "./sign-up";
@@ -166,6 +169,25 @@ describe("Sign Up", () => {
           expect.stringContaining("localhost-auth-refresh="),
         ]),
       );
+
+      // Verify user was created in database
+      const createdUser = await testDatabase
+        .select()
+        .from(users)
+        .where(eq(users.email, "alice.johnson@example.com"))
+        .limit(1);
+
+      expect(createdUser).toHaveLength(1);
+      expect(createdUser[0]).toMatchObject({
+        firstName: "Alice",
+        lastName: "Johnson",
+        email: "alice.johnson@example.com",
+        emailVerified: false, // Should be false initially
+        approved: false, // Should be false initially
+      });
+      expect(createdUser[0].password).toBeDefined();
+      expect(createdUser[0].clientSalt).toBeDefined();
+      expect(createdUser[0].serverSalt).toBeDefined();
     });
 
     it("should reject invalid session ID", async () => {
