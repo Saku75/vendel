@@ -12,13 +12,15 @@ import type {
 } from "./sign-in";
 
 const createSignInClient = createClientRoute(({ context, fetch }) => {
-  return async function signIn(data: {
+  return async function signIn({
+    email,
+    password,
+    captcha,
+  }: {
     email: string;
     password: string;
     captcha: string;
   }) {
-    const { email, password, captcha } = data;
-
     const startRes = await fetch(getClientUrl(context, "/auth/sign-in/start"), {
       method: "post",
       body: JSON.stringify({ email, captcha } satisfies SignInStartRequest),

@@ -10,6 +10,7 @@ import { passwordHashValidator } from "@package/validators/password";
 
 import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
+import { ConfirmEmailTokenData } from "$lib/types/auth/token";
 import { Err, Ok } from "$lib/types/result";
 import { signIn } from "$lib/utils/auth/flows/sign-in";
 import { scrypt } from "$lib/utils/scrypt";
@@ -86,14 +87,14 @@ const signUpFinishRoute = app().post("/", async (c) => {
   ]);
   const { id: userId, firstName, email } = user[0];
 
-  const confirmEmailToken = c.var.token.create({
-    data: {
+  const confirmEmailToken = c.var.token.create<ConfirmEmailTokenData>(
+    {
       userId: session.userId,
     },
-    options: {
+    {
       purpose: TokenPurpose.ConfirmEmail,
     },
-  });
+  );
 
   await c.var.mail.send({
     to: {

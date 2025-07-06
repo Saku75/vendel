@@ -12,7 +12,14 @@ import type {
 } from "./sign-up";
 
 const createSignUpClient = createClientRoute(({ context, fetch }) => {
-  return async function signUp(data: {
+  return async function signUp({
+    firstName,
+    middleName,
+    lastName,
+    email,
+    password,
+    captcha,
+  }: {
     firstName: string;
     middleName?: string;
     lastName?: string;
@@ -21,8 +28,6 @@ const createSignUpClient = createClientRoute(({ context, fetch }) => {
     password: string;
     captcha: string;
   }) {
-    const { firstName, middleName, lastName, email, password, captcha } = data;
-
     const startRes = await fetch(getClientUrl(context, "/auth/sign-up/start"), {
       method: "post",
       body: JSON.stringify({

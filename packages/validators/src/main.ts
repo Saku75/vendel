@@ -2,6 +2,7 @@ enum ValidatorCode {
   Required = "required",
   NotFound = "not-found",
   AlreadyExists = "already-exists",
+  Expired = "expired",
 
   TooShort = "too-short",
   TooLong = "too-long",
@@ -17,6 +18,7 @@ const validatorMessage: Record<ValidatorCode, string> = {
   [ValidatorCode.Required]: "Feltet skal udfyldes.",
   [ValidatorCode.NotFound]: "Kunne ikke findes.",
   [ValidatorCode.AlreadyExists]: "Findes allerede.",
+  [ValidatorCode.Expired]: "Udløbet - prøv igen.",
 
   [ValidatorCode.TooShort]: "Værdien er for kort.",
   [ValidatorCode.TooLong]: "Værdien er for lang.",

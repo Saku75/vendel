@@ -16,4 +16,8 @@ type AuthRefreshTokenData = {
   id: string;
 };
 
-export type { AuthRefreshTokenData, AuthTokenData };
+type ConfirmEmailTokenData = {
+  userId: string;
+};
+
+export type { AuthRefreshTokenData, AuthTokenData, ConfirmEmailTokenData };
