@@ -102,3 +102,8 @@ This is a full-stack web application built with a monorepo structure using Turbo
 - Prettier configuration with import sorting and Tailwind class sorting
 - ESLint configuration per package
 - Import order: @app/_ → @package/_ → $app/_ → $env/_ → $lib/_ → $routes/_ → relative imports
+- Pre-commit hook automatically formats files with Prettier before commits
+
+## Best Practices
+
+- Keep commit messages to one line
