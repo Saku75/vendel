@@ -11,7 +11,7 @@ export const templateConfirmEmail: MailTemplateStructure = {
     <p>Hej {{name}},</p>
 
     <p>Klik på linket herunder for at bekræfte din e-mailadresse:<br />
-    <a href="{{${MailTemplatePlaceholder.BaseURL}}}/auth/confirm-email?token={{token}}">Bekræft e-mail</a></p>
+    <a href="{{${MailTemplatePlaceholder.BaseURL}}}/confirm-email?token={{token}}">Bekræft e-mail</a></p>
 
     <p>Linket udløber om 24 timer. Du kan få et nyt ved at logge ind igen.</p>
 
