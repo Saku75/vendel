@@ -37,10 +37,7 @@ const authMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
 
     const authSession = await getAuthSession(c, refreshToken.id);
 
-    if (
-      authSession?.refreshToken.invalidated ||
-      authSession?.refreshToken.used
-    ) {
+    if (authSession?.refreshToken.used) {
       c.set("auth", { status: AuthStatus.Unauthenticated });
 
       deleteAuthCookie(c);

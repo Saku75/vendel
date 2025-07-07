@@ -2,7 +2,6 @@ import { AuthTokenData } from "./token";
 
 interface AuthSession {
   refreshToken: AuthTokenData["refreshToken"] & {
-    invalidated: boolean;
     used: boolean;
   };
 

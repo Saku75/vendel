@@ -31,7 +31,6 @@ async function signIn(
         family: refreshTokenFamily[0].id,
         id: refreshToken[0].id,
         expiresAt,
-        invalidated: false,
         used: false,
       },
       user: {
