@@ -11,6 +11,7 @@ import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
 import { signIn } from "$lib/utils/auth/flows/sign-in";
 import { scrypt } from "$lib/utils/scrypt";
+import { createSessionCaptchaValidator } from "$lib/utils/validation/captcha";
 
 import { getSignInSession, unsetSignInSession } from "./sign-in";
 
@@ -36,19 +37,12 @@ const signInFinishRoute = app().post("/", async (c) => {
         });
         return;
       }
-
-      if (
-        !(await c.var.captcha.verify(
-          values.captcha,
-          session.captchaIdempotencyKey,
-        ))
-      )
-        context.addIssue({
-          code: ZodIssueCode.custom,
-          message: ValidatorCode.Invalid,
-          path: ["captcha"],
-        });
     })
+    .superRefine(
+      session
+        ? createSessionCaptchaValidator(c, session.captchaIdempotencyKey)
+        : async () => {}, // No-op if session doesn't exist
+    )
     .safeParseAsync(body);
 
   if (!parsedBody.success || !session)

@@ -1,9 +1,8 @@
 import { eq } from "drizzle-orm";
-import { object, ZodIssueCode, type z } from "zod";
+import { object, type z } from "zod";
 
 import { MailTemplate } from "@package/mail";
 import { TokenPurpose } from "@package/token";
-import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
 
 import { AuthStatus } from "$lib/enums";
@@ -12,6 +11,7 @@ import { users } from "$lib/server/database/schema/users";
 import { requireAuth } from "$lib/server/middleware/require-auth";
 import { ConfirmEmailTokenData } from "$lib/types/auth/token";
 import { Err, Ok } from "$lib/types/result";
+import { createFreshCaptchaValidator } from "$lib/utils/validation/captcha";
 
 const emailSendSchema = object({
   captcha: captchaValidator,
@@ -28,17 +28,9 @@ emailSendRoute.post("/", requireAuth(), async (c) => {
   };
 
   const body = await c.req.json<z.infer<typeof emailSendSchema>>();
-  const captchaIdempotencyKey = c.var.captcha.createIdempotencyKey();
 
   const parsedBody = await emailSendSchema
-    .superRefine(async (values, context) => {
-      if (!(await c.var.captcha.verify(values.captcha, captchaIdempotencyKey)))
-        context.addIssue({
-          code: ZodIssueCode.custom,
-          message: ValidatorCode.Invalid,
-          path: ["captcha"],
-        });
-    })
+    .superRefine(createFreshCaptchaValidator(c))
     .safeParseAsync(body);
 
   if (!parsedBody.success)

@@ -15,6 +15,7 @@ import {
 import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
+import { createFreshCaptchaValidatorWithKey } from "$lib/utils/validation/captcha";
 
 import { setSignUpSession, SignUpStartResponse } from "./sign-up";
 
@@ -40,14 +41,8 @@ const signUpStartRoute = app().post("/", async (c) => {
           message: ValidatorCode.AlreadyExists,
           path: ["email"],
         });
-
-      if (!(await c.var.captcha.verify(values.captcha, captchaIdempotencyKey)))
-        context.addIssue({
-          code: ZodIssueCode.custom,
-          message: ValidatorCode.Invalid,
-          path: ["captcha"],
-        });
     })
+    .superRefine(createFreshCaptchaValidatorWithKey(c, captchaIdempotencyKey))
     .safeParseAsync(body);
 
   if (!parsedBody.success)

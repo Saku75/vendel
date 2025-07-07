@@ -1,15 +1,15 @@
 import { bytesToHex, randomBytes } from "@noble/hashes/utils";
 import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
-import { type z, object, ZodIssueCode } from "zod";
+import { type z, object } from "zod";
 
-import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
 import { emailValidator } from "@package/validators/email";
 
 import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
+import { createFreshCaptchaValidatorWithKey } from "$lib/utils/validation/captcha";
 
 import { setSignInSession, SignInStartResponse } from "./sign-in";
 
@@ -24,14 +24,7 @@ const signInStartRoute = app().post("/", async (c) => {
   const captchaIdempotencyKey = c.var.captcha.createIdempotencyKey();
 
   const parsedBody = await signInStartSchema
-    .superRefine(async (values, context) => {
-      if (!(await c.var.captcha.verify(values.captcha, captchaIdempotencyKey)))
-        context.addIssue({
-          code: ZodIssueCode.custom,
-          message: ValidatorCode.Invalid,
-          path: ["captcha"],
-        });
-    })
+    .superRefine(createFreshCaptchaValidatorWithKey(c, captchaIdempotencyKey))
     .safeParseAsync(body);
 
   if (!parsedBody.success)

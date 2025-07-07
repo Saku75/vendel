@@ -1,14 +1,14 @@
 import { eq } from "drizzle-orm";
-import { object, ZodIssueCode, type z } from "zod";
+import { object, type z } from "zod";
 
 import { TokenPurpose } from "@package/token";
-import { ValidatorCode } from "@package/validators";
 import { tokenValidator } from "@package/validators/token";
 
 import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
 import { ConfirmEmailTokenData } from "$lib/types/auth/token";
 import { Err, Ok } from "$lib/types/result";
+import { validateToken } from "$lib/utils/validation/token";
 
 const emailConfirmSchema = object({
   token: tokenValidator,
@@ -31,79 +31,18 @@ emailConfirmRoute.post("/", async (c) => {
 
   const { data } = parsedBody;
 
-  let tokenResult;
+  // Validate token using utility
+  const tokenValidation = validateToken<ConfirmEmailTokenData>(
+    c,
+    data.token,
+    TokenPurpose.ConfirmEmail,
+  );
 
-  try {
-    tokenResult = c.var.token.read<ConfirmEmailTokenData>(data.token);
-  } catch {
-    return c.json(
-      {
-        ok: false,
-        status: 400,
-        errors: [
-          {
-            code: ZodIssueCode.custom,
-            message: ValidatorCode.Invalid,
-            path: ["token"],
-          },
-        ],
-      } satisfies Err,
-      400,
-    );
+  if (!tokenValidation.success) {
+    return c.json(tokenValidation.error, tokenValidation.error.status);
   }
 
-  if (!tokenResult || !tokenResult.valid) {
-    return c.json(
-      {
-        ok: false,
-        status: 400,
-        errors: [
-          {
-            code: ZodIssueCode.custom,
-            message: ValidatorCode.Invalid,
-            path: ["token"],
-          },
-        ],
-      } satisfies Err,
-      400,
-    );
-  }
-
-  if (tokenResult.expired) {
-    return c.json(
-      {
-        ok: false,
-        status: 400,
-        errors: [
-          {
-            code: ZodIssueCode.custom,
-            message: ValidatorCode.Expired,
-            path: ["token"],
-          },
-        ],
-      } satisfies Err,
-      400,
-    );
-  }
-
-  if (tokenResult.payload.purpose !== TokenPurpose.ConfirmEmail) {
-    return c.json(
-      {
-        ok: false,
-        status: 400,
-        errors: [
-          {
-            code: ZodIssueCode.custom,
-            message: ValidatorCode.InvalidType,
-            path: ["token"],
-          },
-        ],
-      } satisfies Err,
-      400,
-    );
-  }
-
-  const tokenData = tokenResult.payload.data;
+  const tokenData = tokenValidation.data;
 
   const user = await c.var.database
     .select({
