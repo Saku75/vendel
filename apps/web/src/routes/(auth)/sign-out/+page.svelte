@@ -20,12 +20,10 @@
     <Button
       class="w-full"
       onclick={async () => {
-        await Promise.all([
-          apiClient.auth.signOut().then((res) => {
-            if (res.ok) authStore.setUnauthenticated();
-          }),
-          goto("/", { invalidateAll: true }),
-        ]);
+        await apiClient.auth.signOut().then((res) => {
+          if (res.ok) authStore.setUnauthenticated();
+        });
+        await goto("/", { invalidateAll: true });
       }}>Ja</Button
     >
   </div>

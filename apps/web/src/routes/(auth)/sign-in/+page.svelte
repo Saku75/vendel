@@ -38,12 +38,10 @@
       return;
     }
 
-    await Promise.all([
-      apiClient.auth.whoAmI().then((res) => {
-        if (res.ok) authStore.setAuthenticated(res.data!);
-      }),
-      goto("/", { invalidateAll: true }),
-    ]);
+    await apiClient.auth.whoAmI().then((res) => {
+      if (res.ok) authStore.setAuthenticated(res.data!);
+    });
+    await goto("/", { invalidateAll: true });
   }
 </script>
 
