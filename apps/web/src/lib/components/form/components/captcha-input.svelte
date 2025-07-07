@@ -35,7 +35,12 @@
   const [_, fieldContext] = formContext.addField<CaptchaField>({
     key,
     type: FieldType.Captcha,
+    isValid: false,
     action,
+  });
+
+  $effect(() => {
+    fieldContext.isValid = !!fieldContext.value;
   });
 
   onDestroy(() => {

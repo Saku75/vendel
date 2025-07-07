@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+
   import Footer from "$lib/components/layout/footer.svelte";
   import Header from "$lib/components/layout/header.svelte";
+  import { refreshService } from "$lib/services/refresh-service";
   import { authStore } from "$lib/stores/auth.svelte";
   import { configStore } from "$lib/stores/config.svelte";
   import { layoutStore } from "$lib/stores/layout.svelte";
@@ -15,6 +18,14 @@
   } else {
     authStore.setUnauthenticated();
   }
+
+  onMount(() => {
+    if (data.whoAmI) {
+      refreshService.startRefreshTimer(data.whoAmI.session.expiresAt);
+    } else {
+      refreshService.stopRefreshTimer();
+    }
+  });
 
   configStore.version = data.config.version;
   configStore.turnstileSiteKey = data.config.turnstileSiteKey;

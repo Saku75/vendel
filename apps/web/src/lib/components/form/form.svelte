@@ -33,8 +33,7 @@
       if (!formContext.fields[field]) break;
 
       if (
-        (formContext.fields[field].type !== FieldType.Captcha &&
-          !formContext.fields[field].isValid) ||
+        !formContext.fields[field].isValid ||
         (formContext.fields[field].type === FieldType.Captcha &&
           !!formContext.fields[field].error)
       ) {

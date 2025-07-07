@@ -38,6 +38,8 @@ interface CaptchaField
 
   value?: string;
 
+  isValid: boolean;
+
   action?: string;
 
   reset?: () => void;
