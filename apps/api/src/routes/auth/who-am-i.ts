@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { AuthStatus } from "$lib/enums";
 import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
+import { requireAuth } from "$lib/server/middleware/require-auth";
 import { User } from "$lib/types";
 import { Err, Ok } from "$lib/types/result";
 import { signOut } from "$lib/utils/auth/flows/sign-out";
@@ -19,16 +20,11 @@ type WhoAmIResponse = {
   };
 };
 
-whoAmIRoute.get("/", async (c) => {
-  if (c.var.auth.status !== AuthStatus.Authenticated)
-    return c.json(
-      {
-        ok: false,
-        status: 401,
-        message: "Not authenticated",
-      } satisfies Err,
-      401,
-    );
+whoAmIRoute.get("/", requireAuth(), async (c) => {
+  // requireAuth middleware guarantees auth is authenticated
+  const auth = c.var.auth as NonNullable<typeof c.var.auth> & {
+    status: AuthStatus.Authenticated;
+  };
 
   const user = await c.var.database
     .select({
@@ -43,10 +39,10 @@ whoAmIRoute.get("/", async (c) => {
       approvedBy: users.approvedBy,
     })
     .from(users)
-    .where(eq(users.id, c.var.auth.user.id));
+    .where(eq(users.id, auth.user.id));
 
   if (!user.length) {
-    await signOut(c, { refreshTokenId: c.var.auth.refreshToken.id });
+    await signOut(c, { refreshTokenId: auth.refreshToken.id });
 
     return c.json(
       {
@@ -64,7 +60,7 @@ whoAmIRoute.get("/", async (c) => {
     data: {
       user: user[0],
       session: {
-        expiresAt: c.var.auth.authToken.expiresAt,
+        expiresAt: auth.authToken.expiresAt,
       },
     },
   } satisfies Ok<WhoAmIResponse>);

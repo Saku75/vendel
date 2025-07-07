@@ -1,22 +1,18 @@
-import { AuthStatus } from "$lib/enums";
+import { AuthStatus } from "$lib/enums/auth/status";
 import { app } from "$lib/server";
-import { Err, Ok } from "$lib/types/result";
+import { requireAuth } from "$lib/server/middleware/require-auth";
+import { Ok } from "$lib/types/result";
 import { signOut } from "$lib/utils/auth/flows/sign-out";
 
 const signOutRoute = app();
 
-signOutRoute.get("/", async (c) => {
-  if (c.var.auth.status !== AuthStatus.Authenticated)
-    return c.json(
-      {
-        ok: false,
-        status: 401,
-        message: "Not authenticated",
-      } satisfies Err,
-      401,
-    );
+signOutRoute.get("/", requireAuth(), async (c) => {
+  // requireAuth middleware guarantees auth is authenticated
+  const { refreshToken } = c.var.auth as NonNullable<typeof c.var.auth> & {
+    status: AuthStatus.Authenticated;
+  };
 
-  await signOut(c, { refreshTokenId: c.var.auth.refreshToken.id });
+  await signOut(c, { refreshTokenId: refreshToken.id });
 
   return c.json({
     ok: true,

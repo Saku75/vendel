@@ -9,6 +9,7 @@ import { captchaValidator } from "@package/validators/captcha";
 import { AuthStatus } from "$lib/enums";
 import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
+import { requireAuth } from "$lib/server/middleware/require-auth";
 import { ConfirmEmailTokenData } from "$lib/types/auth/token";
 import { Err, Ok } from "$lib/types/result";
 
@@ -20,16 +21,11 @@ type EmailSendRequest = z.infer<typeof emailSendSchema>;
 
 const emailSendRoute = app();
 
-emailSendRoute.post("/", async (c) => {
-  if (c.var.auth.status !== AuthStatus.Authenticated)
-    return c.json(
-      {
-        ok: false,
-        status: 401,
-        message: "Not authenticated",
-      } satisfies Err,
-      401,
-    );
+emailSendRoute.post("/", requireAuth(), async (c) => {
+  // requireAuth middleware guarantees auth is authenticated
+  const auth = c.var.auth as NonNullable<typeof c.var.auth> & {
+    status: AuthStatus.Authenticated;
+  };
 
   const body = await c.req.json<z.infer<typeof emailSendSchema>>();
   const captchaIdempotencyKey = c.var.captcha.createIdempotencyKey();
@@ -59,7 +55,7 @@ emailSendRoute.post("/", async (c) => {
       emailVerified: users.emailVerified,
     })
     .from(users)
-    .where(eq(users.id, c.var.auth.user.id));
+    .where(eq(users.id, auth.user.id));
 
   if (!user.length) {
     return c.json(
@@ -87,7 +83,7 @@ emailSendRoute.post("/", async (c) => {
 
   const confirmEmailToken = c.var.token.create<ConfirmEmailTokenData>(
     {
-      userId: c.var.auth.user.id,
+      userId: auth.user.id,
     },
     {
       purpose: TokenPurpose.ConfirmEmail,
