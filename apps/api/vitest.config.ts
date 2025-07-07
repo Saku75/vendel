@@ -21,6 +21,7 @@ export default defineWorkersConfig({
     poolOptions: {
       workers: {
         wrangler: { configPath: "./wrangler.json" },
+        main: "./src/main.ts",
         miniflare: {
           bindings: { TEST_MIGRATIONS: migrations },
         },

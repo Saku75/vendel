@@ -1,7 +1,8 @@
-import { AuthRefreshTokenData, AuthTokenData } from "./token";
+import { AuthTokenData } from "./token";
 
 interface AuthSession {
-  refreshToken: AuthRefreshTokenData & {
+  refreshToken: AuthTokenData["refreshToken"] & {
+    invalidated: boolean;
     used: boolean;
   };
 

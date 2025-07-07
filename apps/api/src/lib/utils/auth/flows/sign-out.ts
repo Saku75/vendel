@@ -18,10 +18,11 @@ async function signOut(
 
     await Promise.all([
       c.var.database
-        .delete(refreshTokenFamilies)
+        .update(refreshTokenFamilies)
+        .set({ invalidated: true })
         .where(eq(refreshTokenFamilies.id, refreshToken.family)),
       setAuthSession(c, refreshToken.id, {
-        refreshToken: { ...refreshToken, used: true },
+        refreshToken: { ...refreshToken, invalidated: true },
         user,
       }),
     ]);

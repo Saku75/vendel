@@ -21,6 +21,8 @@ async function signIn(
     .values({ refreshTokenFamilyId: refreshTokenFamily[0].id })
     .returning({ id: refreshTokens.id, expiresAt: refreshTokens.expiresAt });
 
+  const expiresAt = refreshToken[0].expiresAt.valueOf();
+
   await setAuthSession(
     c,
     refreshToken[0].id,
@@ -28,6 +30,8 @@ async function signIn(
       refreshToken: {
         family: refreshTokenFamily[0].id,
         id: refreshToken[0].id,
+        expiresAt,
+        invalidated: false,
         used: false,
       },
       user: {
@@ -35,14 +39,14 @@ async function signIn(
         role: userRole,
       },
     },
-    { expiration: refreshToken[0].expiresAt.valueOf() / 1000 },
+    { expiration: expiresAt / 1000 },
   );
 
   setAuthCookie(c, refreshToken[0].expiresAt, {
     refreshToken: {
       family: refreshTokenFamily[0].id,
       id: refreshToken[0].id,
-      expiresAt: refreshToken[0].expiresAt.valueOf(),
+      expiresAt: expiresAt,
     },
     user: {
       id: userId,
