@@ -31,7 +31,6 @@ emailConfirmRoute.post("/", async (c) => {
 
   const { data } = parsedBody;
 
-  // Validate token using utility
   const tokenValidation = validateToken<ConfirmEmailTokenData>(
     c,
     data.token,
