@@ -20,6 +20,20 @@ refreshRoute.post("/", async (c) => {
     );
   }
 
+  if (
+    auth.status === AuthStatus.Authenticated &&
+    Date.now() < auth.authToken.expiresAt - 5 * 6 * 1000
+  ) {
+    return c.json(
+      {
+        ok: true,
+        status: 200,
+        message: "Session refresh not required",
+      } satisfies Ok,
+      200,
+    );
+  }
+
   const refreshCookie = getAuthRefreshCookie(c);
 
   if (!refreshCookie || !refreshCookie.valid) {

@@ -100,19 +100,21 @@ async function refreshSession(
 
   const newExpiresAt = newRefreshToken[0].expiresAt.valueOf();
 
-  await setAuthSession(
-    c,
-    newRefreshToken[0].id,
-    {
-      refreshToken: {
-        family: authSession.refreshToken.family,
-        id: newRefreshToken[0].id,
-        expiresAt: newExpiresAt,
-        used: false,
+  c.executionCtx.waitUntil(
+    setAuthSession(
+      c,
+      newRefreshToken[0].id,
+      {
+        refreshToken: {
+          family: authSession.refreshToken.family,
+          id: newRefreshToken[0].id,
+          expiresAt: newExpiresAt,
+          used: false,
+        },
+        user: authSession.user,
       },
-      user: authSession.user,
-    },
-    { expiration: newExpiresAt / 1000 },
+      { expiration: newExpiresAt / 1000 },
+    ),
   );
 
   setAuthCookie(c, newRefreshToken[0].expiresAt, {
