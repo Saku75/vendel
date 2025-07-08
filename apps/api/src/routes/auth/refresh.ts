@@ -33,7 +33,6 @@ refreshRoute.post("/", async (c) => {
     );
   }
 
-  // Type assertion is safe here since we checked status above
   const authenticatedAuth = auth as NonNullable<typeof auth> & {
     status: AuthStatus.Authenticated | AuthStatus.Expired;
   };

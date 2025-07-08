@@ -10,12 +10,13 @@ import { testDatabase } from "$lib/test/utils/database";
 import { testFetch } from "$lib/test/utils/fetch";
 import { Err, Ok } from "$lib/types/result";
 
+import { SignInStartResponse } from "../sign-in";
+
 async function createUnverifiedUserAndSignIn(
   email: string,
   firstName: string = "Test",
   lastName: string = "User",
 ) {
-  // Use the sign-up flow to create a properly configured user
   const startResponse = await testFetch("/auth/sign-up/start", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -27,21 +28,19 @@ async function createUnverifiedUserAndSignIn(
     }),
   });
 
-  const startData = await startResponse.json();
-  const { sessionId } = startData.data;
+  const startData = await startResponse.json<Ok<SignInStartResponse>>();
+  const { sessionId } = startData.data!;
 
-  // Complete sign-up (this creates the user and signs them in)
   const finishResponse = await testFetch("/auth/sign-up/finish", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       sessionId,
-      passwordClientHash: "a".repeat(128), // Mock password hash
+      passwordClientHash: "a".repeat(128),
       captcha: "mock-captcha-token",
     }),
   });
 
-  // Get the created user from database
   const [user] = await testDatabase
     .select()
     .from(users)
@@ -106,7 +105,6 @@ describe("Email Send", () => {
     it("should reject requests for already verified email", async () => {
       const verifiedUser = TEST_USERS.USER_ONE;
 
-      // Sign in as verified user using the same pattern as who-am-i tests
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -116,8 +114,8 @@ describe("Email Send", () => {
         }),
       });
 
-      const startData = await startResponse.json();
-      const { sessionId } = startData.data;
+      const startData = await startResponse.json<Ok<SignInStartResponse>>();
+      const { sessionId } = startData.data!;
 
       const finishResponse = await testFetch("/auth/sign-in/finish", {
         method: "POST",
@@ -164,7 +162,7 @@ describe("Email Send", () => {
           Cookie: authCookies.join("; "),
         },
         body: JSON.stringify({
-          captcha: "", // Empty captcha should fail validation
+          captcha: "",
         }),
       });
 
@@ -218,7 +216,6 @@ describe("Email Send", () => {
         "temp.user@example.com",
       );
 
-      // Delete the user after signing in
       await testDatabase.delete(users).where(eq(users.id, user.id));
 
       const response = await testFetch("/auth/email/send", {

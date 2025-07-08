@@ -44,7 +44,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
     .superRefine(
       session
         ? createSessionCaptchaValidator(c, session.captchaIdempotencyKey)
-        : async () => {}, // No-op if session doesn't exist
+        : async () => {},
     )
     .safeParseAsync(body);
 

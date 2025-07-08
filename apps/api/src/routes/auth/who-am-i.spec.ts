@@ -16,7 +16,6 @@ describe("Who Am I", () => {
     it("should return user data for authenticated user", async () => {
       const user = TEST_USERS.USER_ONE;
 
-      // First sign in to get auth cookies
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -41,7 +40,6 @@ describe("Who Am I", () => {
 
       const authCookies = finishResponse.headers.getSetCookie();
 
-      // Now test the who-am-i endpoint
       const whoAmIResponse = await testFetch("/auth/whoami", {
         method: "GET",
         headers: {
@@ -77,7 +75,6 @@ describe("Who Am I", () => {
     it("should return user data for admin user", async () => {
       const user = TEST_USERS.ADMIN;
 
-      // First sign in to get auth cookies
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -102,7 +99,6 @@ describe("Who Am I", () => {
 
       const authCookies = finishResponse.headers.getSetCookie();
 
-      // Now test the who-am-i endpoint
       const whoAmIResponse = await testFetch("/auth/whoami", {
         method: "GET",
         headers: {
@@ -138,7 +134,6 @@ describe("Who Am I", () => {
     it("should return user data for super admin user", async () => {
       const user = TEST_USERS.SUPER_ADMIN;
 
-      // First sign in to get auth cookies
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -163,7 +158,6 @@ describe("Who Am I", () => {
 
       const authCookies = finishResponse.headers.getSetCookie();
 
-      // Now test the who-am-i endpoint
       const whoAmIResponse = await testFetch("/auth/whoami", {
         method: "GET",
         headers: {
@@ -233,7 +227,6 @@ describe("Who Am I", () => {
     it("should return 400 and sign out user when user does not exist in database", async () => {
       const user = TEST_USERS.USER_TWO;
 
-      // First sign in to get auth cookies
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -258,10 +251,8 @@ describe("Who Am I", () => {
 
       const authCookies = finishResponse.headers.getSetCookie();
 
-      // Delete the user from the database to simulate user not existing
       await testDatabase.delete(users).where(eq(users.id, user.id));
 
-      // Now test the who-am-i endpoint
       const whoAmIResponse = await testFetch("/auth/whoami", {
         method: "GET",
         headers: {
@@ -278,7 +269,6 @@ describe("Who Am I", () => {
         message: "User does not exist",
       });
 
-      // Verify that the refresh token family was deleted (user was signed out)
       const refreshTokenFamily = await testDatabase
         .select()
         .from(refreshTokenFamilies)
@@ -287,7 +277,6 @@ describe("Who Am I", () => {
 
       expect(refreshTokenFamily).toHaveLength(0);
 
-      // Verify that sign-out cookies were set
       const signOutCookies = whoAmIResponse.headers.getSetCookie();
       expect(signOutCookies).toEqual(
         expect.arrayContaining([

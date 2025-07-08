@@ -42,7 +42,6 @@ export function requireAuth(options: RequireAuthOptions = {}) {
   return createMiddleware<HonoEnv>(async (c, next) => {
     const auth = c.var.auth;
 
-    // Check if user is authenticated
     if (auth.status !== AuthStatus.Authenticated) {
       return c.json(
         {
@@ -54,10 +53,8 @@ export function requireAuth(options: RequireAuthOptions = {}) {
       );
     }
 
-    // Type assertion safe here since we checked status above
     const authenticatedAuth = auth as AuthContext;
 
-    // Check role-based authorization
     if (
       options.minRole &&
       !hasRequiredRole(authenticatedAuth.user.role, options.minRole)
@@ -72,7 +69,6 @@ export function requireAuth(options: RequireAuthOptions = {}) {
       );
     }
 
-    // Check custom authorization
     if (options.authorize) {
       const authorized = await options.authorize(c, authenticatedAuth);
       if (!authorized) {
@@ -91,7 +87,6 @@ export function requireAuth(options: RequireAuthOptions = {}) {
   });
 }
 
-// Convenience functions for common use cases
 export const requireGuest = () => requireAuth({ minRole: AuthRole.Guest });
 export const requireUser = () => requireAuth({ minRole: AuthRole.User });
 export const requireAdmin = () => requireAuth({ minRole: AuthRole.Admin });

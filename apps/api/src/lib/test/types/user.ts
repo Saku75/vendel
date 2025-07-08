@@ -3,7 +3,7 @@ import type { AuthRole } from "$lib/enums/auth/role";
 interface TestUser {
   id: string;
   email: string;
-  password: string; // Client hash for tests
+  password: string;
   firstName: string;
   lastName: string;
   role: AuthRole;

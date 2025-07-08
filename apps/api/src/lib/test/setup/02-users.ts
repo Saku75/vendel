@@ -10,12 +10,10 @@ const database = drizzle(env.DB, {
   casing: "snake_case",
 });
 
-// Setup test users with properly hashed passwords
 for (const user of Object.values(TEST_USERS)) {
   const clientSalt = bytesToHex(randomBytes(32));
   const serverSalt = bytesToHex(randomBytes(32));
 
-  // Hash the password using the same method as the real sign-up flow
   const passwordServerHash = await scrypt(user.password, serverSalt);
 
   await database.insert(users).values({
@@ -27,7 +25,7 @@ for (const user of Object.values(TEST_USERS)) {
     clientSalt,
     serverSalt,
     role: user.role,
-    emailVerified: true, // Set to true for test users
-    approved: true, // Set to true for test users
+    emailVerified: true,
+    approved: true,
   });
 }

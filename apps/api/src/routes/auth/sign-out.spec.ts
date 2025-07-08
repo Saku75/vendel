@@ -14,7 +14,6 @@ describe("Sign Out", () => {
     it("should successfully sign out authenticated user", async () => {
       const user = TEST_USERS.USER_ONE;
 
-      // First sign in to get auth cookies
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -39,7 +38,6 @@ describe("Sign Out", () => {
 
       const authCookies = finishResponse.headers.getSetCookie();
 
-      // Now test the sign-out endpoint
       const signOutResponse = await testFetch("/auth/sign-out", {
         method: "GET",
         headers: {
@@ -56,7 +54,6 @@ describe("Sign Out", () => {
         message: "User signed out",
       });
 
-      // Verify that sign-out cookies were set
       const signOutCookies = signOutResponse.headers.getSetCookie();
       expect(signOutCookies).toEqual(
         expect.arrayContaining([
@@ -69,7 +66,6 @@ describe("Sign Out", () => {
     it("should invalidate refresh token family when signing out", async () => {
       const user = TEST_USERS.USER_TWO;
 
-      // First sign in to get auth cookies
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,7 +90,6 @@ describe("Sign Out", () => {
 
       const authCookies = finishResponse.headers.getSetCookie();
 
-      // Verify token family exists and is not invalidated before sign-out
       const beforeSignOut = await testDatabase
         .select()
         .from(refreshTokenFamilies)
@@ -104,7 +99,6 @@ describe("Sign Out", () => {
       expect(beforeSignOut).toHaveLength(1);
       expect(beforeSignOut[0].invalidated).toBe(false);
 
-      // Now sign out
       const signOutResponse = await testFetch("/auth/sign-out", {
         method: "GET",
         headers: {
@@ -114,7 +108,6 @@ describe("Sign Out", () => {
 
       expect(signOutResponse.status).toBe(200);
 
-      // Verify that the refresh token family was invalidated
       const afterSignOut = await testDatabase
         .select()
         .from(refreshTokenFamilies)
@@ -128,7 +121,6 @@ describe("Sign Out", () => {
     it("should mark refresh token as used in KV session", async () => {
       const user = TEST_USERS.ADMIN;
 
-      // First sign in to get auth cookies and extract refresh token ID
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -153,7 +145,6 @@ describe("Sign Out", () => {
 
       const authCookies = finishResponse.headers.getSetCookie();
 
-      // Extract refresh token ID from auth cookie to check KV session
       const authCookieValue = authCookies
         .find((cookie) => cookie.startsWith("localhost-auth="))
         ?.split("=")[1]
@@ -161,8 +152,6 @@ describe("Sign Out", () => {
 
       expect(authCookieValue).toBeDefined();
 
-      // Decode the auth cookie to get refresh token ID (simplified check)
-      // We'll verify the session exists before sign-out by making a who-am-i call
       const beforeSignOutCheck = await testFetch("/auth/whoami", {
         method: "GET",
         headers: {
@@ -172,7 +161,6 @@ describe("Sign Out", () => {
 
       expect(beforeSignOutCheck.status).toBe(200);
 
-      // Now sign out
       const signOutResponse = await testFetch("/auth/sign-out", {
         method: "GET",
         headers: {
@@ -182,7 +170,6 @@ describe("Sign Out", () => {
 
       expect(signOutResponse.status).toBe(200);
 
-      // Verify that using the same cookies no longer works (session invalidated)
       const afterSignOutCheck = await testFetch("/auth/whoami", {
         method: "GET",
         headers: {
@@ -230,7 +217,6 @@ describe("Sign Out", () => {
     it("should handle sign-out when token family doesn't exist", async () => {
       const user = TEST_USERS.SUPER_ADMIN;
 
-      // First sign in to get auth cookies
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -255,12 +241,10 @@ describe("Sign Out", () => {
 
       const authCookies = finishResponse.headers.getSetCookie();
 
-      // Manually delete the token family to simulate edge case
       await testDatabase
         .delete(refreshTokenFamilies)
         .where(eq(refreshTokenFamilies.userId, user.id));
 
-      // Sign out should still work (gracefully handle missing token family)
       const signOutResponse = await testFetch("/auth/sign-out", {
         method: "GET",
         headers: {
@@ -277,7 +261,6 @@ describe("Sign Out", () => {
         message: "User signed out",
       });
 
-      // Verify that sign-out cookies were still set
       const signOutCookies = signOutResponse.headers.getSetCookie();
       expect(signOutCookies).toEqual(
         expect.arrayContaining([
@@ -290,7 +273,6 @@ describe("Sign Out", () => {
     it("should handle multiple sign-out attempts gracefully", async () => {
       const user = TEST_USERS.USER_ONE;
 
-      // First sign in to get auth cookies
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -315,7 +297,6 @@ describe("Sign Out", () => {
 
       const authCookies = finishResponse.headers.getSetCookie();
 
-      // First sign-out should succeed
       const firstSignOutResponse = await testFetch("/auth/sign-out", {
         method: "GET",
         headers: {
@@ -325,7 +306,6 @@ describe("Sign Out", () => {
 
       expect(firstSignOutResponse.status).toBe(200);
 
-      // Second sign-out attempt with same cookies should fail (401)
       const secondSignOutResponse = await testFetch("/auth/sign-out", {
         method: "GET",
         headers: {

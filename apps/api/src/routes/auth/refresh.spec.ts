@@ -54,7 +54,6 @@ describe("Refresh", () => {
         message: "Session refreshed",
       });
 
-      // Verify new cookies are set
       const newCookies = refreshResponse.headers.getSetCookie();
       expect(newCookies.length).toBeGreaterThan(0);
       expect(
@@ -84,7 +83,6 @@ describe("Refresh", () => {
       const user = TEST_USERS.USER_ONE;
       const authCookies = await signInUser(user);
 
-      // Filter out the refresh cookie, keep only auth cookie
       const authOnlyCookies = authCookies.filter(
         (cookie) => !cookie.includes("localhost-auth-refresh="),
       );
@@ -110,8 +108,6 @@ describe("Refresh", () => {
       const user = TEST_USERS.USER_TWO;
       const authCookies = await signInUser(user);
 
-      // The refresh endpoint needs both cookies - auth token contains the refresh token ID
-      // and refresh cookie provides the actual refresh token
       const refreshResponse = await testFetch("/auth/refresh", {
         method: "POST",
         headers: {
@@ -128,7 +124,6 @@ describe("Refresh", () => {
         message: "Session refreshed",
       });
 
-      // Verify new cookies are set
       const newCookies = refreshResponse.headers.getSetCookie();
       expect(newCookies.length).toBeGreaterThan(0);
     });
@@ -137,7 +132,6 @@ describe("Refresh", () => {
       const user = TEST_USERS.ADMIN;
       const authCookies = await signInUser(user);
 
-      // First refresh (legitimate)
       const firstRefreshResponse = await testFetch("/auth/refresh", {
         method: "POST",
         headers: {
@@ -147,7 +141,6 @@ describe("Refresh", () => {
 
       expect(firstRefreshResponse.status).toBe(200);
 
-      // Attempt to use the same cookies again (token replay attack)
       const secondRefreshResponse = await testFetch("/auth/refresh", {
         method: "POST",
         headers: {
@@ -158,7 +151,6 @@ describe("Refresh", () => {
       expect(secondRefreshResponse.status).toBe(401);
       const data = (await secondRefreshResponse.json()) as Err;
 
-      // Should invalidate the token family
       expect(data.message).toMatch(
         /family invalidated|Token mismatch|Session not found/,
       );

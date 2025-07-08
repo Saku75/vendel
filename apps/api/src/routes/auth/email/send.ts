@@ -22,7 +22,6 @@ type EmailSendRequest = z.infer<typeof emailSendSchema>;
 const emailSendRoute = app();
 
 emailSendRoute.post("/", requireAuth(), async (c) => {
-  // requireAuth middleware guarantees auth is authenticated
   const auth = c.var.auth as NonNullable<typeof c.var.auth> & {
     status: AuthStatus.Authenticated;
   };

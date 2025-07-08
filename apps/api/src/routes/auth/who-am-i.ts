@@ -21,7 +21,6 @@ type WhoAmIResponse = {
 };
 
 whoAmIRoute.get("/", requireAuth(), async (c) => {
-  // requireAuth middleware guarantees auth is authenticated
   const auth = c.var.auth as NonNullable<typeof c.var.auth> & {
     status: AuthStatus.Authenticated;
   };

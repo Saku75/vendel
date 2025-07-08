@@ -30,7 +30,6 @@ export function validateToken<T = unknown>(
   token: string,
   expectedPurpose: TokenPurpose,
 ): TokenValidationResponse<T> {
-  // Step 1: Parse and decrypt token
   let tokenResult;
   try {
     tokenResult = c.var.token.read(token);
@@ -51,7 +50,6 @@ export function validateToken<T = unknown>(
     };
   }
 
-  // Step 2: Check token validity
   if (!tokenResult || !tokenResult.valid) {
     return {
       success: false,
@@ -69,7 +67,6 @@ export function validateToken<T = unknown>(
     };
   }
 
-  // Step 3: Check token expiration
   if (tokenResult.expired) {
     return {
       success: false,
@@ -87,7 +84,6 @@ export function validateToken<T = unknown>(
     };
   }
 
-  // Step 4: Check token purpose
   if (tokenResult.payload.purpose !== expectedPurpose) {
     return {
       success: false,
@@ -105,7 +101,6 @@ export function validateToken<T = unknown>(
     };
   }
 
-  // Success - return validated token data
   return {
     success: true,
     data: tokenResult.payload.data as T,
@@ -123,7 +118,6 @@ export function createTokenValidator<T = unknown>(
   return async (values: { token: string }, context: RefinementCtx) => {
     const result = validateToken<T>(c, values.token, expectedPurpose);
     if (!result.success) {
-      // Extract the first error from the result
       const error = result.error.errors![0];
       context.addIssue({
         code: ZodIssueCode.custom,

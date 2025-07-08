@@ -115,13 +115,9 @@ class Mail {
   }
 
   private htmlToText(html: string) {
-    return (
-      html
-        // Convert anchor tags to plain text
-        .replace(/<a.*?href="(.*?)".*?>(.*?)<\/a>/g, "$2 ($1)")
-        // Remove all other tags
-        .replace(/<.*?>/g, "")
-    );
+    return html
+      .replace(/<a.*?href="(.*?)".*?>(.*?)<\/a>/g, "$2 ($1)")
+      .replace(/<.*?>/g, "");
   }
 
   private replacePlaceholders(

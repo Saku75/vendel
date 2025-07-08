@@ -7,7 +7,6 @@ import { signOut } from "$lib/utils/auth/flows/sign-out";
 const signOutRoute = app();
 
 signOutRoute.get("/", requireAuth(), async (c) => {
-  // requireAuth middleware guarantees auth is authenticated
   const { refreshToken } = c.var.auth as NonNullable<typeof c.var.auth> & {
     status: AuthStatus.Authenticated;
   };

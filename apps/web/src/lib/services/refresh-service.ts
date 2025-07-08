@@ -5,11 +5,10 @@ class RefreshService {
   private refreshTimeout: number | null = null;
 
   startRefreshTimer(expiresAt: number) {
-    // Clear existing timer
     this.stopRefreshTimer();
 
     const now = Date.now();
-    const refreshTime = expiresAt - 5 * 60 * 1000; // 5 minutes before expiration
+    const refreshTime = expiresAt - 5 * 60 * 1000;
 
     const timeUntilRefresh = Math.max(0, refreshTime - now);
 
@@ -46,5 +45,4 @@ class RefreshService {
   }
 }
 
-// Export singleton instance
 export const refreshService = new RefreshService();

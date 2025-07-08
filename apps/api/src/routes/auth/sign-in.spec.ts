@@ -98,7 +98,7 @@ describe("Sign In", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: "test@example.com",
-          captcha: "", // Empty captcha should fail validation
+          captcha: "",
         }),
       });
 
@@ -121,7 +121,6 @@ describe("Sign In", () => {
     it("should successfully sign in existing user with correct password", async () => {
       const user = TEST_USERS.USER_ONE;
 
-      // Start sign-in
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -134,7 +133,6 @@ describe("Sign In", () => {
       const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
-      // Finish sign-in
       const finishResponse = await testFetch("/auth/sign-in/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -154,7 +152,6 @@ describe("Sign In", () => {
         message: "User signed in",
       });
 
-      // Should set authentication cookies
       const cookies = finishResponse.headers.getSetCookie();
       expect(cookies).toEqual(
         expect.arrayContaining([
@@ -163,7 +160,6 @@ describe("Sign In", () => {
         ]),
       );
 
-      // Verify refresh token family was created in database
       const refreshTokenFamily = await testDatabase
         .select()
         .from(refreshTokenFamilies)
@@ -182,7 +178,6 @@ describe("Sign In", () => {
     it("should reject sign-in with wrong password", async () => {
       const user = TEST_USERS.USER_TWO;
 
-      // Start sign-in
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -195,13 +190,12 @@ describe("Sign In", () => {
       const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
-      // Finish sign-in with wrong password
       const finishResponse = await testFetch("/auth/sign-in/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sessionId,
-          passwordClientHash: "wrong-password-hash", // Wrong password
+          passwordClientHash: "wrong-password-hash",
           captcha: "mock-captcha-token",
         }),
       });
@@ -225,7 +219,6 @@ describe("Sign In", () => {
     });
 
     it("should reject sign-in for non-existing user", async () => {
-      // Start sign-in with non-existing user
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -238,7 +231,6 @@ describe("Sign In", () => {
       const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
-      // Try to finish sign-in
       const finishResponse = await testFetch("/auth/sign-in/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -297,7 +289,6 @@ describe("Sign In", () => {
     it("should validate password hash format", async () => {
       const user = TEST_USERS.ADMIN;
 
-      // Start sign-in
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -310,13 +301,12 @@ describe("Sign In", () => {
       const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
-      // Try to finish with invalid password hash format
       const finishResponse = await testFetch("/auth/sign-in/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sessionId,
-          passwordClientHash: "invalid-hash!", // Contains invalid characters
+          passwordClientHash: "invalid-hash!",
           captcha: "mock-captcha-token",
         }),
       });
@@ -338,7 +328,6 @@ describe("Sign In", () => {
     it("should clean up session after successful sign-in", async () => {
       const user = TEST_USERS.SUPER_ADMIN;
 
-      // Start sign-in
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -351,7 +340,6 @@ describe("Sign In", () => {
       const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
-      // Successful sign-in
       await testFetch("/auth/sign-in/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -362,7 +350,6 @@ describe("Sign In", () => {
         }),
       });
 
-      // Try to use the same session again - should fail
       const secondFinishResponse = await testFetch("/auth/sign-in/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -389,7 +376,6 @@ describe("Sign In", () => {
     it("should clean up session after failed sign-in", async () => {
       const user = TEST_USERS.ADMIN;
 
-      // Start sign-in
       const startResponse = await testFetch("/auth/sign-in/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -402,7 +388,6 @@ describe("Sign In", () => {
       const startData = (await startResponse.json()) as Ok<SignInStartResponse>;
       const { sessionId } = startData.data!;
 
-      // Failed sign-in
       await testFetch("/auth/sign-in/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -413,7 +398,6 @@ describe("Sign In", () => {
         }),
       });
 
-      // Try to use the same session again - should fail with session not found
       const secondFinishResponse = await testFetch("/auth/sign-in/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

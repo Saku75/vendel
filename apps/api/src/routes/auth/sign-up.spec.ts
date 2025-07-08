@@ -39,7 +39,6 @@ describe("Sign Up", () => {
     });
 
     it("should reject duplicate email addresses", async () => {
-      // Try to sign up with existing user's email
       const existingUser = TEST_USERS.USER_ONE;
       const response = await testFetch("/auth/sign-up/start", {
         method: "POST",
@@ -47,7 +46,7 @@ describe("Sign Up", () => {
         body: JSON.stringify({
           firstName: "Jane",
           lastName: "Doe",
-          email: existingUser.email, // Use existing user's email
+          email: existingUser.email,
           captcha: "mock-captcha-token",
         }),
       });
@@ -126,7 +125,6 @@ describe("Sign Up", () => {
 
   describe("POST /auth/sign-up/finish", () => {
     it("should complete sign-up with valid session", async () => {
-      // First, start sign-up
       const startResponse = await testFetch("/auth/sign-up/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -141,13 +139,12 @@ describe("Sign Up", () => {
       const startData = (await startResponse.json()) as Ok<SignUpStartResponse>;
       const { sessionId } = startData.data!;
 
-      // Then, finish sign-up
       const finishResponse = await testFetch("/auth/sign-up/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sessionId,
-          passwordClientHash: "a".repeat(128), // Mock password hash
+          passwordClientHash: "a".repeat(128),
           captcha: "mock-captcha-token",
         }),
       });
@@ -161,7 +158,6 @@ describe("Sign Up", () => {
         message: "User signed up",
       });
 
-      // Should set authentication cookies
       const cookies = finishResponse.headers.getSetCookie();
       expect(cookies).toEqual(
         expect.arrayContaining([
@@ -170,7 +166,6 @@ describe("Sign Up", () => {
         ]),
       );
 
-      // Verify user was created in database
       const createdUser = await testDatabase
         .select()
         .from(users)
@@ -182,8 +177,8 @@ describe("Sign Up", () => {
         firstName: "Alice",
         lastName: "Johnson",
         email: "alice.johnson@example.com",
-        emailVerified: false, // Should be false initially
-        approved: false, // Should be false initially
+        emailVerified: false,
+        approved: false,
       });
       expect(createdUser[0].password).toBeDefined();
       expect(createdUser[0].clientSalt).toBeDefined();
@@ -218,7 +213,6 @@ describe("Sign Up", () => {
     });
 
     it("should validate password hash format", async () => {
-      // Start sign-up first
       const startResponse = await testFetch("/auth/sign-up/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -233,13 +227,12 @@ describe("Sign Up", () => {
       const startData = (await startResponse.json()) as Ok<SignUpStartResponse>;
       const { sessionId } = startData.data!;
 
-      // Try to finish with invalid password hash (not base64url)
       const finishResponse = await testFetch("/auth/sign-up/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sessionId,
-          passwordClientHash: "invalid-hash!", // Contains invalid characters
+          passwordClientHash: "invalid-hash!",
           captcha: "mock-captcha-token",
         }),
       });
@@ -259,7 +252,6 @@ describe("Sign Up", () => {
     });
 
     it("should clean up session after successful completion", async () => {
-      // Start sign-up
       const startResponse = await testFetch("/auth/sign-up/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -274,7 +266,6 @@ describe("Sign Up", () => {
       const startData = (await startResponse.json()) as Ok<SignUpStartResponse>;
       const { sessionId } = startData.data!;
 
-      // Finish sign-up
       await testFetch("/auth/sign-up/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -285,7 +276,6 @@ describe("Sign Up", () => {
         }),
       });
 
-      // Try to use the same session again - should fail
       const secondFinishResponse = await testFetch("/auth/sign-up/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

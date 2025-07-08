@@ -9,25 +9,22 @@ import { setAuthCookie, setAuthRefreshCookie } from "../cookies";
 import { getAuthSession, setAuthSession } from "../session";
 
 async function invalidateTokenFamily(c: Context<HonoEnv>, familyId: string) {
-  // Get all refresh tokens in the family
   const familyTokens = await c.var.database
     .select({ id: refreshTokens.id })
     .from(refreshTokens)
     .where(eq(refreshTokens.refreshTokenFamilyId, familyId));
 
-  // Update family and all tokens in parallel
   await Promise.all([
-    // Invalidate the family
     c.var.database
       .update(refreshTokenFamilies)
       .set({ invalidated: true })
       .where(eq(refreshTokenFamilies.id, familyId)),
-    // Mark all tokens as used
+
     c.var.database
       .update(refreshTokens)
       .set({ used: true })
       .where(eq(refreshTokens.refreshTokenFamilyId, familyId)),
-    // Update all auth sessions for this family
+
     ...familyTokens.map(async (token) => {
       const session = await getAuthSession(c, token.id);
       if (session) {
@@ -52,25 +49,20 @@ async function refreshSession(
     authRefreshTokenId,
   }: { refreshTokenId: string; authRefreshTokenId: string },
 ) {
-  // Verify the refresh token IDs match (prevent token substitution attacks)
   if (refreshTokenId !== authRefreshTokenId) {
     return { success: false, error: "Token mismatch" };
   }
 
-  // Get current auth session
   const authSession = await getAuthSession(c, refreshTokenId);
   if (!authSession) {
     return { success: false, error: "Session not found" };
   }
 
-  // Check if token is already used
   if (authSession.refreshToken.used) {
-    // Token replay attack - invalidate entire family
     await invalidateTokenFamily(c, authSession.refreshToken.family);
     return { success: false, error: "Token family invalidated" };
   }
 
-  // Check if token family is invalidated
   const tokenFamily = await c.var.database
     .select({ invalidated: refreshTokenFamilies.invalidated })
     .from(refreshTokenFamilies)
@@ -80,7 +72,6 @@ async function refreshSession(
     return { success: false, error: "Token family invalid" };
   }
 
-  // Check if token exists and is not used in database
   const currentToken = await c.var.database
     .select({ used: refreshTokens.used, expiresAt: refreshTokens.expiresAt })
     .from(refreshTokens)
@@ -89,23 +80,19 @@ async function refreshSession(
     );
 
   if (!currentToken.length) {
-    // Token doesn't exist or is already used - invalidate family
     await invalidateTokenFamily(c, authSession.refreshToken.family);
     return { success: false, error: "Token family invalidated" };
   }
 
-  // Check if token is expired
   if (currentToken[0].expiresAt < new Date()) {
     return { success: false, error: "Token expired" };
   }
 
-  // Mark current token as used
   await c.var.database
     .update(refreshTokens)
     .set({ used: true })
     .where(eq(refreshTokens.id, refreshTokenId));
 
-  // Create new refresh token
   const newRefreshToken = await c.var.database
     .insert(refreshTokens)
     .values({ refreshTokenFamilyId: authSession.refreshToken.family })
@@ -113,7 +100,6 @@ async function refreshSession(
 
   const newExpiresAt = newRefreshToken[0].expiresAt.valueOf();
 
-  // Create new auth session
   await setAuthSession(
     c,
     newRefreshToken[0].id,
@@ -129,7 +115,6 @@ async function refreshSession(
     { expiration: newExpiresAt / 1000 },
   );
 
-  // Set new cookies
   setAuthCookie(c, newRefreshToken[0].expiresAt, {
     refreshToken: {
       family: authSession.refreshToken.family,

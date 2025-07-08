@@ -12,12 +12,13 @@ import { testToken } from "$lib/test/utils/token";
 import { ConfirmEmailTokenData } from "$lib/types/auth/token";
 import { Err, Ok } from "$lib/types/result";
 
+import { SignInStartResponse } from "../sign-in";
+
 async function createUnverifiedUser(
   email: string,
   firstName: string = "Test",
   lastName: string = "User",
 ) {
-  // Use the sign-up flow to create a properly configured user
   const startResponse = await testFetch("/auth/sign-up/start", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -29,21 +30,19 @@ async function createUnverifiedUser(
     }),
   });
 
-  const startData = await startResponse.json();
-  const { sessionId } = startData.data;
+  const startData = await startResponse.json<Ok<SignInStartResponse>>();
+  const { sessionId } = startData.data!;
 
-  // Complete sign-up (this creates the user)
   await testFetch("/auth/sign-up/finish", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       sessionId,
-      passwordClientHash: "a".repeat(128), // Mock password hash
+      passwordClientHash: "a".repeat(128),
       captcha: "mock-captcha-token",
     }),
   });
 
-  // Get the created user from database
   const [user] = await testDatabase
     .select()
     .from(users)
@@ -84,7 +83,6 @@ describe("Email Confirm", () => {
         message: "Email confirmed successfully",
       });
 
-      // Verify user's email is now verified in database
       const updatedUser = await testDatabase
         .select({ emailVerified: users.emailVerified })
         .from(users)
@@ -122,12 +120,11 @@ describe("Email Confirm", () => {
     it("should reject expired tokens", async () => {
       const [user] = await createUnverifiedUser("jane.expired@example.com");
 
-      // Create an expired token (expires 1 second ago)
       const expiredToken = testToken.create<ConfirmEmailTokenData>(
         { userId: user.id },
         {
           purpose: TokenPurpose.ConfirmEmail,
-          expiresAt: Date.now() - 1000, // 1 second ago
+          expiresAt: Date.now() - 1000,
         },
       );
 
@@ -158,10 +155,9 @@ describe("Email Confirm", () => {
     it("should reject tokens with wrong purpose", async () => {
       const [user] = await createUnverifiedUser("bob.wrongpurpose@example.com");
 
-      // Create a token with wrong purpose
       const wrongPurposeToken = testToken.create<ConfirmEmailTokenData>(
         { userId: user.id },
-        { purpose: TokenPurpose.Auth }, // Wrong purpose
+        { purpose: TokenPurpose.Auth },
       );
 
       const response = await testFetch("/auth/email/confirm", {
@@ -219,7 +215,6 @@ describe("Email Confirm", () => {
         "alice.alreadyverified@example.com",
       );
 
-      // First confirm the email
       const firstToken = testToken.create<ConfirmEmailTokenData>(
         { userId: user.id },
         { purpose: TokenPurpose.ConfirmEmail },
@@ -233,7 +228,6 @@ describe("Email Confirm", () => {
         }),
       });
 
-      // Try to confirm again with a new token
       const secondToken = testToken.create<ConfirmEmailTokenData>(
         { userId: user.id },
         { purpose: TokenPurpose.ConfirmEmail },
@@ -262,7 +256,7 @@ describe("Email Confirm", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          token: "", // Empty token
+          token: "",
         }),
       });
 

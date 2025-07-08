@@ -66,7 +66,7 @@ function getAuthCookie(c: Context<HonoEnv>) {
     return c.var.token.read<AuthTokenData>(cookie);
   } catch (error) {
     console.error(error);
-    // Return null for malformed tokens, let the middleware handle it
+
     return null;
   }
 }
@@ -84,7 +84,7 @@ function getAuthRefreshCookie(c: Context<HonoEnv>) {
     return c.var.token.read<AuthRefreshTokenData>(cookie);
   } catch (error) {
     console.error(error);
-    // Return null for malformed tokens, let the middleware handle it
+
     return null;
   }
 }

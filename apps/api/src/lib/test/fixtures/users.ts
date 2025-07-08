@@ -1,12 +1,11 @@
 import { AuthRole } from "$lib/enums/auth/role";
 import type { TestUsers } from "$lib/test/types/user";
 
-// Test user credentials - these are the client hashes we'll use in tests
 const TEST_USERS: TestUsers = {
   SUPER_ADMIN: {
     id: "test_super_admin_001",
     email: "superadmin@test.com",
-    password: "superadmin-password-hash", // Client hash for tests
+    password: "superadmin-password-hash",
     firstName: "Super",
     lastName: "Admin",
     role: AuthRole.SuperAdmin,
@@ -14,7 +13,7 @@ const TEST_USERS: TestUsers = {
   ADMIN: {
     id: "test_admin_002",
     email: "admin@test.com",
-    password: "admin-password-hash", // Client hash for tests
+    password: "admin-password-hash",
     firstName: "Test",
     lastName: "Admin",
     role: AuthRole.Admin,
@@ -22,7 +21,7 @@ const TEST_USERS: TestUsers = {
   USER_ONE: {
     id: "test_user_one_003",
     email: "user1@test.com",
-    password: "user1-password-hash", // Client hash for tests
+    password: "user1-password-hash",
     firstName: "User",
     lastName: "One",
     role: AuthRole.User,
@@ -30,7 +29,7 @@ const TEST_USERS: TestUsers = {
   USER_TWO: {
     id: "test_user_two_004",
     email: "user2@test.com",
-    password: "user2-password-hash", // Client hash for tests
+    password: "user2-password-hash",
     firstName: "User",
     lastName: "Two",
     role: AuthRole.User,
