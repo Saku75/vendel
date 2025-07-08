@@ -44,6 +44,7 @@
 
     if (!response.ok) {
       formContext.setErrors(response.errors);
+      formContext.resetCaptchas();
       return;
     }
 
@@ -54,59 +55,61 @@
   }
 </script>
 
-<Form name="signUp" class="mx-auto w-full max-w-xs items-center" {onsubmit}>
-  <h1 class="mb-4 text-4xl">Opret</h1>
+<main class="mx-auto w-full max-w-xs">
+  <Form name="signUp" class="items-center" {onsubmit}>
+    <h1 class="mb-4 text-4xl">Opret konto</h1>
 
-  <TextInput
-    key="firstName"
-    type={FieldType.Text}
-    label="Fornavn"
-    autocomplete="given-name"
-    validator={firstNameValidator}
-    required
-  />
-  <TextInput
-    key="middleName"
-    type={FieldType.Text}
-    label="Mellemnavn"
-    autocomplete="additional-name"
-    validator={middleNameValidator}
-  />
-  <TextInput
-    key="lastName"
-    type={FieldType.Text}
-    label="Efternavn"
-    autocomplete="family-name"
-    validator={lastNameValidator}
-  />
+    <TextInput
+      key="firstName"
+      type={FieldType.Text}
+      label="Fornavn"
+      autocomplete="given-name"
+      validator={firstNameValidator}
+      required
+    />
+    <TextInput
+      key="middleName"
+      type={FieldType.Text}
+      label="Mellemnavn"
+      autocomplete="additional-name"
+      validator={middleNameValidator}
+    />
+    <TextInput
+      key="lastName"
+      type={FieldType.Text}
+      label="Efternavn"
+      autocomplete="family-name"
+      validator={lastNameValidator}
+    />
 
-  <TextInput
-    key="email"
-    type={FieldType.Email}
-    label="Email"
-    autocomplete="email"
-    validator={emailValidator}
-    required
-  />
+    <TextInput
+      key="email"
+      type={FieldType.Email}
+      label="Email"
+      autocomplete="email"
+      validator={emailValidator}
+      required
+    />
 
-  <TextInput
-    key="password"
-    type={FieldType.Password}
-    label="Adgangskode"
-    autocomplete="new-password"
-    validator={passwordValidator}
-    required
-  />
-  <TextInput
-    key="confirmPassword"
-    type={FieldType.Password}
-    label="Bekræft adgangskode"
-    autocomplete="new-password"
-    validator={passwordValidator}
-    required
-  />
+    <TextInput
+      key="password"
+      type={FieldType.Password}
+      label="Adgangskode"
+      autocomplete="new-password"
+      validator={passwordValidator}
+      required
+    />
+    <TextInput
+      key="confirmPassword"
+      type={FieldType.Password}
+      label="Bekræft adgangskode"
+      autocomplete="new-password"
+      validator={passwordValidator}
+      required
+    />
 
-  <CaptchaInput key="captcha" />
+    <CaptchaInput key="captcha" />
 
-  <FormSubmit label="Opret" />
-</Form>
+    <FormSubmit label="Opret konto" submittingLabel="Opretter konto" />
+  </Form>
+</main>

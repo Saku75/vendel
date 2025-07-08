@@ -8,6 +8,8 @@ interface FormContext<T extends Fields> {
   isDirty: boolean;
   isValid: boolean;
 
+  isSubmitting: boolean;
+
   majorityRequired?: boolean;
 
   fields: Partial<T>;

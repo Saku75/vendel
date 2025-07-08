@@ -35,6 +35,7 @@
 
     if (!response.ok) {
       formContext.setErrors(response.errors);
+      formContext.resetCaptchas();
       return;
     }
 
@@ -45,27 +46,29 @@
   }
 </script>
 
-<Form name="signIn" class="mx-auto w-full max-w-xs items-center" {onsubmit}>
-  <h1 class="mb-4 text-4xl">Log ind</h1>
+<main class="mx-auto w-full max-w-xs">
+  <Form name="signIn" class="items-center" {onsubmit}>
+    <h1 class="mb-4 text-4xl">Log ind</h1>
 
-  <TextInput
-    key="email"
-    type={FieldType.Email}
-    label="Email"
-    autocomplete="email"
-    validator={emailValidator}
-    required
-  />
-  <TextInput
-    key="password"
-    type={FieldType.Password}
-    label="Adgangskode"
-    autocomplete="current-password"
-    validator={passwordValidator}
-    required
-  />
+    <TextInput
+      key="email"
+      type={FieldType.Email}
+      label="Email"
+      autocomplete="email"
+      validator={emailValidator}
+      required
+    />
+    <TextInput
+      key="password"
+      type={FieldType.Password}
+      label="Adgangskode"
+      autocomplete="current-password"
+      validator={passwordValidator}
+      required
+    />
 
-  <CaptchaInput key="captcha" />
+    <CaptchaInput key="captcha" />
 
-  <FormSubmit label="Log ind" />
-</Form>
+    <FormSubmit label="Log ind" submittingLabel="Logger ind" />
+  </Form>
+</main>

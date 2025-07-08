@@ -20,7 +20,7 @@
   emphasis={InteractionEmphasis.Secondary}
   class={cn("w-full", classes)}
   type="reset"
-  disabled={!formContext.isDirty}
+  disabled={!formContext.isDirty || formContext.isSubmitting}
 >
   Nulstil
 </Button>

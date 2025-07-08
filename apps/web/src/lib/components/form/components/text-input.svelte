@@ -116,7 +116,7 @@
     type={fieldContext.type}
     required={fieldContext.required}
     disabled={fieldContext.disabled}
-    readonly={fieldContext.readonly}
+    readonly={fieldContext.readonly || formContext.isSubmitting}
     bind:value={fieldContext.value}
     oninput={() => (fieldContext.isTouched = true)}
     {autocomplete}

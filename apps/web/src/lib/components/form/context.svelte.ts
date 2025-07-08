@@ -17,6 +17,8 @@ function setFormContext<T extends Fields>(name: string) {
     isDirty: false,
     isValid: false,
 
+    isSubmitting: false,
+
     fields: {},
 
     addField<F extends Field>(field: F): [string, F] {
@@ -80,8 +82,6 @@ function setFormContext<T extends Fields>(name: string) {
 
     setErrors(errors) {
       if (!errors) return;
-
-      this.resetCaptchas();
 
       for (const error of errors) {
         const fieldKey = error.path[0]?.toString();

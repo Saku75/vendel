@@ -17,10 +17,10 @@
     if (authStore.status === AuthStatus.Unauthenticated) return false;
     if (!role && authStore.status === AuthStatus.Authenticated) return true;
 
-    if (role && !authStore.user!.role) return false;
+    if (role && !authStore.user?.role) return false;
     if (
       role &&
-      (role !== authStore.user!.role || !role.includes(authStore.user!.role))
+      (role !== authStore.user?.role || !role.includes(authStore.user?.role))
     )
       return false;
 

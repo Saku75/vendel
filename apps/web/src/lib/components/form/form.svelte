@@ -92,7 +92,9 @@
 
     if (!formContext.isDirty || !formContext.isValid) return;
 
+    formContext.isSubmitting = true;
     await onsubmit?.();
+    formContext.isSubmitting = false;
   }
 
   async function handleReset(event: Event) {
