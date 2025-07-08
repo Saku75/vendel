@@ -11,7 +11,7 @@
   "no_bundle": false,
   "minify": true,
 
-  "main": "./dist/main.js",
+  "main": "./src/main.ts",
   "assets": {
     "binding": "ASSETS",
     "directory": "./static"

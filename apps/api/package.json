@@ -8,7 +8,7 @@
     "dev:tsup": "tsup --watch",
     "dev:wrangler": "wrangler dev",
     "build": "tsup",
-    "deploy": "wrangler deploy",
+    "deploy": "wrangler deploy ./dist/main.js",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings src/worker-env.d.ts",
     "lint": "eslint .",
     "test": "vitest run",
