@@ -21,9 +21,11 @@
       class="w-full"
       onclick={async () => {
         await apiClient.auth.signOut().then((res) => {
-          if (res.ok) authStore.setUnauthenticated();
+          if (res.ok) {
+            authStore.setUnauthenticated();
+          }
         });
-        await goto("/", { invalidateAll: true });
+        await goto("/");
       }}>Ja</Button
     >
   </div>

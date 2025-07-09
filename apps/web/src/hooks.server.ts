@@ -43,6 +43,8 @@ const preload: Handle = async ({ event, resolve }) => {
 const initiateLocals: Handle = async ({ event, resolve }) => {
   const cookieHeader = event.request.headers.get("cookie") ?? "";
 
+  console.log("Received cookies: ", cookieHeader);
+
   event.locals = {
     api: createClient({
       prefix: `${event.url.origin}/api`,
@@ -54,6 +56,7 @@ const initiateLocals: Handle = async ({ event, resolve }) => {
       hooks: {
         afterRequest: (res) => {
           const cookies = res.headers.getSetCookie();
+          console.log("Returned cookies: ", cookies);
           for (const key in cookies) {
             const cookie = cookies[key];
             const { name, value, path, sameSite, ...rest } =

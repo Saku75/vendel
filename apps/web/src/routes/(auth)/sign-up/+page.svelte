@@ -49,9 +49,11 @@
     }
 
     await apiClient.auth.whoAmI().then((res) => {
-      if (res.ok) authStore.setAuthenticated(res.data!);
+      if (res.ok) {
+        authStore.setAuthenticated(res.data!);
+      }
     });
-    await goto("/", { invalidateAll: true });
+    await goto("/");
   }
 </script>
 

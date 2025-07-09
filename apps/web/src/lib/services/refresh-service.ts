@@ -8,7 +8,7 @@ class RefreshService {
     this.stopRefreshTimer();
 
     const now = Date.now();
-    const refreshTime = expiresAt - 5 * 60 * 1000;
+    const refreshTime = expiresAt - 3 * 60 * 1000;
 
     const timeUntilRefresh = Math.max(0, refreshTime - now);
 
