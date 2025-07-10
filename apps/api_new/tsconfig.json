@@ -1,0 +1,19 @@
+{
+  "extends": ["@config/typescript/configs/base.json"],
+  "compilerOptions": {
+    "noEmit": true,
+
+    "types": [
+      "@types/node",
+      "@cloudflare/vitest-pool-workers",
+      "./src/worker-env.d.ts",
+      "./src/worker-env.test.d.ts"
+    ],
+
+    "paths": {
+      "$lib/*": ["./src/lib/*"],
+      "$routes/*": ["./src/routes/*"]
+    }
+  },
+  "include": ["./src/**/*"]
+}
