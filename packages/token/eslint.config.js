@@ -1,5 +1,5 @@
 import { defineConfig } from "eslint/config";
 
-import { customConfig } from "@package/eslint";
+import { customConfig } from "@config/eslint";
 
 export default defineConfig(customConfig());

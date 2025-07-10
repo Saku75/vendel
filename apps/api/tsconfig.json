@@ -1,5 +1,5 @@
 {
-  "extends": ["@package/typescript/configs/base.json"],
+  "extends": ["@config/typescript/configs/base.json"],
   "compilerOptions": {
     "noEmit": true,
 

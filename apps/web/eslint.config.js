@@ -2,7 +2,7 @@ import svelte from "eslint-plugin-svelte";
 import { defineConfig, globalIgnores } from "eslint/config";
 import ts from "typescript-eslint";
 
-import { customConfig } from "@package/eslint";
+import { customConfig } from "@config/eslint";
 
 import svelteConfig from "./svelte.config.js";
 

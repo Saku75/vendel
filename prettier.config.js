@@ -12,6 +12,7 @@ const config = {
 
   importOrder: [
     "^@app/(.*)$",
+    "^@config/(.*)$",
     "^@package/(.*)$",
     "^\\$app/(.*)$",
     "^\\$env/(.*)$",
