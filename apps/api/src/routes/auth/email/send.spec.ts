@@ -5,10 +5,11 @@ import { ZodIssueCode } from "zod";
 import { ValidatorCode } from "@package/validators";
 
 import { users } from "$lib/server/database/schema/users";
-import { TEST_USERS } from "$lib/test/fixtures/users";
-import { testDatabase } from "$lib/test/utils/database";
-import { testFetch } from "$lib/test/utils/fetch";
 import { Err, Ok } from "$lib/types/result";
+
+import { TEST_USERS } from "$test/fixtures/users";
+import { testDatabase } from "$test/utils/database";
+import { testFetch } from "$test/utils/fetch";
 
 import { SignInStartResponse } from "../sign-in";
 

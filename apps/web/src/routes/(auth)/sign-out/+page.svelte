@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
 
   import { apiClient } from "$lib/api/client";
   import Button from "$lib/components/common/interactions/button.svelte";
@@ -25,7 +26,7 @@
             authStore.setUnauthenticated();
           }
         });
-        await goto("/");
+        await goto(resolve("/"));
       }}>Ja</Button
     >
   </div>

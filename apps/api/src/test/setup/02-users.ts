@@ -1,10 +1,11 @@
-import { bytesToHex, randomBytes } from "@noble/hashes/utils";
+import { bytesToHex, randomBytes } from "@noble/hashes/utils.js";
 import { env } from "cloudflare:test";
 import { drizzle } from "drizzle-orm/d1";
 
 import { users } from "$lib/server/database/schema/users";
-import { TEST_USERS } from "$lib/test/fixtures/users";
 import { scrypt } from "$lib/utils/scrypt";
+
+import { TEST_USERS } from "../fixtures/users";
 
 const database = drizzle(env.DB, {
   casing: "snake_case",

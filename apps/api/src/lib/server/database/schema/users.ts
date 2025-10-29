@@ -1,4 +1,3 @@
-import { createId } from "@paralleldrive/cuid2";
 import {
   AnySQLiteColumn,
   blob,
@@ -8,6 +7,7 @@ import {
 } from "drizzle-orm/sqlite-core";
 
 import { AuthRole } from "$lib/enums/auth/role";
+import { createId } from "$lib/utils/create-id";
 
 const users = sqliteTable("users", {
   // Internal ID

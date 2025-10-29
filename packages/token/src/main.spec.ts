@@ -1,4 +1,4 @@
-import { randomBytes } from "@noble/hashes/utils";
+import { randomBytes } from "@noble/hashes/utils.js";
 import { expect, it } from "vitest";
 
 import { TokenExpiry } from "./enums/expiry";

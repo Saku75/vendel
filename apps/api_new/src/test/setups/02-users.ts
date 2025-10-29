@@ -1,4 +1,4 @@
-import { bytesToHex, randomBytes } from "@noble/hashes/utils";
+import { bytesToHex, randomBytes } from "@noble/hashes/utils.js";
 
 import { users } from "$lib/database/schema/users";
 import { scrypt } from "$lib/utils/scrypt";

@@ -6,11 +6,12 @@ import { TokenPurpose } from "@package/token";
 import { ValidatorCode } from "@package/validators";
 
 import { users } from "$lib/server/database/schema/users";
-import { testDatabase } from "$lib/test/utils/database";
-import { testFetch } from "$lib/test/utils/fetch";
-import { testToken } from "$lib/test/utils/token";
 import { ConfirmEmailTokenData } from "$lib/types/auth/token";
 import { Err, Ok } from "$lib/types/result";
+
+import { testDatabase } from "$test/utils/database";
+import { testFetch } from "$test/utils/fetch";
+import { testToken } from "$test/utils/token";
 
 import { SignInStartResponse } from "../sign-in";
 

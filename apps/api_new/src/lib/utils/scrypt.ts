@@ -1,5 +1,5 @@
-import { scryptAsync } from "@noble/hashes/scrypt";
-import { KDFInput } from "@noble/hashes/utils";
+import { scryptAsync } from "@noble/hashes/scrypt.js";
+import { KDFInput } from "@noble/hashes/utils.js";
 
 async function scrypt(password: KDFInput, salt: KDFInput) {
   return await scryptAsync(password, salt, {

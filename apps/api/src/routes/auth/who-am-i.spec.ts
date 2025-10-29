@@ -3,10 +3,11 @@ import { describe, expect, it } from "vitest";
 
 import { refreshTokenFamilies } from "$lib/server/database/schema/refresh-token-families";
 import { users } from "$lib/server/database/schema/users";
-import { TEST_USERS } from "$lib/test/fixtures/users";
-import { testDatabase } from "$lib/test/utils/database";
-import { testFetch } from "$lib/test/utils/fetch";
 import { Err, Ok } from "$lib/types/result";
+
+import { TEST_USERS } from "$test/fixtures/users";
+import { testDatabase } from "$test/utils/database";
+import { testFetch } from "$test/utils/fetch";
 
 import { SignInStartResponse } from "./sign-in";
 import { WhoAmIResponse } from "./who-am-i";

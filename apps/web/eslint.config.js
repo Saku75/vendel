@@ -1,5 +1,5 @@
 import svelte from "eslint-plugin-svelte";
-import { defineConfig, globalIgnores } from "eslint/config";
+import { defineConfig } from "eslint/config";
 import ts from "typescript-eslint";
 
 import { customConfig } from "@config/eslint";
@@ -21,5 +21,4 @@ export default defineConfig(
       },
     },
   },
-  globalIgnores(["./src/worker-env.d.ts", "./.svelte-kit"]),
 );

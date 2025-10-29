@@ -1,8 +1,9 @@
 import { env } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
 
-import { testFetch } from "$lib/test/utils/fetch";
 import { Ok } from "$lib/types/result";
+
+import { testFetch } from "$test/utils/fetch";
 
 describe("Root", () => {
   it("should return welcome message", async () => {

@@ -1,4 +1,4 @@
-import { scryptAsync } from "@noble/hashes/scrypt";
+import { scryptAsync } from "@noble/hashes/scrypt.js";
 
 async function scrypt(password: string, salt: string) {
   return await scryptAsync(password, salt, {

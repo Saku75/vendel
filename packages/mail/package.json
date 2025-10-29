@@ -3,18 +3,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "tsdown --watch",
+    "build": "tsdown",
     "lint": "eslint ."
   },
   "devDependencies": {
     "@config/eslint": "workspace:*",
     "@config/typescript": "workspace:*",
-    "@types/node": "^24.5.2",
-    "eslint": "^9.36.0",
-    "resend": "^4.8.0",
-    "tsup": "^8.5.0",
-    "typescript": "^5.9.2"
+    "@types/node": "^24.9.2",
+    "eslint": "^9.38.0",
+    "tsdown": "^0.15.11",
+    "typescript": "^5.9.3"
   },
   "exports": {
     ".": {

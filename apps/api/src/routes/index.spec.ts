@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { testFetch } from "$lib/test/utils/fetch";
+import { testFetch } from "$test/utils/fetch";
 
 describe("Root", () => {
   it("should return API welcome message", async () => {

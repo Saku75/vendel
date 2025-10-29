@@ -22,12 +22,12 @@
     },
 
     "cf-typegen": {
-      "inputs": ["./wrangler.json"],
+      "inputs": ["./wrangler.json", "./.dev.vars"],
       "outputs": ["./src/worker-env.d.ts"]
     },
 
     "lint": {
-      "dependsOn": ["build"]
+      "dependsOn": ["cf-typegen", "^build"]
     },
     "test": {
       "dependsOn": ["^build"]
@@ -37,7 +37,10 @@
     },
 
     "db:apply": {
-      "inputs": ["./src/lib/database/migrations/**"]
+      "inputs": [
+        "./src/lib/server/database/migrations/**",
+        "./src/lib/database/migrations/**"
+      ]
     }
   }
 }

@@ -5,35 +5,35 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter @app/api_new --parallel \"/^dev:.*/\"",
-    "dev:tsup": "tsup --watch",
+    "dev:tsup": "tsdown --watch",
     "dev:wrangler": "wrangler dev",
-    "build": "tsup",
+    "build": "tsdown",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings src/worker-env.d.ts",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",
-    "db:apply": "wrangler d1 migrations apply DB"
+    "q:db:apply": "wrangler d1 migrations apply DB"
   },
   "dependencies": {
-    "@noble/hashes": "^1.8.0",
-    "@paralleldrive/cuid2": "^2.2.2",
-    "@scure/base": "^1.2.6",
-    "drizzle-orm": "^0.44.5",
-    "hono": "^4.9.8",
+    "@noble/hashes": "^2.0.1",
+    "@paralleldrive/cuid2": "^3.0.4",
+    "@scure/base": "^2.0.0",
+    "drizzle-orm": "^0.44.7",
+    "hono": "^4.10.3",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.8.71",
+    "@cloudflare/vitest-pool-workers": "^0.10.2",
     "@config/eslint": "workspace:*",
     "@config/typescript": "workspace:*",
-    "@types/node": "^24.5.2",
-    "drizzle-kit": "^0.31.4",
-    "eslint": "^9.36.0",
-    "tsup": "^8.5.0",
-    "typescript": "^5.9.2",
+    "@types/node": "^24.9.2",
+    "drizzle-kit": "^0.31.6",
+    "eslint": "^9.38.0",
+    "tsdown": "^0.15.11",
+    "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
-    "wrangler": "^4.38.0"
+    "wrangler": "^4.45.2"
   }
 }

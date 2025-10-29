@@ -1,4 +1,4 @@
-import { hexToBytes } from "@noble/hashes/utils";
+import { hexToBytes } from "@noble/hashes/utils.js";
 import { createMiddleware } from "hono/factory";
 
 import { Token } from "@package/token";

@@ -1,16 +1,17 @@
-import { gcm } from "@noble/ciphers/aes";
-import { hmac } from "@noble/hashes/hmac";
-import { sha3_512 } from "@noble/hashes/sha3";
-import { bytesToUtf8, randomBytes, utf8ToBytes } from "@noble/hashes/utils";
+import { gcm } from "@noble/ciphers/aes.js";
+import { bytesToUtf8 } from "@noble/ciphers/utils.js";
+import { hmac } from "@noble/hashes/hmac.js";
+import { sha3_512 } from "@noble/hashes/sha3.js";
+import { randomBytes, utf8ToBytes } from "@noble/hashes/utils.js";
 import { base64urlnopad } from "@scure/base";
 
 import { TokenExpiry } from "./enums/expiry";
 import { TokenPurpose } from "./enums/purpose";
 import { TokenVersion } from "./enums/version";
-import { TokenKeys } from "./types/keys";
-import { TokenOptions } from "./types/options";
-import { TokenPayload, TokenPayloadData } from "./types/payload";
-import { TokenReadResponse } from "./types/read";
+import type { TokenKeys } from "./types/keys";
+import type { TokenOptions } from "./types/options";
+import type { TokenPayload, TokenPayloadData } from "./types/payload";
+import type { TokenReadResponse } from "./types/read";
 
 class Token {
   private readonly keys: TokenKeys;

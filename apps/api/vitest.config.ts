@@ -15,8 +15,8 @@ export default defineWorkersConfig({
   plugins: [tsconfigPaths()],
   test: {
     setupFiles: [
-      "./src/lib/test/setup/01-migrations.ts",
-      "./src/lib/test/setup/02-users.ts",
+      "./src/test/setup/01-migrations.ts",
+      "./src/test/setup/02-users.ts",
     ],
     poolOptions: {
       workers: {

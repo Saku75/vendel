@@ -18,6 +18,7 @@ const config = {
     "^\\$env/(.*)$",
     "^\\$lib/(.*)$",
     "^\\$routes/(.*)$",
+    "^\\$test/(.*)$",
     "^[./]",
   ],
   importOrderSeparation: true,

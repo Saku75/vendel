@@ -9,6 +9,7 @@ const config = {
     adapter: adapter(),
     alias: {
       $routes: "./src/routes",
+      $test: "./src/test",
     },
     csp: {
       directives: {

@@ -4,6 +4,7 @@
   import SunMoon from "@lucide/svelte/icons/sun-moon";
   import X from "@lucide/svelte/icons/x";
   import { onMount } from "svelte";
+  import { SvelteDate } from "svelte/reactivity";
 
   import { LayoutMenuContent } from "$lib/enums/layout/menu/content";
   import { LayoutTheme } from "$lib/enums/layout/theme";
@@ -15,7 +16,7 @@
   $effect(() => {
     if (layoutStore.theme != LayoutTheme.System) {
       document.documentElement.dataset.theme = layoutStore.theme;
-      const currentTime = new Date();
+      const currentTime = new SvelteDate();
       currentTime.setFullYear(currentTime.getFullYear() + 1);
       document.cookie = `theme-preference=${layoutStore.theme}; SameSite=Strict; Secure; Path=/; Expires=${currentTime.toUTCString()}`;
     } else {

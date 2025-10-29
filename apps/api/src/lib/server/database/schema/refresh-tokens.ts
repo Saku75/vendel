@@ -1,5 +1,6 @@
-import { createId } from "@paralleldrive/cuid2";
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+import { createId } from "$lib/utils/create-id";
 
 import { refreshTokenFamilies } from "./refresh-token-families";
 

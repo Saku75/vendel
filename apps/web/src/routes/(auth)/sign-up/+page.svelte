@@ -8,6 +8,7 @@
   import { passwordValidator } from "@package/validators/password";
 
   import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
 
   import { apiClient } from "$lib/api/client";
   import CaptchaInput from "$lib/components/form/components/captcha-input.svelte";
@@ -53,7 +54,7 @@
         authStore.setAuthenticated(res.data!);
       }
     });
-    await goto("/");
+    await goto(resolve("/"));
   }
 </script>
 

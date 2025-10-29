@@ -1,15 +1,21 @@
 import { includeIgnoreFile } from "@eslint/compat";
 import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
+import { Config, defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
-import ts, { ConfigArray } from "typescript-eslint";
+import ts from "typescript-eslint";
 
-function customConfig(): ConfigArray {
-  return ts.config(
-    { ignores: ["./dist", "./node_modules"] },
+function customConfig(): Config[] {
+  return defineConfig(
+    globalIgnores([
+      "./dist",
+      "./node_modules",
+      "./.svelte-kit",
+      "./src/worker-env.d.ts",
+    ]),
 
     js.configs.recommended,
-    ...ts.configs.recommended,
+    ts.configs.recommended,
     prettier,
 
     {
@@ -17,6 +23,9 @@ function customConfig(): ConfigArray {
         globals: {
           ...globals.browser,
           ...globals.node,
+        },
+        parserOptions: {
+          tsconfigRootDir: process.cwd(),
         },
       },
       rules: { "no-undef": "off" },
