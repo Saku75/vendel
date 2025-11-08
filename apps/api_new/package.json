@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@noble/hashes": "^2.0.1",
-    "@paralleldrive/cuid2": "^3.0.4",
+    "@package/crypto-utils": "workspace:*",
     "@scure/base": "^2.0.0",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.10.4",

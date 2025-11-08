@@ -2,7 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
 
   "name": "vendel-api",
-  "compatibility_date": "2025-11-08",
+  "compatibility_date": "2025-11-05",
   "compatibility_flags": ["nodejs_compat"],
 
   "workers_dev": false,

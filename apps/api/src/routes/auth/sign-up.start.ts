@@ -2,6 +2,7 @@ import { bytesToHex, randomBytes } from "@noble/hashes/utils.js";
 import { eq } from "drizzle-orm";
 import { type z, object, ZodIssueCode } from "zod";
 
+import { createId } from "@package/crypto-utils/cuid";
 import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
 import { emailValidator } from "@package/validators/email";
@@ -14,7 +15,6 @@ import {
 import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
-import { createId } from "$lib/utils/create-id";
 import { createFreshCaptchaValidatorWithKey } from "$lib/utils/validation/captcha";
 
 import { setSignUpSession, SignUpStartResponse } from "./sign-up";

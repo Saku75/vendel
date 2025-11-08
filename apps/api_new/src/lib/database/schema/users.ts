@@ -6,8 +6,9 @@ import {
   text,
 } from "drizzle-orm/sqlite-core";
 
+import { createId } from "@package/crypto-utils/cuid";
+
 import { AuthRole } from "$lib/enums/auth/role";
-import { createId } from "$lib/utils/create-id";
 
 const users = sqliteTable("users", {
   id: text({ length: 24 })

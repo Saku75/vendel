@@ -19,10 +19,10 @@
   "dependencies": {
     "@noble/hashes": "^2.0.1",
     "@package/captcha": "workspace:*",
+    "@package/crypto-utils": "workspace:*",
     "@package/mail": "workspace:*",
     "@package/token": "workspace:*",
     "@package/validators": "workspace:*",
-    "@paralleldrive/cuid2": "^3.0.4",
     "@scure/base": "^2.0.0",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.10.4",

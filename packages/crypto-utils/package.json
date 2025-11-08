@@ -1,0 +1,32 @@
+{
+  "name": "@package/crypto-utils",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^3.0.4"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.10.5",
+    "@config/eslint": "workspace:*",
+    "@config/typescript": "workspace:*",
+    "eslint": "^9.39.1",
+    "tsdown": "^0.16.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "exports": {
+    "./*": {
+      "import": {
+        "types": "./dist/*.d.mts",
+        "default": "./dist/*.mjs"
+      }
+    }
+  }
+}

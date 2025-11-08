@@ -1,6 +1,6 @@
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-import { createId } from "$lib/utils/create-id";
+import { createId } from "@package/crypto-utils/cuid";
 
 import { users } from "./users";
 
