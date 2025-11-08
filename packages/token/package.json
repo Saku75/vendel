@@ -17,8 +17,8 @@
   "devDependencies": {
     "@config/eslint": "workspace:*",
     "@config/typescript": "workspace:*",
-    "eslint": "^9.38.0",
-    "tsdown": "^0.15.11",
+    "eslint": "^9.39.1",
+    "tsdown": "^0.15.12",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
