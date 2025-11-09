@@ -35,7 +35,7 @@ jobs:
             ${{ runner.os }}-turbo-deploy_dev-
       - uses: wyvox/action-setup-pnpm@v3
         with:
-          node-version: 22
+          node-version: 24
       - run: pnpm turbo run db:apply -- -e dev --remote
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
