@@ -1,6 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { object, ZodIssueCode, type z } from "zod";
 
+import { scrypt } from "@package/crypto-utils/scrypt";
 import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
 import { idValidator } from "@package/validators/id";
@@ -10,7 +11,6 @@ import { app } from "$lib/server";
 import { users } from "$lib/server/database/schema/users";
 import { Err, Ok } from "$lib/types/result";
 import { signIn } from "$lib/utils/auth/flows/sign-in";
-import { scrypt } from "$lib/utils/scrypt";
 import { createSessionCaptchaValidator } from "$lib/utils/validation/captcha";
 
 import { getSignInSession, unsetSignInSession } from "./sign-in";

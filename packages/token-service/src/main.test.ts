@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   base64ToBytes,
   bytesToBase64,
-  bytesToString,
-  stringToBytes,
+  bytesToUtf8,
+  utf8ToBytes,
 } from "@package/crypto-utils/bytes";
 import { gcm } from "@package/crypto-utils/gcm";
 
@@ -219,11 +219,11 @@ describe("TokenService", () => {
 
       const parts = createResult.token.split(".");
       const metadataBytes = base64ToBytes(parts[1]);
-      const metadata = JSON.parse(bytesToString(metadataBytes));
+      const metadata = JSON.parse(bytesToUtf8(metadataBytes));
       const nonce = base64ToBytes(metadata.nonce);
 
       const tamperedData = { tampered: "different data" };
-      const tamperedDataBytes = stringToBytes(JSON.stringify(tamperedData));
+      const tamperedDataBytes = utf8ToBytes(JSON.stringify(tamperedData));
       const cipher = gcm(keys.encryption, nonce);
       const encryptedTamperedData = await cipher.encrypt(tamperedDataBytes);
       parts[2] = bytesToBase64(encryptedTamperedData);
@@ -246,11 +246,11 @@ describe("TokenService", () => {
 
       const parts = createResult.token.split(".");
       const metadataBytes = base64ToBytes(parts[1]);
-      const metadata = JSON.parse(bytesToString(metadataBytes));
+      const metadata = JSON.parse(bytesToUtf8(metadataBytes));
 
       metadata.purpose = "tampered-purpose";
 
-      const tamperedMetadataBytes = stringToBytes(JSON.stringify(metadata));
+      const tamperedMetadataBytes = utf8ToBytes(JSON.stringify(metadata));
       parts[1] = bytesToBase64(tamperedMetadataBytes);
 
       const tamperedToken = parts.join(".");

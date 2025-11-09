@@ -23,7 +23,6 @@
     "@package/mail": "workspace:*",
     "@package/token-service": "workspace:*",
     "@package/validators": "workspace:*",
-    "@scure/base": "^2.0.0",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.10.4",
     "set-cookie-parser": "^2.7.2",

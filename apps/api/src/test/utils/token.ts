@@ -1,6 +1,6 @@
-import { hexToBytes } from "@noble/hashes/utils.js";
 import { env } from "cloudflare:test";
 
+import { hexToBytes } from "@package/crypto-utils/bytes";
 import { TokenService } from "@package/token-service";
 
 const testToken = new TokenService(

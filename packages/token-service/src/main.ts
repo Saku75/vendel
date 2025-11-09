@@ -1,8 +1,9 @@
 import {
   base64ToBytes,
   bytesToBase64,
-  bytesToString,
-  stringToBytes,
+  bytesToUtf8,
+  randomBytes,
+  utf8ToBytes,
 } from "@package/crypto-utils/bytes";
 import { createId } from "@package/crypto-utils/cuid";
 import { gcm } from "@package/crypto-utils/gcm";
@@ -41,7 +42,7 @@ class TokenService {
     const version = TokenVersion.V1;
 
     const tokenId = createId();
-    const nonce = crypto.getRandomValues(new Uint8Array(12));
+    const nonce = randomBytes(12);
     const now = TokenService.now();
 
     const metadata: TokenMetadata = {
@@ -56,14 +57,14 @@ class TokenService {
       nonce: bytesToBase64(nonce),
     };
 
-    const dataBytes = stringToBytes(JSON.stringify(data));
+    const dataBytes = utf8ToBytes(JSON.stringify(data));
     const encryptedData = await this.encrypt(version, nonce, dataBytes);
 
-    const metadataPart = bytesToBase64(stringToBytes(JSON.stringify(metadata)));
+    const metadataPart = bytesToBase64(utf8ToBytes(JSON.stringify(metadata)));
     const dataPart = bytesToBase64(encryptedData);
 
     const toSign = `${version}.${metadataPart}.${dataPart}`;
-    const signatureBytes = await this.sign(version, stringToBytes(toSign));
+    const signatureBytes = await this.sign(version, utf8ToBytes(toSign));
     const signaturePart = bytesToBase64(signatureBytes);
 
     const token = `${version}.${metadataPart}.${dataPart}.${signaturePart}`;
@@ -85,7 +86,6 @@ class TokenService {
     token: string,
     options?: { metadataOnly?: boolean },
   ): Promise<TokenServiceReadResult<TData> | TokenServiceReadMetadataResult> {
-    // Parse token: version.metadata.data.signature
     const parts = token.split(".");
     if (parts.length !== 4) {
       throw new Error("TokenService: Invalid token format");
@@ -102,12 +102,12 @@ class TokenService {
     const signatureBytes = base64ToBytes(signaturePart);
     const verified = await this.verify(
       version,
-      stringToBytes(toVerify),
+      utf8ToBytes(toVerify),
       signatureBytes,
     );
 
     const metadataBytes = base64ToBytes(metadataPart);
-    const metadataJson = bytesToString(metadataBytes);
+    const metadataJson = bytesToUtf8(metadataBytes);
     const metadata = JSON.parse(metadataJson) as TokenMetadata;
 
     const now = TokenService.now();
@@ -124,7 +124,7 @@ class TokenService {
     const encryptedData = base64ToBytes(dataPart);
     const nonce = base64ToBytes(metadata.nonce);
     const decryptedBytes = await this.decrypt(encryptedData, nonce, version);
-    const decryptedJson = bytesToString(decryptedBytes);
+    const decryptedJson = bytesToUtf8(decryptedBytes);
     const data = JSON.parse(decryptedJson) as TData;
 
     const tokenData = {

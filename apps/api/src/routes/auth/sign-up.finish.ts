@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { type z, object, ZodIssueCode } from "zod";
 
+import { scrypt } from "@package/crypto-utils/scrypt";
 import { MailTemplate } from "@package/mail";
 import { TokenPurpose } from "@package/token-service";
 import { ValidatorCode } from "@package/validators";
@@ -13,7 +14,6 @@ import { users } from "$lib/server/database/schema/users";
 import { ConfirmEmailTokenData } from "$lib/types/auth/token";
 import { Err, Ok } from "$lib/types/result";
 import { signIn } from "$lib/utils/auth/flows/sign-in";
-import { scrypt } from "$lib/utils/scrypt";
 import { createSessionCaptchaValidator } from "$lib/utils/validation/captcha";
 
 import { getSignUpSession, unsetSignUpSession } from "./sign-up";

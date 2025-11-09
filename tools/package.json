@@ -1,8 +1,0 @@
-{
-  "name": "tools",
-  "type": "module",
-  "dependencies": {
-    "@noble/hashes": "^1.8.0",
-    "@scure/base": "^1.2.6"
-  }
-}

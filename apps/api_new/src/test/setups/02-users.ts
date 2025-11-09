@@ -1,7 +1,8 @@
 import { bytesToHex, randomBytes } from "@noble/hashes/utils.js";
 
+import { scrypt } from "@package/crypto-utils/scrypt";
+
 import { users } from "$lib/database/schema/users";
-import { scrypt } from "$lib/utils/scrypt";
 
 import { testUsers } from "../fixtures/users";
 import { testDatabase } from "../utils/database";

@@ -1,7 +1,7 @@
-import { bytesToHex, randomBytes } from "@noble/hashes/utils.js";
 import { eq } from "drizzle-orm";
 import { type z, object, ZodIssueCode } from "zod";
 
+import { bytesToHex, randomBytes } from "@package/crypto-utils/bytes";
 import { createId } from "@package/crypto-utils/cuid";
 import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";

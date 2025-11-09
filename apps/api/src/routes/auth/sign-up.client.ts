@@ -1,9 +1,9 @@
-import { base64urlnopad } from "@scure/base";
+import { bytesToBase64 } from "@package/crypto-utils/bytes";
+import { scrypt } from "@package/crypto-utils/scrypt";
 
 import { createClientRoute } from "$lib/client/create-route";
 import { getClientUrl } from "$lib/client/utils/get-url";
 import { handleApiResponse } from "$lib/client/utils/handle-api-response";
-import { scrypt } from "$lib/utils/scrypt";
 
 import type {
   SignUpFinishRequest,
@@ -50,7 +50,7 @@ const createSignUpClient = createClientRoute(({ context, fetch }) => {
         method: "post",
         body: JSON.stringify({
           sessionId: startJson.data.sessionId,
-          passwordClientHash: base64urlnopad.encode(passwordHash),
+          passwordClientHash: bytesToBase64(passwordHash),
           captcha,
         } satisfies SignUpFinishRequest),
       },

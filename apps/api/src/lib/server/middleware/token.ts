@@ -1,6 +1,6 @@
-import { hexToBytes } from "@noble/hashes/utils.js";
 import { createMiddleware } from "hono/factory";
 
+import { hexToBytes } from "@package/crypto-utils/bytes";
 import { TokenService } from "@package/token-service";
 
 import { HonoEnv } from "$lib/server";

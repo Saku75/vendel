@@ -4,9 +4,10 @@ import {
   base64ToBytes,
   bytesToBase64,
   bytesToHex,
-  bytesToString,
+  bytesToUtf8,
   hexToBytes,
-  stringToBytes,
+  randomBytes,
+  utf8ToBytes,
 } from "./bytes";
 
 describe("bytesToHex", () => {
@@ -182,85 +183,153 @@ describe("cross-format conversions", () => {
   });
 });
 
-describe("stringToBytes", () => {
+describe("utf8ToBytes", () => {
   it("should convert UTF-8 string to Uint8Array", () => {
     const str = "Hello";
-    const bytes = stringToBytes(str);
+    const bytes = utf8ToBytes(str);
     expect(bytes).toEqual(new Uint8Array([72, 101, 108, 108, 111]));
   });
 
   it("should handle empty string", () => {
     const str = "";
-    const bytes = stringToBytes(str);
+    const bytes = utf8ToBytes(str);
     expect(bytes).toEqual(new Uint8Array([]));
   });
 
   it("should handle Unicode characters", () => {
     const str = "Hello 世界";
-    const bytes = stringToBytes(str);
+    const bytes = utf8ToBytes(str);
     expect(bytes.length).toBeGreaterThan(str.length); // Multi-byte characters
   });
 
   it("should handle emojis", () => {
     const str = "Hello 👋";
-    const bytes = stringToBytes(str);
+    const bytes = utf8ToBytes(str);
     expect(bytes.length).toBeGreaterThan(str.length);
   });
 
   it("should handle special characters", () => {
     const str = "Hello\nWorld\t!";
-    const bytes = stringToBytes(str);
+    const bytes = utf8ToBytes(str);
     expect(bytes.length).toBe(13);
   });
 });
 
-describe("bytesToString", () => {
+describe("bytesToUtf8", () => {
   it("should convert Uint8Array to UTF-8 string", () => {
     const bytes = new Uint8Array([72, 101, 108, 108, 111]);
-    const str = bytesToString(bytes);
+    const str = bytesToUtf8(bytes);
     expect(str).toBe("Hello");
   });
 
   it("should handle empty Uint8Array", () => {
     const bytes = new Uint8Array([]);
-    const str = bytesToString(bytes);
+    const str = bytesToUtf8(bytes);
     expect(str).toBe("");
   });
 
   it("should handle Unicode characters", () => {
     const original = "Hello 世界";
-    const bytes = stringToBytes(original);
-    const str = bytesToString(bytes);
+    const bytes = utf8ToBytes(original);
+    const str = bytesToUtf8(bytes);
     expect(str).toBe(original);
   });
 
   it("should handle emojis", () => {
     const original = "Hello 👋";
-    const bytes = stringToBytes(original);
-    const str = bytesToString(bytes);
+    const bytes = utf8ToBytes(original);
+    const str = bytesToUtf8(bytes);
     expect(str).toBe(original);
   });
 });
 
-describe("string round-trip conversions", () => {
-  it("should convert string -> bytes -> string correctly", () => {
+describe("utf8 round-trip conversions", () => {
+  it("should convert utf8 -> bytes -> utf8 correctly", () => {
     const original = "Hello, World!";
-    const bytes = stringToBytes(original);
-    const converted = bytesToString(bytes);
+    const bytes = utf8ToBytes(original);
+    const converted = bytesToUtf8(bytes);
     expect(converted).toBe(original);
   });
 
   it("should handle complex Unicode in round-trip", () => {
     const original = "Hello 世界 👋 Здравствуй مرحبا";
-    const bytes = stringToBytes(original);
-    const converted = bytesToString(bytes);
+    const bytes = utf8ToBytes(original);
+    const converted = bytesToUtf8(bytes);
     expect(converted).toBe(original);
   });
 
   it("should handle JSON in round-trip", () => {
     const original = JSON.stringify({ hello: "world", count: 42 });
-    const bytes = stringToBytes(original);
-    const converted = bytesToString(bytes);
+    const bytes = utf8ToBytes(original);
+    const converted = bytesToUtf8(bytes);
     expect(converted).toBe(original);
+  });
+});
+
+describe("randomBytes", () => {
+  it("should generate Uint8Array of correct length", () => {
+    const bytes = randomBytes(16);
+    expect(bytes).toBeInstanceOf(Uint8Array);
+    expect(bytes.length).toBe(16);
+  });
+
+  it("should handle zero length", () => {
+    const bytes = randomBytes(0);
+    expect(bytes).toBeInstanceOf(Uint8Array);
+    expect(bytes.length).toBe(0);
+  });
+
+  it("should handle various lengths", () => {
+    expect(randomBytes(1).length).toBe(1);
+    expect(randomBytes(32).length).toBe(32);
+    expect(randomBytes(64).length).toBe(64);
+    expect(randomBytes(256).length).toBe(256);
+  });
+
+  it("should generate different values on successive calls", () => {
+    const bytes1 = randomBytes(32);
+    const bytes2 = randomBytes(32);
+
+    // Extremely unlikely to be identical (1 in 2^256)
+    expect(bytes1).not.toEqual(bytes2);
+  });
+
+  it("should generate values in valid byte range", () => {
+    const bytes = randomBytes(100);
+
+    for (let i = 0; i < bytes.length; i++) {
+      expect(bytes[i]).toBeGreaterThanOrEqual(0);
+      expect(bytes[i]).toBeLessThanOrEqual(255);
+    }
+  });
+
+  it("should have reasonable distribution of values", () => {
+    // Generate a larger sample to check distribution
+    const bytes = randomBytes(1000);
+    const counts = new Array(256).fill(0);
+
+    for (let i = 0; i < bytes.length; i++) {
+      counts[bytes[i]]++;
+    }
+
+    // At least some variety in the generated bytes
+    const uniqueValues = counts.filter((count) => count > 0).length;
+    expect(uniqueValues).toBeGreaterThan(100); // Should have many unique values
+  });
+
+  it("should work with conversion functions", () => {
+    const bytes = randomBytes(16);
+
+    // Should be able to convert to hex
+    const hex = bytesToHex(bytes);
+    expect(hex.length).toBe(32); // 16 bytes = 32 hex chars
+
+    // Should be able to convert to base64
+    const base64 = bytesToBase64(bytes);
+    expect(base64.length).toBeGreaterThan(0);
+
+    // Round-trip should work
+    const hexBytes = hexToBytes(hex);
+    expect(hexBytes).toEqual(bytes);
   });
 });

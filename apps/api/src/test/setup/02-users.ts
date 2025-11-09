@@ -1,9 +1,10 @@
-import { bytesToHex, randomBytes } from "@noble/hashes/utils.js";
 import { env } from "cloudflare:test";
 import { drizzle } from "drizzle-orm/d1";
 
+import { bytesToHex, randomBytes } from "@package/crypto-utils/bytes";
+import { scrypt } from "@package/crypto-utils/scrypt";
+
 import { users } from "$lib/server/database/schema/users";
-import { scrypt } from "$lib/utils/scrypt";
 
 import { TEST_USERS } from "../fixtures/users";
 

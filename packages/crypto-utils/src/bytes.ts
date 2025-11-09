@@ -14,19 +14,24 @@ function base64ToBytes(input: string): Uint8Array {
   return Uint8Array.fromBase64(input, { alphabet: "base64url" });
 }
 
-function stringToBytes(input: string): Uint8Array {
+function utf8ToBytes(input: string): Uint8Array {
   return new TextEncoder().encode(input);
 }
 
-function bytesToString(input: Uint8Array): string {
+function bytesToUtf8(input: Uint8Array): string {
   return new TextDecoder().decode(input);
+}
+
+function randomBytes(length: number): Uint8Array {
+  return crypto.getRandomValues(new Uint8Array(length));
 }
 
 export {
   base64ToBytes,
   bytesToBase64,
   bytesToHex,
-  bytesToString,
+  bytesToUtf8,
   hexToBytes,
-  stringToBytes,
+  randomBytes,
+  utf8ToBytes,
 };
