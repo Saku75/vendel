@@ -7,11 +7,11 @@ function hexToBytes(input: string): Uint8Array {
 }
 
 function bytesToBase64(input: Uint8Array): string {
-  return input.toBase64();
+  return input.toBase64({ alphabet: "base64url", omitPadding: true });
 }
 
 function base64ToBytes(input: string): Uint8Array {
-  return Uint8Array.fromBase64(input);
+  return Uint8Array.fromBase64(input, { alphabet: "base64url" });
 }
 
 function stringToBytes(input: string): Uint8Array {

@@ -1,7 +1,7 @@
 import { hexToBytes } from "@noble/hashes/utils.js";
 import { createMiddleware } from "hono/factory";
 
-import { Token } from "@package/token";
+import { TokenService } from "@package/token-service";
 
 import { HonoEnv } from "$lib/server";
 
@@ -10,12 +10,12 @@ const tokenMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
 
   c.set(
     "token",
-    new Token(
+    new TokenService(
       {
         encryption: hexToBytes(TOKEN_ENCRYPTION_KEY),
         signing: hexToBytes(TOKEN_SIGNING_KEY),
       },
-      { issuer: c.env.API_ORIGIN },
+      { issuer: c.env.API_ORIGIN, audience: c.env.CORS_ORIGINS },
     ),
   );
 

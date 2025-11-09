@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { type z, object, ZodIssueCode } from "zod";
 
 import { MailTemplate } from "@package/mail";
-import { TokenPurpose } from "@package/token";
+import { TokenPurpose } from "@package/token-service";
 import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
 import { idValidator } from "@package/validators/id";
@@ -81,7 +81,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
   ]);
   const { id: userId, firstName, email } = user[0];
 
-  const confirmEmailToken = c.var.token.create<ConfirmEmailTokenData>(
+  const confirmEmailToken = await c.var.token.create<ConfirmEmailTokenData>(
     {
       userId: session.userId,
     },
@@ -98,7 +98,7 @@ const signUpFinishRoute = app().post("/", async (c) => {
     template: MailTemplate.ConfirmEmail,
     data: {
       name: firstName,
-      token: confirmEmailToken,
+      token: confirmEmailToken.token,
     },
   });
 

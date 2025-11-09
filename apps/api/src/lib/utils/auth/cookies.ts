@@ -1,7 +1,11 @@
 import { Context } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 
-import { TokenExpiry, TokenPurpose } from "@package/token";
+import {
+  TokenExpiresIn,
+  TokenPurpose,
+  TokenService,
+} from "@package/token-service";
 
 import { HonoEnv } from "$lib/server";
 import { AuthRefreshTokenData, AuthTokenData } from "$lib/types/auth/token";
@@ -13,7 +17,7 @@ import { getNormalizedHostname } from "../get-normalized-hostname";
 const AUTH_COOKIE_NAME = "auth";
 const AUTH_REFRESH_COOKIE_NAME = "auth-refresh";
 
-function setAuthCookie(
+async function setAuthCookie(
   c: Context<HonoEnv>,
   expiresAt: Date,
   data: AuthTokenData,
@@ -23,16 +27,18 @@ function setAuthCookie(
   setCookie(
     c,
     cookieName(AUTH_COOKIE_NAME, { prefix: hostname }),
-    c.var.token.create<AuthTokenData>(data, {
-      purpose: TokenPurpose.Auth,
-      expiresIn: TokenExpiry.FifteenMinutes,
-    }),
+    (
+      await c.var.token.create<AuthTokenData>(data, {
+        purpose: TokenPurpose.Auth,
+        expiresAt: TokenService.getExpiresAt(TokenExpiresIn.FifteenMinutes),
+      })
+    ).token,
     cookieOptions(c, {
       expires: expiresAt,
     }),
   );
 }
-function setAuthRefreshCookie(
+async function setAuthRefreshCookie(
   c: Context<HonoEnv>,
   expiresAt: Date,
   data: AuthRefreshTokenData,
@@ -42,17 +48,19 @@ function setAuthRefreshCookie(
   setCookie(
     c,
     cookieName(AUTH_REFRESH_COOKIE_NAME, { prefix: hostname }),
-    c.var.token.create<AuthRefreshTokenData>(data, {
-      purpose: TokenPurpose.Refresh,
-      expiresAt: expiresAt.valueOf(),
-    }),
+    (
+      await c.var.token.create<AuthRefreshTokenData>(data, {
+        purpose: TokenPurpose.Refresh,
+        expiresAt: expiresAt.valueOf(),
+      })
+    ).token,
     cookieOptions(c, {
       expires: expiresAt,
     }),
   );
 }
 
-function getAuthCookie(c: Context<HonoEnv>) {
+async function getAuthCookie(c: Context<HonoEnv>) {
   const hostname = getNormalizedHostname(c);
 
   const cookie = getCookie(
@@ -63,14 +71,14 @@ function getAuthCookie(c: Context<HonoEnv>) {
   if (!cookie) return;
 
   try {
-    return c.var.token.read<AuthTokenData>(cookie);
+    return await c.var.token.read<AuthTokenData>(cookie);
   } catch (error) {
     console.error(error);
 
     return null;
   }
 }
-function getAuthRefreshCookie(c: Context<HonoEnv>) {
+async function getAuthRefreshCookie(c: Context<HonoEnv>) {
   const hostname = getNormalizedHostname(c);
 
   const cookie = getCookie(
@@ -81,7 +89,7 @@ function getAuthRefreshCookie(c: Context<HonoEnv>) {
   if (!cookie) return;
 
   try {
-    return c.var.token.read<AuthRefreshTokenData>(cookie);
+    return await c.var.token.read<AuthRefreshTokenData>(cookie);
   } catch (error) {
     console.error(error);
 

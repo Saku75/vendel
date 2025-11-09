@@ -9,6 +9,7 @@ import { gcm } from "@package/crypto-utils/gcm";
 import { hmac } from "@package/crypto-utils/hmac";
 
 import { TokenExpiresIn } from "./enums/expires-in";
+import { TokenPurpose } from "./enums/purpose";
 import { TokenVersion } from "./enums/version";
 import type { TokenServiceCreateResult } from "./types/service/create/result";
 import type { TokenServiceKeys } from "./types/service/keys";
@@ -203,4 +204,12 @@ class TokenService {
   }
 }
 
-export { TokenService, TokenServiceKeys };
+export { TokenExpiresIn, TokenPurpose, TokenService, TokenVersion };
+export type {
+  TokenData,
+  TokenMetadata,
+  TokenServiceCreateResult,
+  TokenServiceKeys,
+  TokenServiceReadMetadataResult,
+  TokenServiceReadResult,
+};

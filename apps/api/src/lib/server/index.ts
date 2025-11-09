@@ -4,7 +4,7 @@ import { HonoOptions } from "hono/hono-base";
 
 import { Captcha } from "@package/captcha";
 import { Mail } from "@package/mail";
-import { Token } from "@package/token";
+import { TokenService } from "@package/token-service";
 
 import { Auth } from "$lib/types/auth";
 import { Err } from "$lib/types/result";
@@ -16,7 +16,7 @@ type HonoEnv = {
     auth: Auth;
     captcha: Captcha;
     database: DrizzleD1Database;
-    token: Token;
+    token: TokenService;
     mail: Mail;
   };
 };

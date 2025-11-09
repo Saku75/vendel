@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { object, type z } from "zod";
 
 import { MailTemplate } from "@package/mail";
-import { TokenPurpose } from "@package/token";
+import { TokenPurpose } from "@package/token-service";
 import { captchaValidator } from "@package/validators/captcha";
 
 import { AuthStatus } from "$lib/enums";
@@ -72,7 +72,7 @@ emailSendRoute.post("/", requireAuth(), async (c) => {
     );
   }
 
-  const confirmEmailToken = c.var.token.create<ConfirmEmailTokenData>(
+  const confirmEmailToken = await c.var.token.create<ConfirmEmailTokenData>(
     {
       userId: auth.user.id,
     },
@@ -89,7 +89,7 @@ emailSendRoute.post("/", requireAuth(), async (c) => {
     template: MailTemplate.ConfirmEmail,
     data: {
       name: firstName,
-      token: confirmEmailToken,
+      token: confirmEmailToken.token,
     },
   });
 

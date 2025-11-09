@@ -65,7 +65,7 @@ describe("bytesToBase64", () => {
   it("should convert Uint8Array to base64 string", () => {
     const bytes = new Uint8Array([72, 101, 108, 108, 111]);
     const base64 = bytesToBase64(bytes);
-    expect(base64).toBe("SGVsbG8=");
+    expect(base64).toBe("SGVsbG8");
   });
 
   it("should handle empty Uint8Array", () => {
@@ -75,13 +75,13 @@ describe("bytesToBase64", () => {
   });
 
   it("should handle various byte lengths", () => {
-    // Length 1 (padding: ==)
+    // Length 1
     const bytes1 = new Uint8Array([65]);
-    expect(bytesToBase64(bytes1)).toBe("QQ==");
+    expect(bytesToBase64(bytes1)).toBe("QQ");
 
-    // Length 2 (padding: =)
+    // Length 2
     const bytes2 = new Uint8Array([65, 66]);
-    expect(bytesToBase64(bytes2)).toBe("QUI=");
+    expect(bytesToBase64(bytes2)).toBe("QUI");
 
     // Length 3 (no padding)
     const bytes3 = new Uint8Array([65, 66, 67]);
@@ -98,7 +98,7 @@ describe("bytesToBase64", () => {
 
 describe("base64ToBytes", () => {
   it("should convert base64 string to Uint8Array", () => {
-    const base64 = "SGVsbG8=";
+    const base64 = "SGVsbG8";
     const bytes = base64ToBytes(base64);
     expect(bytes).toEqual(new Uint8Array([72, 101, 108, 108, 111]));
   });
@@ -110,9 +110,9 @@ describe("base64ToBytes", () => {
   });
 
   it("should handle base64 with different padding", () => {
-    expect(base64ToBytes("QQ==")).toEqual(new Uint8Array([65]));
+    expect(base64ToBytes("QQ")).toEqual(new Uint8Array([65]));
 
-    expect(base64ToBytes("QUI=")).toEqual(new Uint8Array([65, 66]));
+    expect(base64ToBytes("QUI")).toEqual(new Uint8Array([65, 66]));
 
     expect(base64ToBytes("QUJD")).toEqual(new Uint8Array([65, 66, 67]));
   });
@@ -152,7 +152,7 @@ describe("base64 round-trip conversions", () => {
   });
 
   it("should convert base64 -> bytes -> base64 correctly", () => {
-    const original = "SGVsbG8gV29ybGQ=";
+    const original = "SGVsbG8gV29ybGQ";
     const bytes = base64ToBytes(original);
     const converted = bytesToBase64(bytes);
     expect(converted).toBe(original);
@@ -174,7 +174,7 @@ describe("cross-format conversions", () => {
     const hex = "48656c6c6f";
     const bytes = hexToBytes(hex);
     const base64 = bytesToBase64(bytes);
-    expect(base64).toBe("SGVsbG8=");
+    expect(base64).toBe("SGVsbG8");
 
     const bytesFromBase64 = base64ToBytes(base64);
     const hexFromBytes = bytesToHex(bytesFromBase64);

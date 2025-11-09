@@ -34,9 +34,9 @@ refreshRoute.post("/", async (c) => {
     );
   }
 
-  const refreshCookie = getAuthRefreshCookie(c);
+  const refreshCookie = await getAuthRefreshCookie(c);
 
-  if (!refreshCookie || !refreshCookie.valid) {
+  if (!refreshCookie || !refreshCookie.verified) {
     return c.json(
       {
         ok: false,
@@ -52,7 +52,7 @@ refreshRoute.post("/", async (c) => {
   };
 
   const result = await refreshSession(c, {
-    refreshTokenId: refreshCookie.payload.data.id,
+    refreshTokenId: refreshCookie.token.data.id,
     authRefreshTokenId: authenticatedAuth.refreshToken.id,
   });
 

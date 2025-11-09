@@ -1,5 +1,4 @@
 import { cors } from "hono/cors";
-import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
@@ -17,7 +16,6 @@ export default {
     const server = app();
 
     server.use(
-      logger(),
       trimTrailingSlash(),
       secureHeaders({ strictTransportSecurity: false, xXssProtection: "1" }),
       cors({

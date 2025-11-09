@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { object, type z } from "zod";
 
-import { TokenPurpose } from "@package/token";
+import { TokenPurpose } from "@package/token-service";
 import { tokenValidator } from "@package/validators/token";
 
 import { app } from "$lib/server";
@@ -31,7 +31,7 @@ emailConfirmRoute.post("/", async (c) => {
 
   const { data } = parsedBody;
 
-  const tokenValidation = validateToken<ConfirmEmailTokenData>(
+  const tokenValidation = await validateToken<ConfirmEmailTokenData>(
     c,
     data.token,
     TokenPurpose.ConfirmEmail,

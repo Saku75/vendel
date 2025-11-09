@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import { ZodIssueCode } from "zod";
 
-import { TokenPurpose } from "@package/token";
+import { TokenPurpose } from "@package/token-service";
 import { ValidatorCode } from "@package/validators";
 
 import { users } from "$lib/server/database/schema/users";
@@ -62,7 +62,7 @@ describe("Email Confirm", () => {
         "Doe",
       );
 
-      const token = testToken.create<ConfirmEmailTokenData>(
+      const { token } = await testToken.create<ConfirmEmailTokenData>(
         { userId: user.id },
         { purpose: TokenPurpose.ConfirmEmail },
       );
@@ -121,13 +121,14 @@ describe("Email Confirm", () => {
     it("should reject expired tokens", async () => {
       const [user] = await createUnverifiedUser("jane.expired@example.com");
 
-      const expiredToken = testToken.create<ConfirmEmailTokenData>(
-        { userId: user.id },
-        {
-          purpose: TokenPurpose.ConfirmEmail,
-          expiresAt: Date.now() - 1000,
-        },
-      );
+      const { token: expiredToken } =
+        await testToken.create<ConfirmEmailTokenData>(
+          { userId: user.id },
+          {
+            purpose: TokenPurpose.ConfirmEmail,
+            expiresAt: Date.now() - 1000,
+          },
+        );
 
       const response = await testFetch("/auth/email/confirm", {
         method: "POST",
@@ -156,10 +157,11 @@ describe("Email Confirm", () => {
     it("should reject tokens with wrong purpose", async () => {
       const [user] = await createUnverifiedUser("bob.wrongpurpose@example.com");
 
-      const wrongPurposeToken = testToken.create<ConfirmEmailTokenData>(
-        { userId: user.id },
-        { purpose: TokenPurpose.Auth },
-      );
+      const { token: wrongPurposeToken } =
+        await testToken.create<ConfirmEmailTokenData>(
+          { userId: user.id },
+          { purpose: TokenPurpose.Auth },
+        );
 
       const response = await testFetch("/auth/email/confirm", {
         method: "POST",
@@ -188,7 +190,7 @@ describe("Email Confirm", () => {
     it("should handle non-existent user", async () => {
       const fakeUserId = "fake_user_id_123";
 
-      const token = testToken.create<ConfirmEmailTokenData>(
+      const { token } = await testToken.create<ConfirmEmailTokenData>(
         { userId: fakeUserId },
         { purpose: TokenPurpose.ConfirmEmail },
       );
@@ -216,10 +218,11 @@ describe("Email Confirm", () => {
         "alice.alreadyverified@example.com",
       );
 
-      const firstToken = testToken.create<ConfirmEmailTokenData>(
-        { userId: user.id },
-        { purpose: TokenPurpose.ConfirmEmail },
-      );
+      const { token: firstToken } =
+        await testToken.create<ConfirmEmailTokenData>(
+          { userId: user.id },
+          { purpose: TokenPurpose.ConfirmEmail },
+        );
 
       await testFetch("/auth/email/confirm", {
         method: "POST",
@@ -229,10 +232,11 @@ describe("Email Confirm", () => {
         }),
       });
 
-      const secondToken = testToken.create<ConfirmEmailTokenData>(
-        { userId: user.id },
-        { purpose: TokenPurpose.ConfirmEmail },
-      );
+      const { token: secondToken } =
+        await testToken.create<ConfirmEmailTokenData>(
+          { userId: user.id },
+          { purpose: TokenPurpose.ConfirmEmail },
+        );
 
       const response = await testFetch("/auth/email/confirm", {
         method: "POST",

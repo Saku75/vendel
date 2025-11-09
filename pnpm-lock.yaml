@@ -44,9 +44,9 @@ importers:
       '@package/mail':
         specifier: workspace:*
         version: link:../../packages/mail
-      '@package/token':
+      '@package/token-service':
         specifier: workspace:*
-        version: link:../../packages/token
+        version: link:../../packages/token-service
       '@package/validators':
         specifier: workspace:*
         version: link:../../packages/validators
@@ -359,37 +359,6 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/token:
-    dependencies:
-      '@noble/ciphers':
-        specifier: ^2.0.1
-        version: 2.0.1
-      '@noble/hashes':
-        specifier: ^2.0.1
-        version: 2.0.1
-      '@scure/base':
-        specifier: ^2.0.0
-        version: 2.0.0
-    devDependencies:
-      '@config/eslint':
-        specifier: workspace:*
-        version: link:../../configs/eslint
-      '@config/typescript':
-        specifier: workspace:*
-        version: link:../../configs/typescript
-      eslint:
-        specifier: ^9.39.1
-        version: 9.39.1(jiti@2.6.1)
-      tsdown:
-        specifier: ^0.15.12
-        version: 0.15.12(typescript@5.9.3)(unrun@0.2.6(synckit@0.11.11))
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)
-
   packages/token-service:
     dependencies:
       '@paralleldrive/cuid2':
@@ -448,9 +417,6 @@ importers:
       '@noble/hashes':
         specifier: ^1.8.0
         version: 1.8.0
-      '@package/token':
-        specifier: workspace:*
-        version: link:../packages/token
       '@scure/base':
         specifier: ^1.2.6
         version: 1.2.6
@@ -1209,10 +1175,6 @@ packages:
 
   '@napi-rs/wasm-runtime@1.0.7':
     resolution: {integrity: sha512-SeDnOO0Tk7Okiq6DbXmmBODgOAb9dp9gjlphokTUxmt8U3liIP1ZsozBahH69j/RJv+Rfs6IwUKHTgQYJ/HBAw==}
-
-  '@noble/ciphers@2.0.1':
-    resolution: {integrity: sha512-xHK3XHPUW8DTAobU+G0XT+/w+JLM7/8k1UFdB5xg/zTFPnFCobhftzw8wl4Lw2aq/Rvir5pxfZV5fEazmeCJ2g==}
-    engines: {node: '>= 20.19.0'}
 
   '@noble/hashes@1.8.0':
     resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
@@ -3808,8 +3770,6 @@ snapshots:
       '@emnapi/runtime': 1.7.0
       '@tybys/wasm-util': 0.10.1
     optional: true
-
-  '@noble/ciphers@2.0.1': {}
 
   '@noble/hashes@1.8.0': {}
 

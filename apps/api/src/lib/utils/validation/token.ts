@@ -1,7 +1,7 @@
 import { Context } from "hono";
 import { ZodIssueCode, type RefinementCtx } from "zod";
 
-import { TokenPurpose } from "@package/token";
+import { TokenPurpose } from "@package/token-service";
 import { ValidatorCode } from "@package/validators";
 
 import { HonoEnv } from "$lib/server";
@@ -25,14 +25,14 @@ export type TokenValidationResponse<T> =
  * Validates a token with comprehensive error handling
  * Returns either success with data or structured error response
  */
-export function validateToken<T = unknown>(
+export async function validateToken<T = unknown>(
   c: Context<HonoEnv>,
   token: string,
   expectedPurpose: TokenPurpose,
-): TokenValidationResponse<T> {
+): Promise<TokenValidationResponse<T>> {
   let tokenResult;
   try {
-    tokenResult = c.var.token.read(token);
+    tokenResult = await c.var.token.read(token);
   } catch {
     return {
       success: false,
@@ -50,7 +50,7 @@ export function validateToken<T = unknown>(
     };
   }
 
-  if (!tokenResult || !tokenResult.valid) {
+  if (!tokenResult || !tokenResult.verified) {
     return {
       success: false,
       error: {
@@ -84,7 +84,7 @@ export function validateToken<T = unknown>(
     };
   }
 
-  if (tokenResult.payload.purpose !== expectedPurpose) {
+  if (tokenResult.token.metadata.purpose !== expectedPurpose) {
     return {
       success: false,
       error: {
@@ -103,7 +103,7 @@ export function validateToken<T = unknown>(
 
   return {
     success: true,
-    data: tokenResult.payload.data as T,
+    data: tokenResult.token.data as T,
   };
 }
 
@@ -116,7 +116,7 @@ export function createTokenValidator<T = unknown>(
   expectedPurpose: TokenPurpose,
 ) {
   return async (values: { token: string }, context: RefinementCtx) => {
-    const result = validateToken<T>(c, values.token, expectedPurpose);
+    const result = await validateToken<T>(c, values.token, expectedPurpose);
     if (!result.success) {
       const error = result.error.errors![0];
       context.addIssue({

@@ -10,22 +10,22 @@ import {
 import { getAuthSession } from "$lib/utils/auth/session";
 
 const authMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
-  const authCookie = getAuthCookie(c);
+  const authCookie = await getAuthCookie(c);
 
   try {
-    if (authCookie && authCookie.valid) {
-      const { user, refreshToken } = authCookie.payload.data;
+    if (authCookie && authCookie.verified) {
+      const { user, refreshToken } = authCookie.token.data;
 
       c.set("auth", {
         status: authCookie.expired
           ? AuthStatus.Expired
           : AuthStatus.Authenticated,
-        authToken: { expiresAt: authCookie.payload.expiresAt },
+        authToken: { expiresAt: authCookie.token.metadata.expiresAt },
         refreshToken,
         user,
       });
     } else {
-      if ((authCookie && !authCookie.valid) || authCookie === null) {
+      if ((authCookie && !authCookie.verified) || authCookie === null) {
         deleteAuthCookie(c);
         deleteAuthRefreshCookie(c);
       }
@@ -34,7 +34,7 @@ const authMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
     }
 
     if (authCookie) {
-      const { refreshToken } = authCookie.payload.data;
+      const { refreshToken } = authCookie.token.data;
 
       const authSession = await getAuthSession(c, refreshToken.id);
 
