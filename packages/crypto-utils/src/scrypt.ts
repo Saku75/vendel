@@ -1,4 +1,7 @@
-async function scrypt(password: string, salt: string): Promise<Uint8Array> {
+async function scrypt(
+  password: string | Uint8Array,
+  salt: string,
+): Promise<Uint8Array> {
   try {
     const { scrypt } = await import("node:crypto");
 

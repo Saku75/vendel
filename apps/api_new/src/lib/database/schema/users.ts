@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   AnySQLiteColumn,
   blob,
@@ -38,10 +39,10 @@ const users = sqliteTable("users", {
 
   createdAt: int({ mode: "timestamp" })
     .notNull()
-    .$default(() => new Date()),
+    .default(sql`(unixepoch())`),
   updatedAt: int({ mode: "timestamp" })
     .notNull()
-    .$default(() => new Date())
+    .default(sql`(unixepoch())`)
     .$onUpdate(() => new Date()),
 });
 

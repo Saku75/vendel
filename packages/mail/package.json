@@ -13,10 +13,6 @@
     "typescript": "^5.9.3"
   },
   "exports": {
-    ".": {
-      "import": {
-        "default": "./src/main.ts"
-      }
-    }
+    ".": "./src/main.ts"
   }
 }

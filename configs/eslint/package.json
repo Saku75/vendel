@@ -22,11 +22,6 @@
     "typescript": "^5.9.3"
   },
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/main.d.ts",
-        "default": "./dist/main.js"
-      }
-    }
+    ".": "./dist/main.js"
   }
 }

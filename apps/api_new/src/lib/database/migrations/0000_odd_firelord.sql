@@ -5,7 +5,7 @@ CREATE TABLE `users` (
 	`last_name` text(64),
 	`email` text(320) NOT NULL,
 	`email_verified` integer DEFAULT false NOT NULL,
-	`password` blob,
+	`password` text(128),
 	`client_salt` text(64) NOT NULL,
 	`server_salt` text(64) NOT NULL,
 	`role` text(16),

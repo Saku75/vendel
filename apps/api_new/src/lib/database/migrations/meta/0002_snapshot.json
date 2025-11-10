@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "5ebe6e0e-d0f6-4e71-8ae2-9f35fe7f89ff",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "ce86a304-f87f-420f-acc6-2fbb791613b5",
+  "prevId": "a3778121-00bc-4e5b-bedf-23f40ed14f62",
   "tables": {
     "users": {
       "name": "users",
@@ -52,7 +52,7 @@
         },
         "password": {
           "name": "password",
-          "type": "text(128)",
+          "type": "blob",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

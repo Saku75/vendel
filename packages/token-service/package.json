@@ -20,10 +20,6 @@
     "vitest": "^3.2.4"
   },
   "exports": {
-    ".": {
-      "import": {
-        "default": "./src/main.ts"
-      }
-    }
+    ".": "./src/main.ts"
   }
 }

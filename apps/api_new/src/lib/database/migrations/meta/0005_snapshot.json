@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "5ebe6e0e-d0f6-4e71-8ae2-9f35fe7f89ff",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "17d73848-0ade-49e7-94da-35a2200d4ab2",
+  "prevId": "d571eb79-3c5c-4577-b9bd-0c2b451b71ff",
   "tables": {
     "users": {
       "name": "users",
@@ -52,7 +52,7 @@
         },
         "password": {
           "name": "password",
-          "type": "text(128)",
+          "type": "blob",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -98,14 +98,16 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "(unixepoch())"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "(unixepoch())"
         }
       },
       "indexes": {

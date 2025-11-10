@@ -15,15 +15,7 @@
     "typescript": "^5.9.3"
   },
   "exports": {
-    ".": {
-      "import": {
-        "default": "./src/main.ts"
-      }
-    },
-    "./*": {
-      "import": {
-        "default": "./src/validators/*.ts"
-      }
-    }
+    ".": "./src/main.ts",
+    "./*": "./src/validators/*.ts"
   }
 }
