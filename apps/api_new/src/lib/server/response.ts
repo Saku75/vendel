@@ -13,14 +13,14 @@ import { Result } from "$lib/types/result";
 import type { ServerContext } from ".";
 
 type SuccessResponse<T extends JSONValue | undefined = undefined> = {
-  status?: Omit<SuccessStatusCode, ContentlessStatusCode>;
+  status?: Exclude<SuccessStatusCode, ContentlessStatusCode>;
   content: T extends undefined
     ? { message: string }
     : { message?: string; data: T };
 };
 
 type ErrorResponse = {
-  status: Omit<
+  status: Exclude<
     ClientErrorStatusCode | ServerErrorStatusCode,
     ContentlessStatusCode
   >;
@@ -35,10 +35,16 @@ type ErrorResponse = {
       };
 };
 
+type ContentlessResponse = {
+  status: ContentlessStatusCode;
+};
+
 function response<T extends JSONValue | undefined = undefined>(
   c: ServerContext,
-  args: SuccessResponse<T> | ErrorResponse,
+  args: SuccessResponse<T> | ErrorResponse | ContentlessResponse,
 ): Response {
+  if (!("content" in args)) return c.body(null, args.status);
+
   const status = (args.status || 200) as ContentfulStatusCode;
 
   const result: Result<T> = {

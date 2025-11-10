@@ -32,9 +32,6 @@ importers:
 
   apps/api:
     dependencies:
-      '@noble/hashes':
-        specifier: ^2.0.1
-        version: 2.0.1
       '@package/captcha':
         specifier: workspace:*
         version: link:../../packages/captcha
@@ -105,9 +102,6 @@ importers:
 
   apps/api_new:
     dependencies:
-      '@noble/hashes':
-        specifier: ^2.0.1
-        version: 2.0.1
       '@package/crypto-utils':
         specifier: workspace:*
         version: link:../../packages/crypto-utils

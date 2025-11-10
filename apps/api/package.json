@@ -17,7 +17,6 @@
     "db:apply": "wrangler d1 migrations apply DB"
   },
   "dependencies": {
-    "@noble/hashes": "^2.0.1",
     "@package/captcha": "workspace:*",
     "@package/crypto-utils": "workspace:*",
     "@package/mail": "workspace:*",

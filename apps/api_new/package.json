@@ -16,7 +16,6 @@
     "q:db:apply": "wrangler d1 migrations apply DB"
   },
   "dependencies": {
-    "@noble/hashes": "^2.0.1",
     "@package/crypto-utils": "workspace:*",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.10.4",
