@@ -32,18 +32,26 @@ const headers: Handle = async ({ event, resolve }) => {
 const preload: Handle = async ({ event, resolve }) => {
   return await resolve(event, {
     preload: ({ type, path }) => {
-      const preloadedType: boolean = ["font", "css", "js"].includes(type);
-      const preloadedPath: boolean =
-        type === "font" ? path.includes("latin") : true;
-      return preloadedType && preloadedPath;
+      const fontFiles = [
+        "inter-latin-wght-normal",
+        "playwrite-dk-loopet-fallback-wght-normal",
+      ];
+
+      switch (type) {
+        case "font":
+          return !!fontFiles.find((value) => path.includes(value));
+        case "css":
+        case "js":
+          return true;
+        default:
+          return false;
+      }
     },
   });
 };
 
 const initiateLocals: Handle = async ({ event, resolve }) => {
   const cookieHeader = event.request.headers.get("cookie") ?? "";
-
-  console.log("Received cookies: ", cookieHeader);
 
   event.locals = {
     api: createClient({
@@ -56,7 +64,7 @@ const initiateLocals: Handle = async ({ event, resolve }) => {
       hooks: {
         afterRequest: (res) => {
           const cookies = res.headers.getSetCookie();
-          console.log("Returned cookies: ", cookies);
+
           for (const key in cookies) {
             const cookie = cookies[key];
             const { name, value, path, sameSite, ...rest } =

@@ -1,5 +1,4 @@
 import { cors } from "hono/cors";
-import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
@@ -13,7 +12,6 @@ export default {
 
     server.use(
       // Basic middleware
-      logger(),
       trimTrailingSlash(),
       secureHeaders({ strictTransportSecurity: false }),
       cors({

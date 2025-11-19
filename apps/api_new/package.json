@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @app/api_new --parallel \"/^dev:.*/\"",
+    "q:dev": "pnpm --filter @app/api_new --parallel \"/^dev:.*/\"",
     "dev:ts": "tsdown --watch",
     "dev:wrangler": "wrangler dev",
     "build": "tsdown",
