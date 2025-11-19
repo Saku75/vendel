@@ -16,8 +16,8 @@
     "prettier-plugin-svelte": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tailwindcss": "^4.1.17",
-    "turbo": "^2.6.0",
-    "wrangler": "^4.46.0"
+    "turbo": "^2.6.1",
+    "wrangler": "^4.49.0"
   },
   "packageManager": "pnpm@10.21.0",
   "pnpm": {

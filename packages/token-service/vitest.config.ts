@@ -5,7 +5,7 @@ export default defineWorkersConfig({
     poolOptions: {
       workers: {
         miniflare: {
-          compatibilityDate: "2025-11-05",
+          compatibilityDate: "2025-11-17",
           compatibilityFlags: ["nodejs_compat"],
         },
       },

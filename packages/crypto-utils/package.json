@@ -12,7 +12,7 @@
     "@paralleldrive/cuid2": "^3.0.4"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.10.5",
+    "@cloudflare/vitest-pool-workers": "^0.10.8",
     "@config/eslint": "workspace:*",
     "@config/typescript": "workspace:*",
     "eslint": "^9.39.1",
