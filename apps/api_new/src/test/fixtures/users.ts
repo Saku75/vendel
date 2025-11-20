@@ -47,7 +47,7 @@ const testUsers: Record<string, TestUser> = {
     email: "user_two@example.com",
     emailVerified: false,
     password: "user_two-password",
-    role: null,
+    role: AuthRole.Guest,
     approved: false,
     approvedBy: null,
   },

@@ -29,7 +29,9 @@ const users = sqliteTable("users", {
   role: text({
     length: 16,
     enum: [AuthRole.SuperAdmin, AuthRole.Admin, AuthRole.User, AuthRole.Guest],
-  }),
+  })
+    .notNull()
+    .default(AuthRole.Guest),
 
   approved: int({ mode: "boolean" }).notNull().default(false),
   approvedBy: text({ length: 24 }).references((): AnySQLiteColumn => users.id, {

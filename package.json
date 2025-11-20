@@ -19,7 +19,7 @@
     "turbo": "^2.6.1",
     "wrangler": "^4.49.0"
   },
-  "packageManager": "pnpm@10.21.0",
+  "packageManager": "pnpm@10.22.0",
   "pnpm": {
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",

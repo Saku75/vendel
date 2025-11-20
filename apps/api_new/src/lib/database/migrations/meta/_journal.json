@@ -43,6 +43,13 @@
       "when": 1762776202172,
       "tag": "0005_zippy_liz_osborn",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1763580504665,
+      "tag": "0006_bumpy_justin_hammer",
+      "breakpoints": true
     }
   ]
 }
