@@ -70,7 +70,7 @@
       required
     />
 
-    <CaptchaInput key="captcha" />
+    <CaptchaInput key="captcha" action="auth.sign-in" />
 
     <FormSubmit label="Log ind" submittingLabel="Logger ind" />
   </Form>

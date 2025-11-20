@@ -111,7 +111,7 @@
       required
     />
 
-    <CaptchaInput key="captcha" />
+    <CaptchaInput key="captcha" action="auth.sign-up" />
 
     <FormSubmit label="Opret konto" submittingLabel="Opretter konto" />
   </Form>
