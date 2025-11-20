@@ -1,0 +1,21 @@
+name: "Setup"
+description: "Setup Turbo cache and install PNPM with dependencies"
+
+inputs:
+  cache-key:
+    description: 'Cache key suffix (e.g., "format", "lint", "test")'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: .turbo
+        key: ${{ runner.os }}-turbo-${{ inputs.cache-key }}-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-turbo-${{ inputs.cache-key }}-
+
+    - uses: wyvox/action-setup-pnpm@v3
+      with:
+        node-version: 24

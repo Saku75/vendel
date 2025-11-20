@@ -1,0 +1,56 @@
+name: "Deploy: Reusable"
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: "Environment to deploy to (dev or prod)"
+        required: true
+        type: string
+    secrets:
+      TOKEN_ENCRYPTION_KEY:
+        required: true
+      TOKEN_SIGNING_KEY:
+        required: true
+      RESEND_API_KEY:
+        required: true
+      TURNSTILE_SECRET_KEY:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
+      CLOUDFLARE_API_TOKEN:
+        required: true
+
+jobs:
+  checks:
+    uses: ./.github/workflows/_ci.yaml
+    permissions:
+      contents: read
+    secrets:
+      TOKEN_ENCRYPTION_KEY: ${{ secrets.TOKEN_ENCRYPTION_KEY }}
+      TOKEN_SIGNING_KEY: ${{ secrets.TOKEN_SIGNING_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
+
+  publish:
+    needs: checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+        with:
+          cache-key: deploy_${{ inputs.environment }}
+
+      - name: Apply database migrations
+        run: pnpm turbo run db:apply -- -e ${{ inputs.environment }} --remote
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Deploy to Cloudflare
+        run: pnpm turbo run deploy -- -e ${{ inputs.environment }}
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
