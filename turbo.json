@@ -2,17 +2,31 @@
   "$schema": "./node_modules/turbo/schema.json",
   "ui": "tui",
 
+  "globalDependencies": ["pnpm-lock.yaml"],
   "globalPassThroughEnv": ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"],
 
   "tasks": {
     "dev": {
-      "with": ["@app/api#dev"],
       "dependsOn": ["cf-typegen", "^build"],
+      "with": ["@app/api#dev"],
       "persistent": true,
+      "interactive": true,
       "cache": false
     },
+
     "build": {
       "dependsOn": ["cf-typegen", "^build"],
+      "inputs": [
+        "src/**",
+        "static/**",
+        "tsconfig.json",
+        "tsdown.config.ts",
+        "vite.config.ts",
+        "svelte.config.js",
+        "wrangler.json",
+        "!src/**/*.spec.ts",
+        "!src/**/*.test.ts"
+      ],
       "outputs": ["./dist/**", "./.svelte-kit/**"],
       "env": ["CLOUDFLARE_ENV"]
     },
@@ -27,20 +41,30 @@
     },
 
     "lint": {
-      "dependsOn": ["cf-typegen", "^build"]
+      "dependsOn": ["cf-typegen", "@config/eslint#build"],
+      "inputs": ["src/**", "eslint.config.js", "tsconfig.json"],
+      "outputs": []
     },
+
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "vitest.config.ts", "tsconfig.json"],
+      "outputs": ["coverage/**"]
     },
+
     "test:watch": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "persistent": true,
+      "interactive": true,
+      "cache": false
     },
 
     "db:apply": {
       "inputs": [
         "./src/lib/server/database/migrations/**",
         "./src/lib/database/migrations/**"
-      ]
+      ],
+      "cache": false
     }
   }
 }
