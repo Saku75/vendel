@@ -19,6 +19,8 @@
     "@package/crypto-utils": "workspace:*",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.10.6",
+    "ky": "^1.14.0",
+    "set-cookie-parser": "^2.7.2",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -26,6 +28,7 @@
     "@config/eslint": "workspace:*",
     "@config/typescript": "workspace:*",
     "@types/node": "^24.10.1",
+    "@types/set-cookie-parser": "^2.4.10",
     "drizzle-kit": "^0.31.7",
     "eslint": "^9.39.1",
     "tsdown": "^0.15.12",
@@ -33,5 +36,25 @@
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
     "wrangler": "^4.49.1"
+  },
+  "exports": {
+    "./client": {
+      "import": {
+        "types": "./dist/client/index.d.ts",
+        "default": "./dist/client/index.js"
+      }
+    },
+    "./enums": {
+      "import": {
+        "types": "./dist/enums/index.d.ts",
+        "default": "./dist/enums/index.js"
+      }
+    },
+    "./types": {
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/types/index.js"
+      }
+    }
   }
 }

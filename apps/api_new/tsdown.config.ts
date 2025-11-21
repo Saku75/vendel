@@ -1,7 +1,11 @@
 import { defineConfig } from "tsdown";
 
 export default defineConfig({
-  entry: ["./src/main.ts"],
+  entry: [
+    "./src/lib/client/index.ts",
+    "./src/lib/enums/index.ts",
+    "./src/lib/types/index.ts",
+  ],
 
   outDir: "dist",
 

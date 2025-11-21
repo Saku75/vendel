@@ -4,106 +4,189 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a full-stack web application built with a monorepo structure using Turbo. The project consists of:
+Vendel is a Cloudflare Workers-based application with two main apps: an API (Hono) and a web frontend (SvelteKit). The monorepo uses Turbo for task orchestration and pnpm workspaces for package management.
 
-- **API** (`apps/api`): Hono-based API running on Cloudflare Workers with D1 database
-- **Web** (`apps/web`): SvelteKit frontend with Tailwind CSS
-- **Mail** (`apps/mail`): Email service worker
-- **Packages** (`packages/`): Shared libraries and utilities
+**Architecture:**
+
+- **API (`apps/api`)**: Hono-based REST API deployed to Cloudflare Workers
+  - Uses Drizzle ORM with Cloudflare D1 (SQLite) for data persistence
+  - KV namespace for session/cache storage
+  - Token-based authentication with refresh tokens
+  - Middleware stack: captcha, database, mail, token service, auth
+  - Exports a typed client SDK consumed by the web app
+- **Web (`apps/web`)**: SvelteKit application with SSR deployed to Cloudflare Pages
+  - Communicates with API via exported client SDK
+  - Uses service binding to call API worker directly (no HTTP roundtrip)
+  - TailwindCSS 4.x for styling
+  - Cloudflare Turnstile for CAPTCHA
+- **Shared Packages (`packages/`)**: Workspace packages used across apps
+  - `@package/captcha`: Turnstile CAPTCHA verification
+  - `@package/crypto-utils`: Encryption/hashing utilities
+  - `@package/mail`: Email sending via Resend
+  - `@package/token-service`: JWT token generation/validation
+  - `@package/validators`: Zod schemas for validation
+- **Configs (`configs/`)**: Shared ESLint and TypeScript configurations
 
 ## Development Commands
 
-### Core Commands
+### Root-level commands
 
-- `pnpm dev` - Start development servers for all apps
-- `pnpm build` - Build all applications and packages
-- `pnpm lint` - Run linting across all projects
-- `pnpm test` - Run tests across all projects
-- `pnpm test:watch` - Run tests in watch mode
-- `pnpm format` - Format code with Prettier
+```bash
+# Start all dev servers (API on :8787, web on :5173)
+pnpm dev
 
-### API-Specific Commands
+# Build all apps
+pnpm build
 
-- `pnpm --filter @app/api dev` - Start API development server only
-- `pnpm --filter @app/api build` - Build API only
-- `pnpm --filter @app/api deploy` - Deploy API to Cloudflare Workers
-- `pnpm --filter @app/api cf-typegen` - Generate Cloudflare types
-- `pnpm --filter @app/api db:generate` - Generate database migrations
-- `pnpm --filter @app/api db:apply` - Apply database migrations
-- `pnpm --filter @app/api test` - Run tests
+# Run all linters
+pnpm lint
 
-### Web-Specific Commands
+# Run all tests
+pnpm test
 
-- `pnpm --filter @app/web dev` - Start web development server only
-- `pnpm --filter @app/web build` - Build web app only
-- `pnpm --filter @app/web deploy` - Deploy web app to Cloudflare Pages
-- `pnpm --filter @app/web cf-typegen` - Generate Cloudflare types
+# Run tests in watch mode
+pnpm test:watch
 
-## Architecture
+# Format code
+pnpm format
+```
 
-### Monorepo Structure
+### API-specific commands (`apps/api`)
 
-- Uses Turbo for build orchestration and caching
-- PNPM workspaces for package management
-- Shared packages for common functionality (validators, mail, token, captcha)
+```bash
+# Run API dev server only
+pnpm --filter @app/api dev
 
-### API Architecture
+# Build API
+pnpm --filter @app/api build
 
-- **Framework**: Hono with Cloudflare Workers runtime
-- **Database**: Drizzle ORM with Cloudflare D1 (SQLite)
-- **Authentication**: Custom JWT-based auth with refresh tokens
-- **Middleware Stack**: CORS, security headers, logging, auth, captcha, database, mail, token
-- **Testing**: Vitest with Cloudflare Workers test environment
+# Deploy API (requires CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN)
+pnpm --filter @app/api deploy -- -e <dev|prod>
 
-### Web Architecture
+# Generate Cloudflare bindings types
+pnpm --filter @app/api cf-typegen
 
-- **Framework**: SvelteKit 5 with TypeScript
-- **Styling**: Tailwind CSS v4 with custom design system
-- **State Management**: Svelte 5 runes and stores
-- **API Integration**: Custom typed client consuming the API
-- **Deployment**: Cloudflare Pages with SSR
+# Database operations
+pnpm --filter @app/api db:generate  # Generate migrations from schema
+pnpm --filter @app/api db:apply     # Apply migrations locally
+pnpm --filter @app/api db:apply -- -e <dev|prod> --remote  # Apply to remote D1
 
-### Database Schema
+# Run API tests
+pnpm --filter @app/api test
 
-- Users table with email, password, roles, status
-- Refresh token families for security
-- Auth session management with JWT tokens
+# Run single test file
+pnpm --filter @app/api vitest run <path-to-test>
+```
 
-### Key Technical Patterns
+### Web-specific commands (`apps/web`)
 
-- **Type Safety**: Shared validators and types across API/Web
-- **Authentication Flow**: Email/password with email confirmation
-- **API Client**: Type-safe client with automatic cookie handling
-- **Middleware**: Composable middleware pattern in API
-- **Component Architecture**: Reusable Svelte components with consistent styling
+```bash
+# Run web dev server only
+pnpm --filter @app/web dev
 
-## Development Workflow
+# Build web app
+pnpm --filter @app/web build
 
-### Running Tests
+# Deploy web app
+pnpm --filter @app/web deploy -- -e <dev|prod>
 
-- API tests use Vitest with Cloudflare Workers pool
-- Test database migrations are applied automatically
-- Use `pnpm test:watch` for development
+# Generate Cloudflare bindings types
+pnpm --filter @app/web cf-typegen
+```
 
-### Database Development
+## Key Architecture Details
 
-- Migrations are in `apps/api/src/lib/database/migrations/`
-- Use `pnpm --filter @app/api db:generate` to create new migrations
-- Apply with `pnpm --filter @app/api db:apply`
+### API Request Flow
+
+1. Request enters through `apps/api/src/main.ts`
+2. Middleware chain processes request (CORS, security headers, auth, etc.)
+3. Routes in `apps/api/src/routes/` handle business logic
+4. Database access via Drizzle ORM (`apps/api/src/lib/server/database/`)
+5. Responses follow typed result pattern (`Ok` or `Err` from `$lib/types/result`)
+
+### Web-to-API Communication
+
+The web app uses a service binding to call the API worker directly:
+
+- Client created in `hooks.server.ts` with `event.platform.env.API.fetch`
+- No HTTP roundtrip; direct worker-to-worker communication
+- Cookies automatically forwarded and synced between apps
+- Client SDK defined in `apps/api/src/lib/client/index.ts`
+
+### Database Schema & Migrations
+
+- Schema files: `apps/api/src/lib/server/database/schema/*.ts`
+- Drizzle config: `apps/api/drizzle.config.ts`
+- Migrations: `apps/api/src/lib/server/database/migrations/`
+- **Workflow:**
+  1. Modify schema files
+  2. Run `pnpm --filter @app/api db:generate` to create migration
+  3. Run `pnpm --filter @app/api db:apply` to apply locally
+  4. Deploy applies migrations automatically via GitHub Actions
+
+### Authentication System
+
+- Token-based auth with refresh tokens stored in D1
+- Token families track rotation for security
+- Auth middleware in `apps/api/src/lib/server/middleware/auth.ts`
+- Require-auth middleware enforces authentication on routes
+- Email-based sign-up/sign-in flow with confirmation tokens
+
+### Testing
+
+- Vitest for unit tests
+- `@cloudflare/vitest-pool-workers` for API tests (provides D1, KV bindings)
+- Test files: `*.spec.ts` or `*.test.ts`
+- API tests require `.dev.vars` file with secrets (auto-configured in CI)
 
 ### Environment Configuration
 
-- Local development uses `wrangler.json` for Cloudflare bindings
-- Different environments (dev/prod) configured in wrangler.json
-- D1 database and KV storage bindings configured per environment
+- Local: `.dev.vars` files (not committed) contain secrets
+- Remote: Secrets managed via Cloudflare dashboard or wrangler secrets
+- Environment variables in `wrangler.json` under `env.dev` and `env.prod`
+- Required secrets: `TOKEN_ENCRYPTION_KEY`, `TOKEN_SIGNING_KEY`, `RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`
 
-### Code Style
+### Deployment
 
-- Prettier configuration with import sorting and Tailwind class sorting
-- ESLint configuration per package
-- Import order: @app/_ → @package/_ → $app/_ → $env/_ → $lib/_ → $routes/_ → relative imports
-- Pre-commit hook automatically formats files with Prettier before commits
+- Automated via GitHub Actions (`.github/workflows/deploy_*.yaml`)
+- Separate workflows for dev and prod environments
+- Deployment runs: format check → lint → tests → db migrations → deploy
+- Manual deploy: `pnpm --filter <app> deploy -- -e <dev|prod>`
 
-## Best Practices
+## Project Structure Conventions
 
-- Keep commit messages to one line
+### API Routes
+
+- Routes in `apps/api/src/routes/` use Hono router
+- Each route exports client types via `*.client.ts` files
+- Tests colocated as `*.spec.ts` files
+- Route groups organized by domain (e.g., `auth/`, `user/`)
+
+### Web Routes
+
+- SvelteKit file-based routing in `apps/web/src/routes/`
+- Route groups: `(auth)` for authentication pages, `(misc)` for other pages
+- Server-side logic in `+page.server.ts` or `+layout.server.ts`
+- API client accessed via `event.locals.api` in server code
+
+### Path Aliases
+
+- API: `$lib`, `$routes`, `$test` (tsconfig.json)
+- Web: `$lib`, `$routes`, `$test` (svelte.config.js)
+- Packages use `@package/<name>`, apps use `@app/<name>`, configs use `@config/<name>`
+
+### Type Safety
+
+- Strict TypeScript configuration via `@config/typescript`
+- Cloudflare bindings auto-generated in `worker-env.d.ts`
+- Zod validators in `@package/validators` shared between API and web
+- API client provides end-to-end type safety
+
+## Important Notes
+
+- **Always run `cf-typegen`** after modifying `wrangler.json` to update types
+- **Database migrations are auto-applied** during deployment; test locally first
+- **Service binding** means web app calls API directly; CORS only matters for external clients
+- **Turbo caching** is enabled; use `--force` flag to bypass if needed
+- **Path aliases** require both `tsconfig.json` and build tool configuration
+- The `apps/api_new` directory exists but appears to be a work-in-progress; primary API is `apps/api`
