@@ -22,7 +22,7 @@ Vendel is a Cloudflare Workers-based application with two main apps: an API (Hon
 - **Shared Packages (`packages/`)**: Workspace packages used across apps
   - `@package/captcha`: Turnstile CAPTCHA verification
   - `@package/crypto-utils`: Encryption/hashing utilities
-  - `@package/mail`: Email sending via Resend
+  - `@package/mail-service`: Email sending via Resend
   - `@package/token-service`: JWT token generation/validation
   - `@package/validators`: Zod schemas for validation
 - **Configs (`configs/`)**: Shared ESLint and TypeScript configurations

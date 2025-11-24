@@ -19,7 +19,7 @@
   "dependencies": {
     "@package/captcha": "workspace:*",
     "@package/crypto-utils": "workspace:*",
-    "@package/mail": "workspace:*",
+    "@package/mail-service": "workspace:*",
     "@package/token-service": "workspace:*",
     "@package/validators": "workspace:*",
     "drizzle-orm": "^0.44.7",

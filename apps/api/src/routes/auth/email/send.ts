@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { object, type z } from "zod";
 
-import { MailTemplate } from "@package/mail";
+import { MailTemplate } from "@package/mail-service";
 import { TokenPurpose } from "@package/token-service";
 import { captchaValidator } from "@package/validators/captcha";
 

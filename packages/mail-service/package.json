@@ -1,9 +1,12 @@
 {
-  "name": "@package/mail",
+  "name": "@package/mail-service",
   "private": true,
   "type": "module",
   "scripts": {
     "lint": "eslint ."
+  },
+  "dependencies": {
+    "resend": "^6.5.2"
   },
   "devDependencies": {
     "@config/eslint": "workspace:*",

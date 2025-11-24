@@ -12,7 +12,7 @@ import {
   MailOptionsWithTemplateMail,
 } from "./types/options";
 
-class Mail {
+class MailService {
   private readonly key: string;
   private readonly builtInPlaceholderValues: MailTemplateBuiltInPlaceholders;
   private readonly dev?: boolean;
@@ -155,4 +155,4 @@ class Mail {
   }
 }
 
-export { Mail, MailTemplate };
+export { MailService, MailTemplate };

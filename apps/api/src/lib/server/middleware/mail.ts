@@ -1,6 +1,6 @@
 import { createMiddleware } from "hono/factory";
 
-import { Mail } from "@package/mail";
+import { MailService } from "@package/mail-service";
 
 import { HonoEnv } from "$lib/server";
 
@@ -9,7 +9,7 @@ const mailMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
 
   c.set(
     "mail",
-    new Mail(
+    new MailService(
       RESEND_API_KEY,
       {
         baseURL: CORS_ORIGINS.split(",")[0],

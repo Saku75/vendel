@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { type z, object, ZodIssueCode } from "zod";
 
 import { scrypt } from "@package/crypto-utils/scrypt";
-import { MailTemplate } from "@package/mail";
+import { MailTemplate } from "@package/mail-service";
 import { TokenPurpose } from "@package/token-service";
 import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
