@@ -32,9 +32,6 @@ importers:
 
   apps/api:
     dependencies:
-      '@package/captcha':
-        specifier: workspace:*
-        version: link:../../packages/captcha
       '@package/crypto-utils':
         specifier: workspace:*
         version: link:../../packages/crypto-utils
@@ -105,6 +102,9 @@ importers:
       '@package/crypto-utils':
         specifier: workspace:*
         version: link:../../packages/crypto-utils
+      '@package/mail-service':
+        specifier: workspace:*
+        version: link:../../packages/mail-service
       '@package/token-service':
         specifier: workspace:*
         version: link:../../packages/token-service
@@ -285,24 +285,6 @@ importers:
 
   configs/typescript:
     devDependencies:
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/captcha:
-    devDependencies:
-      '@config/eslint':
-        specifier: workspace:*
-        version: link:../../configs/eslint
-      '@config/typescript':
-        specifier: workspace:*
-        version: link:../../configs/typescript
-      '@types/node':
-        specifier: ^24.10.1
-        version: 24.10.1
-      eslint:
-        specifier: ^9.39.1
-        version: 9.39.1(jiti@2.6.1)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

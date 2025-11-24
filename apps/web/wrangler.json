@@ -24,6 +24,7 @@
 
   "vars": {
     "MODE": "local",
+    "CANONICAL_ORIGIN": "http://localhost:5173",
     "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
   },
 
@@ -33,6 +34,7 @@
     "dev": {
       "vars": {
         "MODE": "dev",
+        "CANONICAL_ORIGIN": "https://dev.vendel.dk",
         "TURNSTILE_SITE_KEY": "0x4AAAAAABh5FlLMz6Dpndqg"
       },
 
@@ -50,6 +52,7 @@
     "prod": {
       "vars": {
         "MODE": "prod",
+        "CANONICAL_ORIGIN": "https://vendel.dk",
         "TURNSTILE_SITE_KEY": "0x4AAAAAABh5GKQ74cdhLL-d"
       },
 
@@ -61,6 +64,16 @@
           "pattern": "prod.vendel.dk",
           "custom_domain": true
         }
+        // {
+        //   "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
+        //   "pattern": "vendel.dk",
+        //   "custom_domain": true
+        // },
+        // {
+        //   "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
+        //   "pattern": "www.vendel.dk",
+        //   "custom_domain": true
+        // }
       ]
     }
   }

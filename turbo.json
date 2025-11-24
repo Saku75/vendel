@@ -49,7 +49,7 @@
     "test": {
       "dependsOn": ["^build"],
       "inputs": ["src/**", "vitest.config.ts", "tsconfig.json"],
-      "outputs": ["coverage/**"]
+      "outputs": []
     },
 
     "test:watch": {

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@package/crypto-utils": "workspace:*",
+    "@package/mail-service": "workspace:*",
     "@package/token-service": "workspace:*",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.10.6",

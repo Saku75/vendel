@@ -88,8 +88,8 @@
     "prod": {
       "vars": {
         "MODE": "prod",
-        "API_ORIGINS": "https://api.prod.vendel.dk",
-        "CORS_ORIGINS": "https://prod.vendel.dk"
+        "API_ORIGINS": "https://api.vendel.dk,https://api.prod.vendel.dk",
+        "CORS_ORIGINS": "https://vendel.dk,https://www.vendel.dk,https://prod.vendel.dk"
       },
 
       "d1_databases": [
@@ -109,11 +109,32 @@
       ],
 
       "routes": [
+        // {
+        //   "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
+        //   "pattern": "api.vendel.dk",
+        //   "custom_domain": true
+        // },
         {
           "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
           "pattern": "api.prod.vendel.dk",
           "custom_domain": true
         },
+        // {
+        //   "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
+        //   "pattern": "vendel.dk/api"
+        // },
+        // {
+        //   "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
+        //   "pattern": "vendel.dk/api/*"
+        // },
+        // {
+        //   "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
+        //   "pattern": "www.vendel.dk/api"
+        // },
+        // {
+        //   "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
+        //   "pattern": "www.vendel.dk/api/*"
+        // },
         {
           "zone_id": "0c04f1be7449bd42a7e9b38ceaac2d6e",
           "pattern": "prod.vendel.dk/api"

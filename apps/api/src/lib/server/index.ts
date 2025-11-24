@@ -2,10 +2,10 @@ import { DrizzleD1Database } from "drizzle-orm/d1";
 import { Hono } from "hono";
 import { HonoOptions } from "hono/hono-base";
 
-import { Captcha } from "@package/captcha";
 import { MailService } from "@package/mail-service";
 import { TokenService } from "@package/token-service";
 
+import { Captcha } from "$lib/captcha";
 import { Auth } from "$lib/types/auth";
 import { Err } from "$lib/types/result";
 
