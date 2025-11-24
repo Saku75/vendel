@@ -23,7 +23,7 @@ on:
 
 jobs:
   checks:
-    uses: ./.github/workflows/_ci.yaml
+    uses: ./.github/workflows/_checks.yaml
     permissions:
       contents: read
     secrets:
