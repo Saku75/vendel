@@ -22,7 +22,7 @@ const users = sqliteTable("users", {
 
   email: text({ length: 320 }).notNull().unique(),
   emailVerified: int({ mode: "boolean" }).notNull().default(false),
-  password: blob({ mode: "buffer" }),
+  password: blob({ mode: "buffer" }).notNull(),
   clientSalt: text({ length: 64 }).notNull(),
   serverSalt: text({ length: 64 }).notNull(),
 

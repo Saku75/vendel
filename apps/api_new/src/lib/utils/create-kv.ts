@@ -3,17 +3,6 @@ interface KVOptions {
   suffix?: string;
 }
 
-/**
- * Creates a scoped KV instance with automatic key prefixing/suffixing
- *
- * @example
- * ```typescript
- * import { env } from "cloudflare:workers";
- *
- * const sessionKV = createKV<Session>(env.KV, { prefix: "session" });
- * await sessionKV.set("user-123", { userId: "123" });
- * ```
- */
 function createKV<T = unknown>(kv: KVNamespace, options: KVOptions = {}) {
   const constructKey = (key: string): string => {
     const parts: string[] = [];
@@ -24,7 +13,6 @@ function createKV<T = unknown>(kv: KVNamespace, options: KVOptions = {}) {
   };
 
   return {
-    /** Get a value as JSON */
     get: async (
       key: string,
       opts?: Omit<KVNamespaceGetOptions<"json">, "type">,
@@ -32,7 +20,6 @@ function createKV<T = unknown>(kv: KVNamespace, options: KVOptions = {}) {
       return kv.get<T>(constructKey(key), { type: "json", ...opts });
     },
 
-    /** Set a value (auto-serializes to JSON) */
     set: async (
       key: string,
       value: T,
@@ -41,12 +28,10 @@ function createKV<T = unknown>(kv: KVNamespace, options: KVOptions = {}) {
       await kv.put(constructKey(key), JSON.stringify(value), opts);
     },
 
-    /** Delete a key */
     delete: async (key: string): Promise<void> => {
       await kv.delete(constructKey(key));
     },
 
-    /** Check if a key exists */
     has: async (key: string): Promise<boolean> => {
       return (await kv.get(constructKey(key))) !== null;
     },

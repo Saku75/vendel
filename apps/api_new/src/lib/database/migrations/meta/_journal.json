@@ -50,6 +50,20 @@
       "when": 1763580504665,
       "tag": "0006_bumpy_justin_hammer",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1764073051052,
+      "tag": "0007_thankful_gamma_corps",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1764075920547,
+      "tag": "0008_black_the_initiative",
+      "breakpoints": true
     }
   ]
 }
