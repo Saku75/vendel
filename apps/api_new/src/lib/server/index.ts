@@ -1,9 +1,5 @@
-import { DrizzleD1Database } from "drizzle-orm/d1";
 import { Context, Hono } from "hono";
 import { HonoOptions } from "hono/hono-base";
-
-import { MailService } from "@package/mail-service";
-import { TokenService } from "@package/token-service";
 
 import { Captcha } from "$lib/captcha";
 
@@ -14,9 +10,6 @@ type ServerEnv = {
 
   Variables: {
     captcha: Captcha;
-    database: DrizzleD1Database;
-    mailService: MailService;
-    tokenService: TokenService;
   };
 };
 

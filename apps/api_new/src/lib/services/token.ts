@@ -1,0 +1,19 @@
+import { env } from "cloudflare:workers";
+
+import { hexToBytes } from "@package/crypto-utils/bytes";
+import { TokenService } from "@package/token-service";
+
+/**
+ * Singleton token service instance
+ * Created once per Worker isolate
+ */
+export const tokenService = new TokenService(
+  {
+    encryption: hexToBytes(env.TOKEN_ENCRYPTION_KEY),
+    signing: hexToBytes(env.TOKEN_SIGNING_KEY),
+  },
+  {
+    issuer: env.API_ORIGINS.split(",")[0],
+    audience: env.CORS_ORIGINS.split(",")[0],
+  },
+);
