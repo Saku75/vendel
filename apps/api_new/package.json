@@ -19,6 +19,7 @@
     "@package/crypto-utils": "workspace:*",
     "@package/mail-service": "workspace:*",
     "@package/token-service": "workspace:*",
+    "@package/validators": "workspace:*",
     "drizzle-orm": "^0.44.7",
     "hono": "^4.10.6",
     "ky": "^1.14.0",

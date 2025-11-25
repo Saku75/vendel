@@ -3,6 +3,8 @@ import { env } from "cloudflare:workers";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
 
+import { authServer } from "./auth";
+
 const routes = createServer();
 
 routes.get("/", (c) => {
@@ -12,5 +14,7 @@ routes.get("/", (c) => {
     },
   });
 });
+
+routes.route("/auth", authServer);
 
 export { routes };

@@ -1,3 +1,4 @@
+import { authClient } from "$routes/auth/index.client";
 import { rootClient } from "$routes/index.client";
 
 import { createBaseClient } from "./client";
@@ -7,6 +8,7 @@ function createClient(config?: ClientConfig) {
   const context = createBaseClient(config);
 
   return {
+    auth: authClient(context),
     root: rootClient(context),
   };
 }
