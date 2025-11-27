@@ -152,7 +152,9 @@ describe("Sign-up", () => {
 
     it("should create user and sign them in", async () => {
       const password = "SecurePassword123!";
-      const passwordClientHash = bytesToBase64(await scrypt(password, clientSalt));
+      const passwordClientHash = bytesToBase64(
+        await scrypt(password, clientSalt),
+      );
 
       const response = await testFetch("/auth/sign-up/finish", {
         method: "POST",
@@ -195,7 +197,9 @@ describe("Sign-up", () => {
 
     it("should reject with invalid session", async () => {
       const password = "SecurePassword123!";
-      const passwordClientHash = bytesToBase64(await scrypt(password, clientSalt));
+      const passwordClientHash = bytesToBase64(
+        await scrypt(password, clientSalt),
+      );
 
       const response = await testFetch("/auth/sign-up/finish", {
         method: "POST",
@@ -218,7 +222,9 @@ describe("Sign-up", () => {
 
     it("should delete session after successful sign-up", async () => {
       const password = "SecurePassword123!";
-      const passwordClientHash = bytesToBase64(await scrypt(password, clientSalt));
+      const passwordClientHash = bytesToBase64(
+        await scrypt(password, clientSalt),
+      );
 
       // First request should succeed
       const firstResponse = await testFetch("/auth/sign-up/finish", {
