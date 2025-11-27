@@ -12,8 +12,13 @@ signUpServer.route("/start", signUpStartServer);
 signUpServer.route("/finish", signUpFinishServer);
 
 type SignUpSession = {
-  userId: string;
+  firstName: string;
+  middleName: string | undefined;
+  lastName: string | undefined;
 
+  email: string;
+
+  clientSalt: string;
   serverSalt: string;
 
   captchaIdempotencyKey: string;
