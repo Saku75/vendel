@@ -7,5 +7,18 @@ type SignUpStartRequest = z.infer<typeof signUpStartSchema>;
 type SignUpStartResponse = { sessionId: string; clientSalt: string };
 
 type SignUpFinishRequest = z.infer<typeof signUpFinishSchema>;
+type SignUpFinishResponse = undefined;
 
-export type { SignUpFinishRequest, SignUpStartRequest, SignUpStartResponse };
+type SignUpRequest = SignUpStartRequest & {
+  password: string;
+};
+type SignUpResponse = SignUpFinishResponse;
+
+export type {
+  SignUpFinishRequest,
+  SignUpFinishResponse,
+  SignUpRequest,
+  SignUpResponse,
+  SignUpStartRequest,
+  SignUpStartResponse,
+};
