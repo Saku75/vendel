@@ -18,11 +18,11 @@ import { tokenService } from "$lib/services/token";
 function getHostnamePrefix(): string {
   return env.CORS_ORIGINS.split(",")[0]
     .replace(/https?:\/\//, "")
-    .replace(/\./g, "-");
+    .replace(/[.:]/g, "_");
 }
 
 function buildCookieName(name: string): string {
-  return `${getHostnamePrefix()}:${name}`;
+  return `${getHostnamePrefix()}-${name}`;
 }
 
 function getDefaultCookieOptions(): CookieOptions {
