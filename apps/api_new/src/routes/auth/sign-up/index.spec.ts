@@ -48,7 +48,7 @@ describe("Sign-up", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...validPayload,
-          email: testUsers.UserOne.email, // Use existing user email
+          email: testUsers.UserOne.email,
         }),
       });
 
@@ -90,7 +90,6 @@ describe("Sign-up", () => {
         body: JSON.stringify({
           firstName: "John",
           captcha: "test-captcha-token",
-          // Missing email
         }),
       });
 
@@ -128,7 +127,6 @@ describe("Sign-up", () => {
     let clientSalt: string;
 
     beforeEach(async () => {
-      // Create a sign-up session first
       const startResponse = await testFetch("/auth/sign-up/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -173,13 +171,11 @@ describe("Sign-up", () => {
       expect(json.status).toBe(201);
       expect(json.message).toBe("User signed up");
 
-      // Verify cookies are set
       const cookies = response.headers.get("set-cookie");
       expect(cookies).toBeDefined();
       expect(cookies).toContain("access");
       expect(cookies).toContain("refresh");
 
-      // Verify user was created in database
       const [user] = await testDatabase
         .select()
         .from(users)
@@ -226,7 +222,6 @@ describe("Sign-up", () => {
         await scrypt(password, clientSalt),
       );
 
-      // First request should succeed
       const firstResponse = await testFetch("/auth/sign-up/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -239,7 +234,6 @@ describe("Sign-up", () => {
 
       expect(firstResponse.status).toBe(201);
 
-      // Second request with same sessionId should fail
       const secondResponse = await testFetch("/auth/sign-up/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -265,7 +259,6 @@ describe("Sign-up", () => {
         body: JSON.stringify({
           sessionId,
           captcha: "test-captcha-token",
-          // Missing passwordClientHash
         }),
       });
 
@@ -286,7 +279,6 @@ describe("Sign-up", () => {
       const email = "full.flow@example.com";
       const password = "FullFlowPassword123!";
 
-      // Step 1: Start sign-up
       const startResponse = await testFetch("/auth/sign-up/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -305,12 +297,10 @@ describe("Sign-up", () => {
         clientSalt: string;
       }>;
 
-      // Step 2: Hash password client-side
       const passwordClientHash = bytesToBase64(
         await scrypt(password, startJson.data!.clientSalt),
       );
 
-      // Step 3: Finish sign-up
       const finishResponse = await testFetch("/auth/sign-up/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -323,7 +313,6 @@ describe("Sign-up", () => {
 
       expect(finishResponse.status).toBe(201);
 
-      // Step 4: Verify user exists and is signed in
       const [user] = await testDatabase
         .select()
         .from(users)
@@ -341,7 +330,6 @@ describe("Sign-up", () => {
     it("should prevent double sign-up with same email", async () => {
       const email = "duplicate@example.com";
 
-      // First sign-up
       const firstStart = await testFetch("/auth/sign-up/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -371,7 +359,6 @@ describe("Sign-up", () => {
         }),
       });
 
-      // Attempt second sign-up with same email
       const secondStart = await testFetch("/auth/sign-up/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

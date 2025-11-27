@@ -1,5 +1,5 @@
-import { authClient } from "$routes/auth/index.client";
-import { rootClient } from "$routes/index.client";
+import { authClient } from "$routes/auth/client";
+import { rootClient } from "$routes/client";
 
 import { createBaseClient } from "./client";
 import type { ClientConfig } from "./types";

@@ -1,14 +1,11 @@
-import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { bytesToBase64 } from "@package/crypto-utils/bytes";
 import { scrypt } from "@package/crypto-utils/scrypt";
 
-import { users } from "$lib/database/schema/users";
 import type { Err, Ok } from "$lib/types/result";
 
 import { testUsers } from "$test/fixtures/users";
-import { testDatabase } from "$test/utils/database";
 import { testFetch } from "$test/utils/fetch";
 
 describe("Sign-in", () => {
