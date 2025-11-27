@@ -1,13 +1,8 @@
+import { and, eq } from "drizzle-orm";
 import { object, ZodIssueCode } from "zod";
 
 import { base64ToBytes } from "@package/crypto-utils/bytes";
 import { scrypt } from "@package/crypto-utils/scrypt";
-import { MailTemplate } from "@package/mail-service";
-import {
-  TokenExpiresIn,
-  TokenPurpose,
-  TokenService,
-} from "@package/token-service";
 import { ValidatorCode } from "@package/validators";
 import { captchaValidator } from "@package/validators/captcha";
 import { idValidator } from "@package/validators/id";
@@ -18,17 +13,14 @@ import { db } from "$lib/database";
 import { users } from "$lib/database/schema/users";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
-import { mailService } from "$lib/services/mail";
-import { tokenService } from "$lib/services/token";
 import type {
-  SignUpFinishRequest,
-  SignUpFinishResponse,
-} from "$lib/types/routes/auth/sign-up";
-import type { UserConfirmEmailToken } from "$lib/types/user/tokens/confirm-email";
+  SignInFinishRequest,
+  SignInFinishResponse,
+} from "$lib/types/routes/auth/sign-in";
 
-import { signUpSessions } from "./index";
+import { signInSessions } from "./index";
 
-const signUpFinishSchema = object({
+const signInFinishSchema = object({
   sessionId: idValidator,
 
   passwordClientHash: passwordHashValidator,
@@ -36,13 +28,13 @@ const signUpFinishSchema = object({
   captcha: captchaValidator,
 });
 
-const signUpFinishServer = createServer();
+const signInFinishServer = createServer();
 
-signUpFinishServer.post("/", async (c) => {
-  const body = await c.req.json<SignUpFinishRequest>();
-  const session = await signUpSessions.get(body.sessionId);
+signInFinishServer.post("/", async (c) => {
+  const body = await c.req.json<SignInFinishRequest>();
+  const session = await signInSessions.get(body.sessionId);
 
-  const parsedBody = await signUpFinishSchema
+  const parsedBody = await signInFinishSchema
     .superRefine(async (_values, context) => {
       if (!session) {
         context.addIssue({
@@ -85,46 +77,31 @@ signUpFinishServer.post("/", async (c) => {
   );
 
   const [user] = await db
-    .insert(users)
-    .values({
-      firstName: session.firstName,
-      middleName: session.middleName,
-      lastName: session.lastName,
-      email: session.email,
-      clientSalt: session.clientSalt,
-      serverSalt: session.serverSalt,
-      password: Buffer.from(passwordServerHash),
-    })
-    .returning({ id: users.id, role: users.role });
+    .select({ id: users.id, role: users.role })
+    .from(users)
+    .where(
+      and(
+        eq(users.email, session.email),
+        eq(users.password, Buffer.from(passwordServerHash)),
+      ),
+    )
+    .limit(1);
 
-  await signUpSessions.delete(data.sessionId);
+  await signInSessions.delete(data.sessionId);
 
-  const confirmEmailToken = await tokenService.create<UserConfirmEmailToken>(
-    { userId: user.id },
-    {
-      purpose: TokenPurpose.ConfirmEmail,
-      expiresAt: TokenService.getExpiresAt(TokenExpiresIn.OneDay),
-    },
-  );
-
-  await mailService.send({
-    to: {
-      name: session.firstName,
-      address: session.email,
-    },
-    template: MailTemplate.ConfirmEmail,
-    data: {
-      name: session.firstName,
-      token: confirmEmailToken.token,
-    },
-  });
+  if (!user) {
+    return response(c, {
+      status: 401,
+      content: { message: "Invalid email or password" },
+    });
+  }
 
   await signIn(c, { userId: user.id, userRole: user.role });
 
-  return response<SignUpFinishResponse>(c, {
-    status: 201,
-    content: { message: "User signed up" },
+  return response<SignInFinishResponse>(c, {
+    status: 200,
+    content: { message: "User signed in" },
   });
 });
 
-export { signUpFinishSchema, signUpFinishServer };
+export { signInFinishSchema, signInFinishServer };
