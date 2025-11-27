@@ -3,6 +3,7 @@ import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
 import { createServer } from "$lib/server";
+import { captchaMiddleware } from "$lib/server/middleware/captcha";
 
 import { routes } from "./routes";
 
@@ -19,6 +20,7 @@ export default {
       }),
 
       // Util middleware
+      captchaMiddleware
     );
 
     server.route(

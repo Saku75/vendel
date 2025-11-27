@@ -1,6 +1,6 @@
 import ky from "ky";
 
-class Captcha {
+class CaptchaService {
   private readonly key: string;
   private readonly remoteIp?: string;
 
@@ -32,4 +32,4 @@ class Captcha {
   }
 }
 
-export { Captcha };
+export { CaptchaService };

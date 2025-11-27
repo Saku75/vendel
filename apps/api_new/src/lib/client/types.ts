@@ -30,7 +30,7 @@ type ExtractData<T> = T extends ClientResult<infer D> ? D : never;
 
 interface RequestOptions {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  json?: unknown;
+  json?: JSONValue;
   searchParams?: Record<string, string | number | boolean>;
   headers?: HeadersInit;
 }
