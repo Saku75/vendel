@@ -1,10 +1,10 @@
 import { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 
-import { authSessions } from "$lib/auth/sessions";
 import { AuthStatus } from "$lib/enums/auth/status";
 import { ServerEnv } from "$lib/server";
 import { AuthAccessToken } from "$lib/types/auth/tokens/access";
+import { AuthRefreshToken } from "$lib/types/auth/tokens/refresh";
 import { deleteCookie, getCookieWithToken } from "$lib/utils/cookies";
 
 function clearAuthAndSetUnauthenticated(c: Context<ServerEnv>) {
@@ -15,18 +15,18 @@ function clearAuthAndSetUnauthenticated(c: Context<ServerEnv>) {
 
 const authMiddleware = createMiddleware<ServerEnv>(async (c, next) => {
   try {
-    const access = await getCookieWithToken<AuthAccessToken>(c, "access");
+    const [access, refresh] = await Promise.all([
+      getCookieWithToken<AuthAccessToken>(c, "access"),
+      getCookieWithToken<AuthRefreshToken>(c, "refresh"),
+    ]);
 
-    if (!access || !access.verified) {
-      clearAuthAndSetUnauthenticated(c);
-      await next();
-      return;
-    }
-
-    const { sessionId, user} = access.token.data;
-    const authSession = await authSessions.get(sessionId);
-
-    if (!authSession || authSession.refreshToken.used) {
+    if (
+      !access ||
+      !access.verified ||
+      !refresh ||
+      !refresh.verified ||
+      access.token.metadata.id !== refresh.token.data.accessTokenId
+    ) {
       clearAuthAndSetUnauthenticated(c);
       await next();
       return;
@@ -34,8 +34,14 @@ const authMiddleware = createMiddleware<ServerEnv>(async (c, next) => {
 
     c.set("auth", {
       status: access.expired ? AuthStatus.Expired : AuthStatus.Authenticated,
-      sessionId,
-      user,
+      refresh: {
+        ...refresh.token.data,
+        expiresAt: refresh.token.metadata.expiresAt,
+      },
+      access: {
+        ...access.token.data,
+        expiresAt: access.token.metadata.expiresAt,
+      },
     });
   } catch (error) {
     console.error("Auth middleware error:", error);

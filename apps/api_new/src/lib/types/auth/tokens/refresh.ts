@@ -1,8 +1,8 @@
 type AuthRefreshToken = {
-  sessionId: string;
-
   family: string;
   id: string;
+
+  accessTokenId: string;
 };
 
 export type { AuthRefreshToken };

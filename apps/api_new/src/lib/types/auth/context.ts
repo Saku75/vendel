@@ -1,11 +1,14 @@
 import { AuthStatus } from "$lib/enums";
 
 import { AuthAccessToken } from "./tokens/access";
+import { AuthRefreshToken } from "./tokens/refresh";
 
 type AuthContextAuthenticatedOrExpired = {
   status: AuthStatus.Authenticated | AuthStatus.Expired;
-  sessionId: AuthAccessToken["sessionId"];
-  user: AuthAccessToken["user"];
+  refresh: AuthRefreshToken & {
+    expiresAt: number;
+  };
+  access: AuthAccessToken & { expiresAt: number };
 };
 
 type AuthContextUnauthenticated = {

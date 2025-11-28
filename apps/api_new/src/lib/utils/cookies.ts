@@ -9,6 +9,7 @@ import type { CookieOptions } from "hono/utils/cookie";
 import type {
   TokenData,
   TokenPurpose,
+  TokenServiceCreateResult,
   TokenServiceReadResult,
 } from "@package/token-service";
 
@@ -42,16 +43,18 @@ async function setCookieWithToken<T extends TokenData = null>(
     purpose: TokenPurpose;
     expiresAt: number;
   },
-): Promise<void> {
-  const { token } = await tokenService.create(data, {
+): Promise<TokenServiceCreateResult> {
+  const result = await tokenService.create(data, {
     purpose: options.purpose,
     expiresAt: options.expiresAt,
   });
 
-  honoSetCookie(c, buildCookieName(name), token, {
+  honoSetCookie(c, buildCookieName(name), result.token, {
     ...getDefaultCookieOptions(),
     expires: new Date(options.expiresAt),
   });
+
+  return result;
 }
 
 function setCookie(

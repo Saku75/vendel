@@ -44,7 +44,10 @@ function requireAuth(options: RequireAuthOptions = {}) {
   return createMiddleware<ServerEnv>(async (c, next) => {
     const auth = c.var.auth;
 
-    if (auth.status === AuthStatus.Unauthenticated) {
+    if (
+      auth.status === AuthStatus.Unauthenticated ||
+      (auth.status === AuthStatus.Expired && !options.allowExpired)
+    ) {
       return response(c, {
         status: 401,
         content: {
@@ -54,17 +57,10 @@ function requireAuth(options: RequireAuthOptions = {}) {
       });
     }
 
-    if (auth.status === AuthStatus.Expired && !options.allowExpired) {
-      return response(c, {
-        status: 401,
-        content: {
-          message:
-            options.customMessage?.unauthenticated || "Authentication expired",
-        },
-      });
-    }
-
-    if (options.minRole && !hasRequiredRole(auth.user.role, options.minRole)) {
+    if (
+      options.minRole &&
+      !hasRequiredRole(auth.access.user.role, options.minRole)
+    ) {
       return response(c, {
         status: 403,
         content: {
