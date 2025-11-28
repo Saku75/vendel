@@ -49,7 +49,7 @@
       return;
     }
 
-    await apiClient.auth.whoAmI().then((res) => {
+    await apiClient.user.whoAmI().then((res) => {
       if (res.ok) {
         authStore.setAuthenticated(res.data!);
       }
@@ -111,7 +111,7 @@
       required
     />
 
-    <CaptchaInput key="captcha" action="auth.sign-up" />
+    <CaptchaInput key="captcha" action="auth-sign_up" />
 
     <FormSubmit label="Opret konto" submittingLabel="Opretter konto" />
   </Form>

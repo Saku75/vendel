@@ -1,48 +1,42 @@
-import { DrizzleD1Database } from "drizzle-orm/d1";
-import { Hono } from "hono";
+import { Context, Hono } from "hono";
 import { HonoOptions } from "hono/hono-base";
 
-import { MailService } from "@package/mail-service";
-import { TokenService } from "@package/token-service";
+import { CaptchaService } from "$lib/services/captcha";
+import { AuthContext } from "$lib/types/auth/context";
 
-import { Captcha } from "$lib/captcha";
-import { Auth } from "$lib/types/auth";
-import { Err } from "$lib/types/result";
+import { response } from "./response";
 
-type HonoEnv = {
+type ServerEnv = {
   Bindings: CloudflareBindings;
 
   Variables: {
-    auth: Auth;
-    captcha: Captcha;
-    database: DrizzleD1Database;
-    token: TokenService;
-    mail: MailService;
+    auth: AuthContext;
+    captcha: CaptchaService;
   };
 };
 
-function app(config?: HonoOptions<HonoEnv>) {
-  const app = new Hono<HonoEnv>(config);
+type ServerOptions = HonoOptions<ServerEnv>;
 
-  app.notFound((c) =>
-    c.json({ ok: false, status: 404, message: "Not found" } satisfies Err, 404),
+type ServerContext = Context<ServerEnv>;
+
+function createServer(config?: ServerOptions) {
+  const hono = new Hono<ServerEnv>(config);
+
+  hono.notFound((c) =>
+    response(c, { status: 404, content: { message: "Not found" } }),
   );
 
-  app.onError((err, c) => {
+  hono.onError((err, c) => {
     console.error(err);
 
-    return c.json(
-      {
-        ok: false,
-        status: 500,
-        message: "Internal server error",
-      } satisfies Err,
-      500,
-    );
+    return response(c, {
+      status: 500,
+      content: { message: "Internal server error" },
+    });
   });
 
-  return app;
+  return hono;
 }
 
-export { app };
-export type { HonoEnv };
+export { createServer };
+export type { ServerContext, ServerEnv, ServerOptions };

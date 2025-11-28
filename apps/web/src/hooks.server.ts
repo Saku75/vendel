@@ -62,7 +62,7 @@ const initiateLocals: Handle = async ({ event, resolve }) => {
       fetch: event.platform?.env.API.fetch.bind(event.platform?.env.API),
 
       hooks: {
-        afterRequest: (res) => {
+        afterResponse: (_, res) => {
           const cookies = res.headers.getSetCookie();
 
           for (const key in cookies) {

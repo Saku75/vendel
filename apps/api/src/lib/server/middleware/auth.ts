@@ -1,53 +1,51 @@
+import { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 
-import { AuthStatus } from "$lib/enums";
-import { HonoEnv } from "$lib/server";
-import {
-  deleteAuthCookie,
-  deleteAuthRefreshCookie,
-  getAuthCookie,
-} from "$lib/utils/auth/cookies";
-import { getAuthSession } from "$lib/utils/auth/session";
+import { AuthStatus } from "$lib/enums/auth/status";
+import { ServerEnv } from "$lib/server";
+import { AuthAccessToken } from "$lib/types/auth/tokens/access";
+import { AuthRefreshToken } from "$lib/types/auth/tokens/refresh";
+import { deleteCookie, getCookieWithToken } from "$lib/utils/cookies";
 
-const authMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
-  const authCookie = await getAuthCookie(c);
+function clearAuthAndSetUnauthenticated(c: Context<ServerEnv>) {
+  deleteCookie(c, "access");
+  deleteCookie(c, "refresh");
+  c.set("auth", { status: AuthStatus.Unauthenticated });
+}
 
+const authMiddleware = createMiddleware<ServerEnv>(async (c, next) => {
   try {
-    if (authCookie && authCookie.verified) {
-      const { user, refreshToken } = authCookie.token.data;
+    const [access, refresh] = await Promise.all([
+      getCookieWithToken<AuthAccessToken>(c, "access"),
+      getCookieWithToken<AuthRefreshToken>(c, "refresh"),
+    ]);
 
-      c.set("auth", {
-        status: authCookie.expired
-          ? AuthStatus.Expired
-          : AuthStatus.Authenticated,
-        authToken: { expiresAt: authCookie.token.metadata.expiresAt },
-        refreshToken,
-        user,
-      });
-    } else {
-      if ((authCookie && !authCookie.verified) || authCookie === null) {
-        deleteAuthCookie(c);
-        deleteAuthRefreshCookie(c);
-      }
-
-      c.set("auth", { status: AuthStatus.Unauthenticated });
+    if (
+      !access ||
+      !access.verified ||
+      !refresh ||
+      !refresh.verified ||
+      access.token.metadata.id !== refresh.token.data.accessTokenId
+    ) {
+      clearAuthAndSetUnauthenticated(c);
+      await next();
+      return;
     }
 
-    if (authCookie) {
-      const { refreshToken } = authCookie.token.data;
-
-      const authSession = await getAuthSession(c, refreshToken.id);
-
-      if (authSession?.refreshToken.used) {
-        c.set("auth", { status: AuthStatus.Unauthenticated });
-
-        deleteAuthCookie(c);
-        deleteAuthRefreshCookie(c);
-      }
-    }
-  } catch {
-    deleteAuthCookie(c);
-    deleteAuthRefreshCookie(c);
+    c.set("auth", {
+      status: access.expired ? AuthStatus.Expired : AuthStatus.Authenticated,
+      refresh: {
+        ...refresh.token.data,
+        expiresAt: refresh.token.metadata.expiresAt,
+      },
+      access: {
+        ...access.token.data,
+        expiresAt: access.token.metadata.expiresAt,
+      },
+    });
+  } catch (error) {
+    console.error("Auth middleware error:", error);
+    clearAuthAndSetUnauthenticated(c);
   }
 
   await next();

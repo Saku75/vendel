@@ -1,19 +1,15 @@
-import { app } from "$lib/server";
+import { createServer } from "$lib/server";
 
-import { emailRoutes } from "./email";
-import { refreshRoute } from "./refresh";
-import { signInRoutes } from "./sign-in";
-import { signOutRoute } from "./sign-out";
-import { signUpRoutes } from "./sign-up";
-import { whoAmIRoute } from "./who-am-i";
+import { refreshServer } from "./refresh";
+import { signInServer } from "./sign-in";
+import { signOutServer } from "./sign-out";
+import { signUpServer } from "./sign-up";
 
-const authRoutes = app();
+const authServer = createServer();
 
-authRoutes.route("/email", emailRoutes);
-authRoutes.route("/refresh", refreshRoute);
-authRoutes.route("/sign-in", signInRoutes);
-authRoutes.route("/sign-out", signOutRoute);
-authRoutes.route("/sign-up", signUpRoutes);
-authRoutes.route("/whoami", whoAmIRoute);
+authServer.route("/refresh", refreshServer);
+authServer.route("/sign-in", signInServer);
+authServer.route("/sign-out", signOutServer);
+authServer.route("/sign-up", signUpServer);
 
-export { authRoutes };
+export { authServer };

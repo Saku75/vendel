@@ -1,18 +1,22 @@
-import { app } from "$lib/server";
-import { Ok } from "$lib/types/result";
+import { env } from "cloudflare:workers";
 
-import { authRoutes } from "./auth";
+import { createServer } from "$lib/server";
+import { response } from "$lib/server/response";
 
-const routes = app();
+import { authServer } from "./auth";
+import { userServer } from "./user";
+
+const routes = createServer();
 
 routes.get("/", (c) => {
-  return c.json({
-    ok: true,
-    status: 200,
-    message: `Vendel.dk API`,
-  } satisfies Ok);
+  return response(c, {
+    content: {
+      message: `Vendel API - ${env.MODE[0].toUpperCase() + env.MODE.slice(1)}`,
+    },
+  });
 });
 
-routes.route("/auth", authRoutes);
+routes.route("/auth", authServer);
+routes.route("/user", userServer);
 
 export { routes };

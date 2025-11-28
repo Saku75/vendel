@@ -8,6 +8,8 @@ export default defineConfig({
   ],
 
   outDir: "dist",
+  external: ["cloudflare:workers"],
+  clean: false,
 
   target: "esnext",
   format: ["esm"],

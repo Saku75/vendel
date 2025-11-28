@@ -25,6 +25,7 @@
   "vars": {
     "MODE": "local",
     "CANONICAL_ORIGIN": "http://localhost:5173",
+    "COOKIE_PREFIX": "vendel_local",
     "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
   },
 
@@ -35,6 +36,7 @@
       "vars": {
         "MODE": "dev",
         "CANONICAL_ORIGIN": "https://dev.vendel.dk",
+        "COOKIE_PREFIX": "vendel_dev",
         "TURNSTILE_SITE_KEY": "0x4AAAAAABh5FlLMz6Dpndqg"
       },
 
@@ -53,6 +55,7 @@
       "vars": {
         "MODE": "prod",
         "CANONICAL_ORIGIN": "https://vendel.dk",
+        "COOKIE_PREFIX": "vendel",
         "TURNSTILE_SITE_KEY": "0x4AAAAAABh5GKQ74cdhLL-d"
       },
 

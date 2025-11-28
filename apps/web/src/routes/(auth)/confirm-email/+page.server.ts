@@ -7,7 +7,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 
   if (!token) return redirect(307, "/");
 
-  const confirmed = await locals.api.auth.email.confirm({ token });
+  const confirmed = await locals.api.user.email.confirm({ token });
 
   let status: boolean;
   let message: string;

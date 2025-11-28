@@ -1,40 +1,56 @@
 import { AuthRole } from "$lib/enums/auth/role";
 
-import type { TestUsers } from "../types/user";
+import { TestUser } from "../types/user";
 
-const TEST_USERS: TestUsers = {
-  SUPER_ADMIN: {
-    id: "test_super_admin_001",
-    email: "superadmin@test.com",
-    password: "superadmin-password-hash",
+const testUsers: Record<string, TestUser> = {
+  SuperAdmin: {
+    id: "super_admin-id",
     firstName: "Super",
+    middleName: null,
     lastName: "Admin",
+    email: "super_admin@example.com",
+    emailVerified: true,
+    password: "super_admin-password",
     role: AuthRole.SuperAdmin,
+    approved: true,
+    approvedBy: null,
   },
-  ADMIN: {
-    id: "test_admin_002",
-    email: "admin@test.com",
-    password: "admin-password-hash",
-    firstName: "Test",
-    lastName: "Admin",
-    role: AuthRole.Admin,
-  },
-  USER_ONE: {
-    id: "test_user_one_003",
-    email: "user1@test.com",
-    password: "user1-password-hash",
-    firstName: "User",
+  Admin: {
+    id: "admin_one-id",
+    firstName: "Admin",
+    middleName: null,
     lastName: "One",
-    role: AuthRole.User,
+    email: "admin_one@example.com",
+    emailVerified: true,
+    password: "admin_one-password",
+    role: AuthRole.Admin,
+    approved: true,
+    approvedBy: "super_admin-id",
   },
-  USER_TWO: {
-    id: "test_user_two_004",
-    email: "user2@test.com",
-    password: "user2-password-hash",
+  UserOne: {
+    id: "user_one-id",
     firstName: "User",
-    lastName: "Two",
+    middleName: null,
+    lastName: "One",
+    email: "user_one@example.com",
+    emailVerified: true,
+    password: "user_one-password",
     role: AuthRole.User,
+    approved: true,
+    approvedBy: "admin_one-id",
   },
-};
+  UserTwo: {
+    id: "user_two-id",
+    firstName: "User",
+    middleName: null,
+    lastName: "Two",
+    email: "user_two@example.com",
+    emailVerified: false,
+    password: "user_two-password",
+    role: AuthRole.Guest,
+    approved: false,
+    approvedBy: null,
+  },
+} as const;
 
-export { TEST_USERS };
+export { testUsers };

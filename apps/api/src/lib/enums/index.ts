@@ -1,2 +1,2 @@
-export * from "./auth/role";
-export * from "./auth/status";
+export { AuthRole } from "./auth/role";
+export { AuthStatus } from "./auth/status";

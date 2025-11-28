@@ -7,14 +7,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Vendel is a Cloudflare Workers-based wishlist application for friends and family. The monorepo uses Turbo for task orchestration and pnpm workspaces for package management.
 
 **Current Status:**
+
 - **Development Stage**: All apps are in active development, aiming for feature completion soon
-- **Primary API**: `apps/api_new` is the active development focus and will replace `apps/api`
 - **Access Model**: Closed system with manual admin approval for new users
 
 **Architecture:**
 
-- **API (`apps/api_new`)**: Hono-based REST API deployed to Cloudflare Workers
-  - **Primary development focus** - refactored architecture with improved security and type safety
+- **API (`apps/api`)**: Hono-based REST API deployed to Cloudflare Workers
   - Uses Drizzle ORM with Cloudflare D1 (SQLite) for data persistence
   - KV namespace for temporary auth sessions
   - Token-based authentication with refresh token families
@@ -22,15 +21,7 @@ Vendel is a Cloudflare Workers-based wishlist application for friends and family
   - Role-based authorization: SuperAdmin, Admin, User, Guest
   - Middleware stack: auth, require-auth, captcha, CORS, security headers
   - Exports a typed client SDK with automatic cookie management
-  - **Current Status**: Missing 3 endpoints to achieve feature parity with old API
-    - `who-am-i` - Get current authenticated user
-    - `confirm-email` - Verify email confirmation token
-    - `resend-confirm-email` - Resend confirmation email
   - **Planned Features**: Wishlist management (wishlists, wishes, wishlist_users schemas + endpoints)
-
-- **API (`apps/api`)**: Legacy API implementation
-  - **Being replaced by `apps/api_new`**
-  - Remaining temporarily for reference until migration complete
 
 - **Web (`apps/web`)**: SvelteKit application with SSR deployed to Cloudflare Pages
   - Communicates with API via exported client SDK
@@ -72,41 +63,34 @@ pnpm test:watch
 pnpm format
 ```
 
-### API-specific commands (`apps/api_new` - Primary API)
+### API-specific commands (`apps/api`)
 
 ```bash
 # Run API dev server only
-pnpm --filter @app/api_new dev
+pnpm --filter @app/api dev
 
 # Build API
-pnpm --filter @app/api_new build
+pnpm --filter @app/api build
 
 # Deploy API (requires CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN)
-pnpm --filter @app/api_new deploy -- -e <dev|prod>
+pnpm --filter @app/api deploy -- -e <dev|prod>
 
 # Generate Cloudflare bindings types
-pnpm --filter @app/api_new cf-typegen
+pnpm --filter @app/api cf-typegen
 
 # Database operations
-pnpm --filter @app/api_new db:generate  # Generate migrations from schema
-pnpm --filter @app/api_new db:apply     # Apply migrations locally
-pnpm --filter @app/api_new db:apply -- -e <dev|prod> --remote  # Apply to remote D1
+pnpm --filter @app/api db:generate  # Generate migrations from schema
+pnpm --filter @app/api db:apply     # Apply migrations locally
+pnpm --filter @app/api db:apply -- -e <dev|prod> --remote  # Apply to remote D1
 
 # Run API tests
-pnpm --filter @app/api_new test
+pnpm --filter @app/api test
 
 # Run tests in watch mode
-pnpm --filter @app/api_new test:watch
+pnpm --filter @app/api test:watch
 
 # Run single test file
-pnpm --filter @app/api_new vitest run <path-to-test>
-```
-
-### Legacy API commands (`apps/api`)
-
-```bash
-# Legacy API - use api_new for new development
-pnpm --filter @app/api <command>  # Same commands as api_new
+pnpm --filter @app/api vitest run <path-to-test>
 ```
 
 ### Web-specific commands (`apps/web`)
@@ -125,29 +109,29 @@ pnpm --filter @app/web deploy -- -e <dev|prod>
 pnpm --filter @app/web cf-typegen
 ```
 
-## Key Architecture Details (apps/api_new)
+## Key Architecture Details (apps/api)
 
 ### API Request Flow
 
-1. Request enters through `apps/api_new/src/main.ts`
+1. Request enters through `apps/api/src/main.ts`
 2. Middleware chain processes request in order:
    - Trailing slash trimmer
    - Secure headers (CSP, X-Frame-Options, etc.)
    - CORS headers (origin validation against `CORS_ORIGINS`)
    - Auth context setup (extracts and validates tokens, sets `c.get('auth')`)
    - CAPTCHA verification (sets `c.get('captcha')` service)
-3. Routes in `apps/api_new/src/routes/` handle business logic
-4. Database access via Drizzle ORM (`apps/api_new/src/lib/database/`)
+3. Routes in `apps/api/src/routes/` handle business logic
+4. Database access via Drizzle ORM (`apps/api/src/lib/database/`)
 5. Responses follow typed result pattern: `Result<T>` = `Ok<T>` | `Err`
 
 ### Type-Safe Server Context
 
 ```typescript
 type ServerEnv = {
-  Bindings: CloudflareBindings;  // D1, KV, environment variables
+  Bindings: CloudflareBindings; // D1, KV, environment variables
   Variables: {
-    auth: AuthContext;            // Authenticated | Expired | Unauthenticated
-    captcha: CaptchaService;      // Turnstile verification service
+    auth: AuthContext; // Authenticated | Expired | Unauthenticated
+    captcha: CaptchaService; // Turnstile verification service
   };
 };
 ```
@@ -159,13 +143,13 @@ The web app uses a service binding to call the API worker directly:
 - Client created in `hooks.server.ts` with `event.platform.env.API.fetch`
 - No HTTP roundtrip; direct worker-to-worker communication
 - Cookies automatically forwarded and synced between apps
-- Client SDK defined in `apps/api_new/src/lib/client/index.ts`
+- Client SDK defined in `apps/api/src/lib/client/index.ts`
 - Client automatically manages cookies via in-memory Map
 - Type-safe `ClientResult<T>` = `Ok<T> & { ok: true }` | `Err & { ok: false }`
 
 ### Database Schema & Migrations
 
-**Location**: `apps/api_new/src/lib/database/`
+**Location**: `apps/api/src/lib/database/`
 
 **Current Schema** (3 tables):
 
@@ -187,17 +171,20 @@ The web app uses a service binding to call the API worker directly:
    - Purpose: One-time use tokens with rotation security
 
 **Planned Schema** (wishlist features):
+
 - `wishlists` - Wishlist containers
 - `wishes` - Individual wish items
 - `wishlist_users` - User permissions/sharing for wishlists
 
 **Migration Workflow:**
-1. Modify schema files in `apps/api_new/src/lib/database/schema/`
-2. Run `pnpm --filter @app/api_new db:generate` to create migration
-3. Run `pnpm --filter @app/api_new db:apply` to apply locally
+
+1. Modify schema files in `apps/api/src/lib/database/schema/`
+2. Run `pnpm --filter @app/api db:generate` to create migration
+3. Run `pnpm --filter @app/api db:apply` to apply locally
 4. Deploy applies migrations automatically via GitHub Actions
 
-**Drizzle Config**: `apps/api_new/drizzle.config.ts`
+**Drizzle Config**: `apps/api/drizzle.config.ts`
+
 - SQLite dialect with snake_case casing conversion
 - Migrations stored in `src/lib/database/migrations/`
 
@@ -208,9 +195,11 @@ The web app uses a service binding to call the API worker directly:
 #### Password Security (Two-Stage Hashing)
 
 1. **Client-side hashing** (in browser/client):
+
    ```
    passwordClientHash = scrypt(password, clientSalt)
    ```
+
    - Client salt is random, generated on sign-up start
    - Sent to server as base64 string
    - **Never sends plaintext password over network**
@@ -219,6 +208,7 @@ The web app uses a service binding to call the API worker directly:
    ```
    passwordHash = scrypt(passwordClientHash, serverSalt)
    ```
+
    - Server salt is random, stored per-user in DB
    - Final hash stored in DB as blob
    - Prevents rainbow table attacks even if DB is compromised
@@ -226,21 +216,24 @@ The web app uses a service binding to call the API worker directly:
 #### Token Types
 
 **Access Token** (`src/lib/types/auth/tokens/access.ts`):
+
 - Payload: `{ user: { id, role } }`
 - Expiry: 15 minutes
 - Stored in cookie: `{hostname_prefix}-access`
 - Used for API authorization
 
 **Refresh Token** (`src/lib/types/auth/tokens/refresh.ts`):
+
 - Payload: `{ family, id, accessTokenId }`
 - Expiry: 30 days
 - Stored in cookie: `{hostname_prefix}-refresh`
 - Links to token family for rotation tracking
 
 **Confirm Email Token** (`src/lib/types/user/tokens/confirm-email.ts`):
+
 - Payload: `{ userId }`
 - Purpose: Email verification link sent on sign-up
-- **Status**: Token type defined, endpoint not yet implemented
+- Expiry: 24 hours
 
 #### Auth Middleware (`src/lib/server/middleware/auth.ts`)
 
@@ -259,6 +252,7 @@ Runs on **every request** to establish auth context:
 **Role Hierarchy**: Guest (0) < User (1) < Admin (2) < SuperAdmin (3)
 
 **Helper Functions**:
+
 - `requireAuth(options?)` - Main factory with custom options
 - `requireGuest()` - Minimum Guest role
 - `requireUser()` - Minimum User role
@@ -266,26 +260,32 @@ Runs on **every request** to establish auth context:
 - `requireSuperAdmin()` - SuperAdmin only
 
 **Options**:
+
 - `minRole`: Minimum role required (default: User)
 - `allowExpired`: Accept expired tokens (useful for sign-out)
 - `customAuth`: Custom authorization callback
 - `errorMessage`: Custom 401 error message
 
 **Example Usage**:
+
 ```typescript
 // Require authenticated user
-app.post('/protected', requireUser(), async (c) => {
+app.post("/protected", requireUser(), async (c) => {
   const auth = getAuth(c); // Type-safe: Authenticated context only
   return c.json({ userId: auth.access.user.id });
 });
 
 // Require admin with custom logic
-app.post('/admin', requireAdmin({
-  customAuth: async (c, auth) => {
-    // Additional checks beyond role
-    return someCondition;
-  }
-}), handler);
+app.post(
+  "/admin",
+  requireAdmin({
+    customAuth: async (c, auth) => {
+      // Additional checks beyond role
+      return someCondition;
+    },
+  }),
+  handler,
+);
 ```
 
 #### Auth Flows
@@ -305,7 +305,7 @@ app.post('/admin', requireAdmin({
    - Retrieves and validates KV session
    - Hashes passwordClientHash with serverSalt
    - Creates user in DB (emailVerified=false, approved=false by default)
-   - Generates confirm email token (not yet sent - endpoint missing)
+   - Generates and sends confirm email token via email
    - Calls `signIn()` to set auth cookies
    - Deletes KV session
    - Returns success with cookies set
@@ -330,6 +330,7 @@ app.post('/admin', requireAdmin({
    - Returns success with cookies set
 
 **Shared Sign-In Logic** (`src/lib/auth/flows/sign-in.ts`):
+
 ```typescript
 async function signIn(c, { userId, userRole }):
   1. Create refresh_token_family (userId)
@@ -365,6 +366,7 @@ async function signIn(c, { userId, userRole }):
 #### Approval Workflow (Planned)
 
 **Current State**:
+
 - User schema has `approved` (boolean) and `approvedBy` (FK) fields
 - New users default to `approved: false`
 - **Not yet implemented**: Email notification to Admins on new sign-ups
@@ -374,32 +376,38 @@ async function signIn(c, { userId, userRole }):
 ### Testing
 
 **Framework**: Vitest with `@cloudflare/vitest-pool-workers`
+
 - Provides D1, KV bindings in test environment
 - Test files: `*.spec.ts` or `*.test.ts`
 - API tests require `.dev.vars` file with secrets (auto-configured in CI)
 
-**Test Infrastructure** (`apps/api_new/src/test/`):
+**Test Infrastructure** (`apps/api/src/test/`):
 
 **Setup Hooks** (`setups/`):
+
 - `01-migrations.ts` - Applies D1 migrations before tests run
 - `02-users.ts` - Seeds test users with different roles and states
 
 **Fixtures** (`fixtures/users.ts`):
+
 - Pre-defined test users: SuperAdmin, Admin, UserOne, UserTwo
 - Known passwords and states for testing auth flows
 - Different approval/verification combinations
 
 **Utilities** (`utils/`):
+
 - `testFetch()` - Configured fetch function for making requests to SELF
 - `testDatabase` - Drizzle instance connected to test D1 binding
 
 **Test Coverage**:
-- Sign-up flow: 16+ test cases (session creation, validation, full flow)
-- Sign-in flow: 11+ test cases (timing attack prevention, password validation)
+
+- Sign-up flow: 11+ test cases (session creation, validation, full flow)
+- Sign-in flow: 13+ test cases (timing attack prevention, password validation)
 - Sign-out flow: 3+ test cases (token family deletion, auth requirements)
-- **Refresh endpoint**: Tests exist but may need review/fixes
+- User endpoints: 12+ test cases (who-am-i, email confirmation, resend)
 
 **Testing Philosophy**:
+
 - Tests are helpful but not critical (personal project)
 - Focus on happy paths and security-critical flows
 - Tests may fail occasionally - acceptable for this use case
@@ -420,42 +428,46 @@ async function signIn(c, { userId, userRole }):
 
 ## Project Structure Conventions
 
-### API Routes (`apps/api_new`)
+### API Routes (`apps/api`)
 
-**Location**: `apps/api_new/src/routes/`
+**Location**: `apps/api/src/routes/`
 
 **Structure**:
+
 - Routes organized by domain (e.g., `auth/`, `user/`, `wishlist/`)
 - Each route group is a separate Hono server instance
 - Modular composition via `route()` method in parent router
 - Tests colocated as `*.spec.ts` files
 
 **Current Routes**:
+
 ```
 /
 ├── / (GET)                          - Health check
-└── /auth
-    ├── /sign-up
-    │   ├── /start (POST)            - Initialize sign-up session
-    │   └── /finish (POST)           - Complete sign-up
-    ├── /sign-in
-    │   ├── /start (POST)            - Initialize sign-in session
-    │   └── /finish (POST)           - Complete sign-in
-    ├── /refresh (POST)              - Refresh access token
-    └── /sign-out (POST)             - Sign out (delete tokens)
+├── /auth
+│   ├── /sign-up
+│   │   ├── /start (POST)            - Initialize sign-up session
+│   │   └── /finish (POST)           - Complete sign-up
+│   ├── /sign-in
+│   │   ├── /start (POST)            - Initialize sign-in session
+│   │   └── /finish (POST)           - Complete sign-in
+│   ├── /refresh (POST)              - Refresh access token
+│   └── /sign-out (POST)             - Sign out (delete tokens)
+└── /user
+    ├── /who-am-i (GET)              - Get current authenticated user info
+    └── /email
+        ├── /confirm (POST)          - Verify email confirmation token
+        └── /resend (POST)           - Resend email confirmation
 ```
 
-**Missing Routes** (for feature parity):
-- `GET /user/who-am-i` - Get current authenticated user info
-- `POST /user/confirm-email` - Verify email confirmation token
-- `POST /user/resend-confirm-email` - Resend email confirmation
-
 **Planned Routes** (wishlist features):
+
 - `/wishlists` - CRUD operations for wishlists
 - `/wishes` - CRUD operations for wishes within wishlists
 - `/wishlists/:id/users` - Manage wishlist sharing/permissions
 
 **Client Exports**:
+
 - Each route group exports typed client functions
 - Main client: `createClient()` from `src/lib/client/index.ts`
 - Aggregated in client SDK: `client.auth.signUp()`, `client.auth.signIn()`, etc.
@@ -470,7 +482,7 @@ async function signIn(c, { userId, userRole }):
 
 ### Path Aliases
 
-- **API** (`apps/api_new`): `$lib`, `$routes`, `$test` (tsconfig.json)
+- **API** (`apps/api`): `$lib`, `$routes`, `$test` (tsconfig.json)
 - **Web**: `$lib`, `$routes`, `$test` (svelte.config.js)
 - **Packages**: `@package/<name>` - Shared utilities and services
 - **Apps**: `@app/<name>` - Application packages
@@ -487,14 +499,13 @@ async function signIn(c, { userId, userRole }):
 
 ### General
 
-- **Primary API**: `apps/api_new` is the active development focus; `apps/api` is legacy
 - **Personal Project**: This is a friends & family wishlist app with manual approval workflow
 - **Development Timeline**: Aiming for feature completion soon
 - **Testing**: Tests are helpful but not critical; occasional failures are acceptable
 - **Service binding**: Web app calls API directly via worker binding; CORS only matters for external clients
 - **Turbo caching**: Enabled; use `--force` flag to bypass if needed
 
-### API Development (`apps/api_new`)
+### API Development (`apps/api`)
 
 - **Always run `cf-typegen`** after modifying `wrangler.json` to update bindings types
 - **Database migrations are auto-applied** during deployment; test locally first with `db:apply`
@@ -509,6 +520,7 @@ async function signIn(c, { userId, userRole }):
 ### Common Tasks
 
 **Scaffolding new endpoints**:
+
 1. Create route file in `src/routes/` following existing patterns
 2. Define request/response types using Zod schemas
 3. Implement handler with proper error handling
@@ -517,14 +529,16 @@ async function signIn(c, { userId, userRole }):
 6. Update CLAUDE.md if adding major features
 
 **Adding database tables**:
+
 1. Create schema file in `src/lib/database/schema/`
 2. Export from `src/lib/database/schema/index.ts`
-3. Run `pnpm --filter @app/api_new db:generate`
+3. Run `pnpm --filter @app/api db:generate`
 4. Review generated migration in `src/lib/database/migrations/`
-5. Run `pnpm --filter @app/api_new db:apply` to test locally
+5. Run `pnpm --filter @app/api db:apply` to test locally
 6. Commit migration with schema changes
 
 **Writing tests**:
+
 1. Use test utilities from `src/test/utils/`
 2. Leverage test fixtures for users with known credentials
 3. Use `testFetch()` for making authenticated requests
@@ -533,18 +547,15 @@ async function signIn(c, { userId, userRole }):
 
 ### Known Issues & TODOs
 
-**Missing Endpoints** (for feature parity):
-- `GET /user/who-am-i` - Return current user info
-- `POST /user/confirm-email` - Verify email token and mark email as verified
-- `POST /user/resend-confirm-email` - Generate and send new confirmation token
-
 **Planned Features**:
+
 - **Wishlist System**: Add `wishlists`, `wishes`, `wishlist_users` schemas
 - **Wishlist APIs**: CRUD endpoints for wishlist management
 - **Admin Approval**: Email notifications to admins on new user sign-ups
 - **Admin Panel**: Endpoint for admins to approve/reject pending users
 
-**Known Test Issues**:
-- Refresh endpoint tests may need review/fixes
-- Some edge cases may not be covered
+**Testing Notes**:
+
 - Test suite is best-effort for personal project
+- Some edge cases may not be covered
+- Focus on security-critical flows and happy paths

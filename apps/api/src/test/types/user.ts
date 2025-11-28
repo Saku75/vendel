@@ -1,19 +1,18 @@
-import type { AuthRole } from "$lib/enums/auth/role";
+import { users } from "$lib/database/schema/users";
 
-interface TestUser {
-  id: string;
-  email: string;
+type TestUser = Pick<
+  typeof users.$inferSelect,
+  | "id"
+  | "firstName"
+  | "middleName"
+  | "lastName"
+  | "email"
+  | "emailVerified"
+  | "role"
+  | "approved"
+  | "approvedBy"
+> & {
   password: string;
-  firstName: string;
-  lastName: string;
-  role: AuthRole;
-}
-
-type TestUsers = {
-  readonly SUPER_ADMIN: TestUser;
-  readonly ADMIN: TestUser;
-  readonly USER_ONE: TestUser;
-  readonly USER_TWO: TestUser;
 };
 
-export type { TestUser, TestUsers };
+export type { TestUser };

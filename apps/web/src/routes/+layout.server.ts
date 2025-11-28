@@ -1,30 +1,23 @@
-import { cookieName } from "@app/api/client";
-
 import { npm_package_version } from "$env/static/private";
 
 import { LayoutTheme } from "$lib/enums/layout/theme";
 
 import type { LayoutServerLoad } from "./$types";
 
-export const load: LayoutServerLoad = async ({
-  platform,
-  cookies,
-  locals,
-  url,
-}) => {
+export const load: LayoutServerLoad = async ({ platform, cookies, locals }) => {
   const themePreferenceCookie =
     (cookies.get("theme-preference") as LayoutTheme) || LayoutTheme.System;
 
-  const normalizedHostname = url.hostname.replace("www.", "");
-
   if (
-    cookies.get(cookieName("auth", { prefix: normalizedHostname })) &&
-    cookies.get(cookieName("auth-refresh", { prefix: normalizedHostname }))
+    cookies.get(`${platform?.env.COOKIE_PREFIX}-access`) &&
+    cookies.get(`${platform?.env.COOKIE_PREFIX}-refresh`)
   ) {
     const refresh = await locals.api.auth.refresh();
 
+    console.log("Refresh result in layout load:", refresh);
+
     if (refresh.ok) {
-      const whoAmI = await locals.api.auth.whoAmI();
+      const whoAmI = await locals.api.user.whoAmI();
 
       return {
         config: {

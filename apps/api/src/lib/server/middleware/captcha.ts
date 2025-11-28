@@ -1,13 +1,16 @@
 import { getConnInfo } from "hono/cloudflare-workers";
 import { createMiddleware } from "hono/factory";
 
-import { Captcha } from "$lib/captcha";
-import { HonoEnv } from "$lib/server";
+import { ServerEnv } from "$lib/server";
+import { CaptchaService } from "$lib/services/captcha";
 
-const captchaMiddleware = createMiddleware<HonoEnv>(async (c, next) => {
+const captchaMiddleware = createMiddleware<ServerEnv>(async (c, next) => {
   c.set(
     "captcha",
-    new Captcha(c.env.TURNSTILE_SECRET_KEY, getConnInfo(c).remote.address),
+    new CaptchaService(
+      c.env.TURNSTILE_SECRET_KEY,
+      getConnInfo(c).remote.address,
+    ),
   );
 
   await next();

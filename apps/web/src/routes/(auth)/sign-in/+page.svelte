@@ -40,7 +40,7 @@
       return;
     }
 
-    await apiClient.auth.whoAmI().then((res) => {
+    await apiClient.user.whoAmI().then((res) => {
       if (res.ok) {
         authStore.setAuthenticated(res.data!);
       }
@@ -70,7 +70,7 @@
       required
     />
 
-    <CaptchaInput key="captcha" action="auth.sign-in" />
+    <CaptchaInput key="captcha" action="auth-sign_in" />
 
     <FormSubmit label="Log ind" submittingLabel="Logger ind" />
   </Form>

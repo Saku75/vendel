@@ -1,5 +1,6 @@
 import {
   ClientErrorStatusCode,
+  ContentlessStatusCode,
   ServerErrorStatusCode,
   SuccessStatusCode,
 } from "hono/utils/http-status";
@@ -7,18 +8,18 @@ import { JSONValue } from "hono/utils/types";
 import { ZodIssue } from "zod";
 
 type Ok<T extends JSONValue | undefined = undefined> = {
-  ok: true;
-  status: SuccessStatusCode;
-  message?: string;
-  data?: T;
-};
+  status: Omit<SuccessStatusCode, ContentlessStatusCode>;
+} & (T extends undefined ? { message: string } : { message?: string; data: T });
 
 type Err = {
-  ok: false;
-  status: ClientErrorStatusCode | ServerErrorStatusCode;
-  message?: string;
-  errors?: ZodIssue[];
-};
+  status: Omit<
+    ClientErrorStatusCode | ServerErrorStatusCode,
+    ContentlessStatusCode
+  >;
+} & (
+  | { message: string; errors?: ZodIssue[] }
+  | { errors: ZodIssue[]; message?: string }
+);
 
 type Result<T extends JSONValue | undefined = undefined> = Ok<T> | Err;
 

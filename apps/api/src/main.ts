@@ -1,37 +1,38 @@
 import { cors } from "hono/cors";
+import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
 import { trimTrailingSlash } from "hono/trailing-slash";
 
-import { app } from "$lib/server";
+import { createServer } from "$lib/server";
 import { authMiddleware } from "$lib/server/middleware/auth";
 import { captchaMiddleware } from "$lib/server/middleware/captcha";
-import { databaseMiddleware } from "$lib/server/middleware/database";
-import { mailMiddleware } from "$lib/server/middleware/mail";
-import { tokenMiddleware } from "$lib/server/middleware/token";
 
 import { routes } from "./routes";
 
 export default {
   async fetch(request, env, context) {
-    const server = app();
+    const server = createServer();
 
     server.use(
+      // Basic middleware
+      logger(),
       trimTrailingSlash(),
-      secureHeaders({ strictTransportSecurity: false, xXssProtection: "1" }),
+      secureHeaders({ strictTransportSecurity: false }),
       cors({
         origin: env.CORS_ORIGINS.split(","),
       }),
 
-      captchaMiddleware,
-      databaseMiddleware,
-      mailMiddleware,
-      tokenMiddleware,
-
+      // Util middleware
       authMiddleware,
+      captchaMiddleware,
     );
 
+    const origin = new URL(request.url).origin;
+
+    console.log("Request origin:", origin);
+
     server.route(
-      new URL(request.url).origin === env.API_ORIGIN ? "/" : "/api",
+      env.API_ORIGINS.split(",").includes(origin) ? "/" : "/api",
       routes,
     );
 

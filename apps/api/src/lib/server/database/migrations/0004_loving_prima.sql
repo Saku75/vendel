@@ -1,1 +1,0 @@
-ALTER TABLE `refresh_tokens` RENAME COLUMN "expires" TO "expires_at";
