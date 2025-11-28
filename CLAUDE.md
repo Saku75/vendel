@@ -205,6 +205,7 @@ The web app uses a service binding to call the API worker directly:
    - **Never sends plaintext password over network**
 
 2. **Server-side hashing** (in API):
+
    ```
    passwordHash = scrypt(passwordClientHash, serverSalt)
    ```
