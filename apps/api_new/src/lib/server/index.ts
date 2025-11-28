@@ -2,6 +2,7 @@ import { Context, Hono } from "hono";
 import { HonoOptions } from "hono/hono-base";
 
 import { CaptchaService } from "$lib/services/captcha";
+import { AuthContext } from "$lib/types/auth/context";
 
 import { response } from "./response";
 
@@ -9,6 +10,7 @@ type ServerEnv = {
   Bindings: CloudflareBindings;
 
   Variables: {
+    auth: AuthContext;
     captcha: CaptchaService;
   };
 };

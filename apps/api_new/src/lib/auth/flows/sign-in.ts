@@ -40,7 +40,7 @@ async function signIn(
   };
 
   await authSessions.set(
-    refreshToken.id,
+    sessionId,
     {
       sessionId,
       user,
