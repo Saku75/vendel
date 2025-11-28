@@ -4,6 +4,7 @@ import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
 
 import { authServer } from "./auth";
+import { userServer } from "./user";
 
 const routes = createServer();
 
@@ -16,5 +17,6 @@ routes.get("/", (c) => {
 });
 
 routes.route("/auth", authServer);
+routes.route("/user", userServer);
 
 export { routes };

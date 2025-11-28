@@ -1,5 +1,6 @@
 import { authClient } from "$routes/auth/client";
 import { rootClient } from "$routes/client";
+import { userClient } from "$routes/user/client";
 
 import { createBaseClient } from "./client";
 import type { ClientConfig } from "./types";
@@ -9,6 +10,7 @@ function createClient(config?: ClientConfig) {
 
   return {
     auth: authClient(context),
+    user: userClient(context),
     root: rootClient(context),
   };
 }
