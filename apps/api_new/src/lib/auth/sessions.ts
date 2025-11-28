@@ -5,12 +5,14 @@ import { AuthRefreshToken } from "$lib/types/auth/tokens/refresh";
 import { createKV } from "$lib/utils/create-kv";
 
 type AuthSession = {
-  refreshToken: AuthRefreshToken & {
+  sessionId: string;
+
+  user: AuthAccessToken["user"];
+
+  refreshToken: Omit<AuthRefreshToken, "sessionId"> & {
     expiresAt: number;
     used: boolean;
   };
-
-  user: AuthAccessToken["user"];
 };
 
 const authSessions = createKV<AuthSession>(env.KV, {

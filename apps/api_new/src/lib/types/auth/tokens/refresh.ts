@@ -1,7 +1,8 @@
 type AuthRefreshToken = {
+  sessionId: string;
+
   family: string;
   id: string;
-  expiresAt: number;
 };
 
 export type { AuthRefreshToken };

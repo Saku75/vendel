@@ -1,9 +1,7 @@
 import { AuthRole } from "$lib/enums/auth/role";
 
-import type { AuthRefreshToken } from "./refresh";
-
 type AuthAccessToken = {
-  refreshToken: AuthRefreshToken;
+  sessionId: string;
 
   user: {
     id: string;

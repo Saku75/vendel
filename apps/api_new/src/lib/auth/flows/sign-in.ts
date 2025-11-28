@@ -1,3 +1,4 @@
+import { createId } from "@package/crypto-utils/cuid";
 import {
   TokenExpiresIn,
   TokenPurpose,
@@ -30,39 +31,48 @@ async function signIn(
 
   const expiresAt = refreshToken.expiresAt.valueOf();
 
-  const authData: AuthAccessToken = {
-    refreshToken: {
-      family: refreshTokenFamily.id,
-      id: refreshToken.id,
-      expiresAt,
-    },
-    user: {
-      id: userId,
-      role: userRole,
-    },
+  const sessionId = createId();
+
+  const user: AuthAccessToken["user"] = { id: userId, role: userRole };
+  const refreshIds: Omit<AuthRefreshToken, "sessionId"> = {
+    family: refreshTokenFamily.id,
+    id: refreshToken.id,
   };
 
   await authSessions.set(
     refreshToken.id,
     {
+      sessionId,
+      user,
       refreshToken: {
-        ...authData.refreshToken,
+        ...refreshIds,
+        expiresAt,
         used: false,
       },
-      user: authData.user,
     },
     { expiration: Math.floor(expiresAt / 1000) },
   );
 
-  await setCookieWithToken<AuthAccessToken>(c, "access", authData, {
-    purpose: TokenPurpose.Auth,
-    expiresAt: TokenService.getExpiresAt(TokenExpiresIn.FifteenMinutes),
-  });
+  await setCookieWithToken<AuthAccessToken>(
+    c,
+    "access",
+    {
+      sessionId,
+      user,
+    },
+    {
+      purpose: TokenPurpose.Auth,
+      expiresAt: TokenService.getExpiresAt(TokenExpiresIn.FifteenMinutes),
+    },
+  );
 
   await setCookieWithToken<AuthRefreshToken>(
     c,
     "refresh",
-    authData.refreshToken,
+    {
+      sessionId,
+      ...refreshIds,
+    },
     {
       purpose: TokenPurpose.Refresh,
       expiresAt,
