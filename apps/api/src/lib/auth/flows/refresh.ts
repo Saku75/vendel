@@ -96,6 +96,7 @@ async function refresh(c: ServerContext): Promise<RefreshResult> {
       purpose: TokenPurpose.Auth,
       expiresAt: TokenService.getExpiresAt(TokenExpiresIn.FifteenMinutes),
     },
+    { expires: new Date(newExpiresAt) },
   );
 
   await setCookieWithToken<AuthRefreshToken>(
@@ -110,6 +111,7 @@ async function refresh(c: ServerContext): Promise<RefreshResult> {
       purpose: TokenPurpose.Refresh,
       expiresAt: newExpiresAt,
     },
+    { expires: new Date(newExpiresAt) },
   );
 
   return { success: true };

@@ -33,19 +33,20 @@ async function setCookieWithToken<T extends TokenData = null>(
   c: ServerContext,
   name: string,
   data: T,
-  options: {
+  tokenOptions: {
     purpose: TokenPurpose;
     expiresAt: number;
   },
+  options?: CookieOptions,
 ): Promise<TokenServiceCreateResult> {
   const result = await tokenService.create(data, {
-    purpose: options.purpose,
-    expiresAt: options.expiresAt,
+    purpose: tokenOptions.purpose,
+    expiresAt: tokenOptions.expiresAt,
   });
 
   honoSetCookie(c, buildCookieName(name), result.token, {
     ...getDefaultCookieOptions(),
-    expires: new Date(options.expiresAt),
+    ...options,
   });
 
   return result;

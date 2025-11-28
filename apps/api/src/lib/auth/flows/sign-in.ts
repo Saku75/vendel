@@ -39,6 +39,7 @@ async function signIn(
       purpose: TokenPurpose.Auth,
       expiresAt: TokenService.getExpiresAt(TokenExpiresIn.FifteenMinutes),
     },
+    { expires: new Date(expiresAt) },
   );
 
   await setCookieWithToken<AuthRefreshToken>(
@@ -53,6 +54,7 @@ async function signIn(
       purpose: TokenPurpose.Refresh,
       expiresAt,
     },
+    { expires: new Date(expiresAt) },
   );
 }
 
