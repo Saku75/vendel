@@ -11,6 +11,7 @@ import {
 
 import { db } from "$lib/database";
 import { wishes } from "$lib/database/schema/wishes";
+import { wishlists } from "$lib/database/schema/wishlists";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
 import {
@@ -88,8 +89,8 @@ wishesServer.post("/:wishlistId/wishes", async (c) => {
 
   const wishlistExists = await db
     .select()
-    .from(wishes)
-    .where(eq(wishes.wishlistId, wishlistId))
+    .from(wishlists)
+    .where(eq(wishlists.id, wishlistId))
     .get();
 
   if (!wishlistExists) {

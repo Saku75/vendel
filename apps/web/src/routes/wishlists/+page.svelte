@@ -65,7 +65,9 @@
         {#each data.wishlists as wishlist (wishlist.id)}
           <li class="contents">
             <a
-              href={resolve(`/wishlists/${wishlist.id}`)}
+              href={resolve("/wishlists/[wishlistId]", {
+                wishlistId: wishlist.id,
+              })}
               class="rounded-[1.25rem] bg-stone-200 p-4 px-4 py-2 dark:bg-stone-800"
             >
               <div class="flex justify-between">

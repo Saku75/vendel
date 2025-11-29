@@ -24,13 +24,12 @@ const wishDescriptionValidator = string({
 const wishPriceValidator = number({
   invalid_type_error: ValidatorCode.InvalidType,
 })
-  .min(0, ValidatorCode.TooSmall)
+  .nullable()
   .optional();
 
 const wishUrlValidator = string({
   invalid_type_error: ValidatorCode.InvalidType,
 })
-  .url(ValidatorCode.InvalidFormat)
   .max(2048, ValidatorCode.TooLong)
   .optional();
 

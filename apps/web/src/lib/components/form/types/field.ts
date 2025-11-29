@@ -32,6 +32,19 @@ interface TextField extends CommonField {
   validator?: z.ZodString | z.ZodOptional<z.ZodString>;
 }
 
+interface NumberField extends CommonField {
+  readonly type: FieldType.Number;
+
+  value?: number;
+  initialValue: number | null;
+
+  validator?:
+    | z.ZodNumber
+    | z.ZodOptional<z.ZodNumber>
+    | z.ZodNullable<z.ZodNumber>
+    | z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+}
+
 interface CaptchaField
   extends Pick<CommonField, "key" | "type" | "value" | "error"> {
   readonly type: FieldType.Captcha;
@@ -45,7 +58,7 @@ interface CaptchaField
   reset?: () => void;
 }
 
-type Field = TextField | CaptchaField;
+type Field = TextField | NumberField | CaptchaField;
 
 interface Fields {
   [key: string]: Field;
@@ -65,6 +78,7 @@ export type {
   Field,
   Fields,
   FieldValues,
+  NumberField,
   Require,
   TextField,
 };
