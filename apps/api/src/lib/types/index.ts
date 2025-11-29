@@ -22,9 +22,13 @@ export type {
 export type { ResendConfirmEmailResponse } from "./routes/user/email/resend";
 export type { WhoAmIResponse } from "./routes/user/who-am-i";
 export type {
-  WishlistsGetRequest,
+  WishlistsCreateRequest,
+  WishlistsCreateResponse,
+  WishlistsDeleteResponse,
   WishlistsGetResponse,
   WishlistsListResponse,
+  WishlistsUpdateRequest,
+  WishlistsUpdateResponse,
 } from "./routes/wishlists";
 export type {
   WishesGetRequest,

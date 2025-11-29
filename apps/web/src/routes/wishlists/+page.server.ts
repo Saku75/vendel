@@ -1,15 +1,9 @@
-import type { LayoutServerLoad } from "../$types";
+import type { PageServerLoad } from "./$types";
 
-export const load: LayoutServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals }) => {
   const wishlistsResponse = await locals.api.wishlists.list();
 
-  if (wishlistsResponse.ok) {
-    return {
-      wishlists: wishlistsResponse.data,
-    };
-  }
-
   return {
-    wishlists: [],
+    wishlists: wishlistsResponse.ok ? wishlistsResponse.data : [],
   };
 };
