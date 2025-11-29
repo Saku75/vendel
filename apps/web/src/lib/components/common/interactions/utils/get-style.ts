@@ -8,7 +8,7 @@ function getInteractionStyle(
   emphasis: InteractionEmphasis = InteractionEmphasis.Secondary,
 ) {
   const baseStyle = cn(
-    "block h-min w-min cursor-pointer rounded-[1.25rem] px-4 py-2 text-center transition-colors disabled:pointer-events-none disabled:cursor-auto",
+    "block cursor-pointer rounded-[1.25rem] px-4 py-2 text-center transition-colors disabled:pointer-events-none disabled:cursor-auto",
   );
 
   switch (emphasis) {

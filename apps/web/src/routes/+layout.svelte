@@ -37,6 +37,4 @@
   {@render children()}
 </div>
 
-<pre>{JSON.stringify(authStore, null, 2)}</pre>
-
 <Footer />

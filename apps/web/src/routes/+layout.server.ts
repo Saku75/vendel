@@ -14,8 +14,6 @@ export const load: LayoutServerLoad = async ({ platform, cookies, locals }) => {
   ) {
     const refresh = await locals.api.auth.refresh();
 
-    console.log("Refresh result in layout load:", refresh);
-
     if (refresh.ok) {
       const whoAmI = await locals.api.user.whoAmI();
 
