@@ -5,10 +5,10 @@
   } from "$lib/stores/navigation.svelte";
   import cn from "$lib/utils/cn";
 
+  import Authenticated from "../common/auth/authenticated.svelte";
+  import Unauthenticated from "../common/auth/unauthenticated.svelte";
   import { InteractionEmphasis } from "../common/interactions/enums/emphasis";
   import Link from "../common/interactions/link.svelte";
-  import Authenticated from "../utils/auth/authenticated.svelte";
-  import Unauthenticated from "../utils/auth/unauthenticated.svelte";
 
   interface Props {
     type?: "list" | "bar";

@@ -60,7 +60,7 @@
 </script>
 
 <main class="mx-auto w-full max-w-xs">
-  <Form name="signUp" class="items-center" {onsubmit}>
+  <Form name={formContext.name} class="items-center" {onsubmit}>
     <h1 class="mb-4 text-4xl">Opret konto</h1>
 
     <TextInput

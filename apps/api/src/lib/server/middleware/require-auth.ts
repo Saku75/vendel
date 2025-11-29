@@ -1,7 +1,7 @@
 import { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 
-import { AuthRole } from "$lib/enums/auth/role";
+import { AuthRole, hasRequiredRole } from "$lib/enums/auth/role";
 import { AuthStatus } from "$lib/enums/auth/status";
 import { ServerEnv } from "$lib/server";
 import { response } from "$lib/server/response";
@@ -23,21 +23,6 @@ interface RequireAuthOptions {
     unauthenticated?: string;
     forbidden?: string;
   };
-}
-
-const ROLE_HIERARCHY: Record<AuthRole, number> = {
-  [AuthRole.Guest]: 0,
-  [AuthRole.User]: 1,
-  [AuthRole.Admin]: 2,
-  [AuthRole.SuperAdmin]: 3,
-};
-
-function hasRequiredRole(
-  userRole: AuthRole | null,
-  minRole: AuthRole,
-): boolean {
-  if (!userRole) return false;
-  return ROLE_HIERARCHY[userRole] >= ROLE_HIERARCHY[minRole];
 }
 
 function requireAuth(options: RequireAuthOptions = {}) {

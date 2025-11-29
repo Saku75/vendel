@@ -7,10 +7,12 @@
   import { getFormContext } from "../../context.svelte";
 
   interface Props {
+    label?: string;
+
     class?: string;
   }
 
-  const { class: classes }: Props = $props();
+  const { label, class: classes }: Props = $props();
 
   const formConfig = getFormConfig();
   const formContext = getFormContext(formConfig.name);
@@ -22,5 +24,5 @@
   type="reset"
   disabled={!formContext.isDirty || formContext.isSubmitting}
 >
-  Nulstil
+  {label ?? "Nulstil"}
 </Button>
