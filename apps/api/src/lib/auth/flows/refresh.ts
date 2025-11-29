@@ -20,11 +20,11 @@ async function invalidateTokenFamily(familyId: string): Promise<void> {
   await Promise.all([
     db
       .update(refreshTokenFamilies)
-      .set({ invalidated: true })
+      .set({ invalidated: true, updatedAt: new Date() })
       .where(eq(refreshTokenFamilies.id, familyId)),
     db
       .update(refreshTokens)
-      .set({ used: true })
+      .set({ used: true, updatedAt: new Date() })
       .where(eq(refreshTokens.refreshTokenFamilyId, familyId)),
   ]);
 }
@@ -80,7 +80,7 @@ async function refresh(c: ServerContext): Promise<RefreshResult> {
       .get(),
     db
       .update(refreshTokens)
-      .set({ used: true })
+      .set({ used: true, updatedAt: new Date() })
       .where(eq(refreshTokens.id, refresh.id)),
   ]);
 

@@ -60,7 +60,7 @@ confirmEmailServer.post("/", async (c) => {
 
   const [user] = await db
     .update(users)
-    .set({ emailVerified: true })
+    .set({ emailVerified: true, updatedAt: new Date() })
     .where(eq(users.id, userId))
     .returning({ id: users.id });
 
