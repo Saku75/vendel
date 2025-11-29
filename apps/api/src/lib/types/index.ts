@@ -21,3 +21,14 @@ export type {
 } from "./routes/user/email/confirm";
 export type { ResendConfirmEmailResponse } from "./routes/user/email/resend";
 export type { WhoAmIResponse } from "./routes/user/who-am-i";
+export type {
+  WishlistsGetRequest,
+  WishlistsGetResponse,
+  WishlistsListResponse,
+} from "./routes/wishlists";
+export type {
+  WishesGetRequest,
+  WishesGetResponse,
+  WishesListRequest,
+  WishesListResponse,
+} from "./routes/wishlists/wishes";

@@ -12,7 +12,7 @@ const whoAmIServer = createServer();
 whoAmIServer.get("/", requireAuth(), async (c) => {
   const auth = getAuth(c);
 
-  const [user] = await db
+  const user = await db
     .select({
       id: users.id,
       firstName: users.firstName,
@@ -25,7 +25,8 @@ whoAmIServer.get("/", requireAuth(), async (c) => {
       approvedBy: users.approvedBy,
     })
     .from(users)
-    .where(eq(users.id, auth.access.user.id));
+    .where(eq(users.id, auth.access.user.id))
+    .get();
 
   if (!user) {
     return response(c, {
