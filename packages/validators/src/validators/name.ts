@@ -7,18 +7,18 @@ const firstNameValidator = string({
   invalid_type_error: ValidatorCode.InvalidType,
 })
   .nonempty(ValidatorCode.Required)
-  .max(50, ValidatorCode.TooLong);
+  .max(64, ValidatorCode.TooLong);
 
 const middleNameValidator = string({
   invalid_type_error: ValidatorCode.InvalidType,
 })
-  .max(200, ValidatorCode.TooLong)
+  .max(256, ValidatorCode.TooLong)
   .optional();
 
 const lastNameValidator = string({
   invalid_type_error: ValidatorCode.InvalidType,
 })
-  .max(50, ValidatorCode.TooLong)
+  .max(64, ValidatorCode.TooLong)
   .optional();
 
 export { firstNameValidator, lastNameValidator, middleNameValidator };

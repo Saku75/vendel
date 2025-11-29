@@ -1,30 +1,27 @@
 import { defineRoute, request } from "$lib/client/route";
 import type { ClientResult } from "$lib/client/types";
-import type {
-  WishesGetRequest,
-  WishesListRequest,
-  WishesListResponse,
-} from "$lib/types/routes/wishlists/wishes";
+import type { WishesListResponse } from "$lib/types/routes/wishlists/wishes";
 
 const wishesClient = defineRoute((context) => {
   return {
     list: async (
-      data: WishesListRequest,
+      wishlistId: string,
     ): Promise<ClientResult<WishesListResponse>> => {
       return await request<WishesListResponse>(
         context,
-        `wishlists/${data.wishlistId}/wishes`,
+        `wishlists/${wishlistId}/wishes`,
         {
           method: "GET",
         },
       );
     },
     get: async (
-      data: WishesGetRequest,
+      wishlistId: string,
+      wishId: string,
     ): Promise<ClientResult<WishesListResponse>> => {
       return await request<WishesListResponse>(
         context,
-        `wishlists/${data.wishlistId}/wishes/${data.wishId}`,
+        `wishlists/${wishlistId}/wishes/${wishId}`,
         {
           method: "GET",
         },
