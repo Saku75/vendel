@@ -32,7 +32,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center">
       <p class="mr-2 font-bold">{wish.title}</p>
     </div>
-    <AuthAs minRole={AuthRole.Admin}>
+    <AuthAs minRole={AuthRole.User}>
       {#if !formOpen}
         <div class="flex gap-1">
           <Button
@@ -88,20 +88,22 @@
     </AuthAs>
   </div>
 
-  {#if formOpen}
-    <div transition:slide={{ duration: 200 }} class="mb-6">
-      {#if data.wishes.length === 0}
-        <p class="my-4 text-center">
-          Der er ingen ønsker på denne ønskeliste endnu. Tilføj en nedenfor!
-        </p>
-      {/if}
-      <WishForm
-        wishlistId={data.wishlist.id}
-        {editItem}
-        onsubmit={() => toggleForm()}
-      />
-    </div>
-  {/if}
+  <AuthAs minRole={AuthRole.User}>
+    {#if formOpen}
+      <div transition:slide={{ duration: 200 }} class="mb-6">
+        {#if data.wishes.length === 0}
+          <p class="my-4 text-center">
+            Der er ingen ønsker på denne ønskeliste endnu. Tilføj en nedenfor!
+          </p>
+        {/if}
+        <WishForm
+          wishlistId={data.wishlist.id}
+          {editItem}
+          onsubmit={() => toggleForm()}
+        />
+      </div>
+    {/if}
+  </AuthAs>
 
   <div>
     {#if data.wishes.length !== 0}

@@ -47,17 +47,19 @@
     </AuthAs>
   </div>
 
-  {#if formOpen}
-    <div transition:slide={{ duration: 200 }} class="mb-6">
-      {#if data.wishlists.length === 0}
-        <p class="my-4 text-center">
-          Der er ingen ønskelister endnu. Opret en ny ønskeliste for at komme i
-          gang!
-        </p>
-      {/if}
-      <WishlistForm {editItem} onsubmit={() => toggleForm()} />
-    </div>
-  {/if}
+  <AuthAs minRole={AuthRole.Admin}>
+    {#if formOpen}
+      <div transition:slide={{ duration: 200 }} class="mb-6">
+        {#if data.wishlists.length === 0}
+          <p class="my-4 text-center">
+            Der er ingen ønskelister endnu. Opret en ny ønskeliste for at komme
+            i gang!
+          </p>
+        {/if}
+        <WishlistForm {editItem} onsubmit={() => toggleForm()} />
+      </div>
+    {/if}
+  </AuthAs>
 
   <div>
     {#if data.wishlists.length !== 0}
