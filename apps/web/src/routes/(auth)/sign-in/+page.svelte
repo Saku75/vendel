@@ -8,6 +8,7 @@
   import { apiClient } from "$lib/api/client";
   import CaptchaInput from "$lib/components/form/components/captcha-input.svelte";
   import TextInput from "$lib/components/form/components/text-input.svelte";
+  import FormGeneralError from "$lib/components/form/components/utils/form-general-error.svelte";
   import FormSubmit from "$lib/components/form/components/utils/form-submit.svelte";
   import { setFormContext } from "$lib/components/form/context.svelte";
   import { FieldType } from "$lib/components/form/enums/field/type";
@@ -35,6 +36,9 @@
     const response = await apiClient.auth.signIn(formValues);
 
     if (!response.ok) {
+      if (response.status === 401) {
+        formContext.setGeneralError("Ugyldig email eller adgangskode.");
+      }
       formContext.setErrors(response.errors);
       formContext.resetCaptchas();
       return;
@@ -52,6 +56,8 @@
 <main class="mx-auto w-full max-w-xs">
   <Form name="signIn" class="items-center" {onsubmit}>
     <h1 class="mb-4 text-4xl">Log ind</h1>
+
+    <FormGeneralError />
 
     <TextInput
       key="email"

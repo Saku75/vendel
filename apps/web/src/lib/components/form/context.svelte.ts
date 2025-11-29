@@ -16,6 +16,7 @@ function setFormContext<T extends Fields>(name: string) {
 
     isDirty: false,
     isValid: false,
+    generalError: undefined,
 
     isSubmitting: false,
 
@@ -42,6 +43,8 @@ function setFormContext<T extends Fields>(name: string) {
 
     reset() {
       this.resetCaptchas();
+
+      this.generalError = undefined;
 
       for (const field in this.fields) {
         if (
@@ -80,6 +83,9 @@ function setFormContext<T extends Fields>(name: string) {
       return values;
     },
 
+    setGeneralError(error) {
+      this.generalError = error;
+    },
     setErrors(errors) {
       if (!errors) return;
 

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter @app/api --parallel \"/^dev:.*/\"",
-    "dev:ts": "tsdown --watch",
+    "dev:ts": "tsdown --watch ./src",
     "dev:wrangler": "wrangler dev",
     "build": "tsdown",
     "deploy": "wrangler deploy",

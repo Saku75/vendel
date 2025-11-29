@@ -7,6 +7,7 @@ interface FormContext<T extends Fields> {
 
   isDirty: boolean;
   isValid: boolean;
+  generalError?: string;
 
   isSubmitting: boolean;
 
@@ -21,6 +22,7 @@ interface FormContext<T extends Fields> {
 
   getValues: () => FieldValues<T>;
 
+  setGeneralError: (error: string | undefined) => void;
   setErrors: (errors: z.ZodIssue[] | undefined) => void;
 }
 

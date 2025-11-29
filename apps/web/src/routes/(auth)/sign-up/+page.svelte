@@ -18,6 +18,7 @@
   import { FieldType } from "$lib/components/form/enums/field/type";
   import Form from "$lib/components/form/form.svelte";
   import type {
+    CaptchaField,
     Fields,
     Require,
     TextField,
@@ -33,7 +34,7 @@
     password: Require<TextField>;
     confirmPassword: Require<TextField>;
 
-    captcha: Require<TextField>;
+    captcha: Require<CaptchaField>;
   }
 
   const formContext = setFormContext<SignUpForm>("signUp");
