@@ -13,6 +13,7 @@ import { db } from "$lib/database";
 import { wishes } from "$lib/database/schema/wishes";
 import { wishlists } from "$lib/database/schema/wishlists";
 import { createServer } from "$lib/server";
+import { requireUser } from "$lib/server/middleware/require-auth";
 import { response } from "$lib/server/response";
 import {
   WishesCreateRequest,
@@ -31,7 +32,8 @@ wishesServer.get("/:wishlistId/wishes", async (c) => {
   const wishesList = await db
     .select()
     .from(wishes)
-    .where(eq(wishes.wishlistId, wishlistId));
+    .where(eq(wishes.wishlistId, wishlistId))
+    .orderBy(wishes.title);
 
   return response<WishesListResponse>(c, {
     content: {
@@ -72,7 +74,7 @@ const wishesSchema = object({
   url: wishUrlValidator,
 });
 
-wishesServer.post("/:wishlistId/wishes", async (c) => {
+wishesServer.post("/:wishlistId/wishes", requireUser(), async (c) => {
   const { wishlistId } = c.req.param();
   const body = await c.req.json<WishesCreateRequest>();
 
@@ -115,7 +117,7 @@ wishesServer.post("/:wishlistId/wishes", async (c) => {
   });
 });
 
-wishesServer.put("/:wishlistId/wishes/:wishId", async (c) => {
+wishesServer.put("/:wishlistId/wishes/:wishId", requireUser(), async (c) => {
   const { wishlistId, wishId } = c.req.param();
   const body = await c.req.json<WishesUpdateRequest>();
 
@@ -153,7 +155,7 @@ wishesServer.put("/:wishlistId/wishes/:wishId", async (c) => {
   });
 });
 
-wishesServer.delete("/:wishlistId/wishes/:wishId", async (c) => {
+wishesServer.delete("/:wishlistId/wishes/:wishId", requireUser(), async (c) => {
   const { wishlistId, wishId } = c.req.param();
 
   const deleteResult = await db

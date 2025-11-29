@@ -25,7 +25,10 @@ import { wishesServer } from "./wishes";
 const wishlistsServer = createServer();
 
 wishlistsServer.get("/", async (c) => {
-  const wishlistsList = await db.select().from(wishlists);
+  const wishlistsList = await db
+    .select()
+    .from(wishlists)
+    .orderBy(wishlists.name);
 
   return response<WishlistsListResponse>(c, {
     content: {
