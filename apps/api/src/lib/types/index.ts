@@ -31,8 +31,11 @@ export type {
   WishlistsUpdateResponse,
 } from "./routes/wishlists";
 export type {
-  WishesGetRequest,
+  WishesCreateRequest,
+  WishesCreateResponse,
+  WishesDeleteResponse,
   WishesGetResponse,
-  WishesListRequest,
   WishesListResponse,
+  WishesUpdateRequest,
+  WishesUpdateResponse,
 } from "./routes/wishlists/wishes";

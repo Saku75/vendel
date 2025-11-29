@@ -1,25 +1,33 @@
+import z from "zod";
+
 import { wishes } from "$lib/database/schema/wishes";
 
-type WishesListRequest = {
-  wishlistId: string;
-};
+import { wishesSchema } from "$routes/wishlists/wishes";
+
 type WishesListResponse = Omit<
   typeof wishes.$inferSelect,
   "createdAt" | "updatedAt"
 >[];
 
-type WishesGetRequest = {
-  wishlistId: string;
-  wishId: string;
-};
 type WishesGetResponse = Omit<
   typeof wishes.$inferSelect,
   "createdAt" | "updatedAt"
 >;
 
+type WishesCreateRequest = z.infer<typeof wishesSchema>;
+type WishesCreateResponse = undefined;
+
+type WishesUpdateRequest = z.infer<typeof wishesSchema>;
+type WishesUpdateResponse = undefined;
+
+type WishesDeleteResponse = undefined;
+
 export type {
-  WishesGetRequest,
+  WishesCreateRequest,
+  WishesCreateResponse,
+  WishesDeleteResponse,
   WishesGetResponse,
-  WishesListRequest,
   WishesListResponse,
+  WishesUpdateRequest,
+  WishesUpdateResponse,
 };

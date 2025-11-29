@@ -62,7 +62,7 @@ const wishlistsSchema = object({
   description: wishlistDescriptionValidator,
 });
 
-wishesServer.post("/", requireAdmin(), async (c) => {
+wishlistsServer.post("/", requireAdmin(), async (c) => {
   const body = await c.req.json<WishlistsCreateRequest>();
 
   const parsedBody = wishlistsSchema.safeParse(body);
@@ -87,7 +87,7 @@ wishesServer.post("/", requireAdmin(), async (c) => {
   });
 });
 
-wishesServer.put("/:wishlistId", requireAdmin(), async (c) => {
+wishlistsServer.put("/:wishlistId", requireAdmin(), async (c) => {
   const { wishlistId } = c.req.param();
   const body = await c.req.json<WishlistsUpdateRequest>();
 
@@ -122,7 +122,7 @@ wishesServer.put("/:wishlistId", requireAdmin(), async (c) => {
   });
 });
 
-wishesServer.delete("/:wishlistId", requireAdmin(), async (c) => {
+wishlistsServer.delete("/:wishlistId", requireAdmin(), async (c) => {
   const { wishlistId } = c.req.param();
 
   const deleteResult = await db
