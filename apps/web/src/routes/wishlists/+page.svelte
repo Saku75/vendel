@@ -11,6 +11,7 @@
   import AuthAs from "$lib/components/common/auth/auth-as.svelte";
   import Button from "$lib/components/common/interactions/button.svelte";
   import { InteractionEmphasis } from "$lib/components/common/interactions/enums/emphasis";
+  import { formatRelativeDate } from "$lib/utils/format-relative-date";
 
   import type { PageProps } from "./$types";
   import WishlistForm from "./wishlist-form.svelte";
@@ -70,20 +71,20 @@
               href={resolve("/wishlists/[wishlistId]", {
                 wishlistId: wishlist.id,
               })}
-              class="rounded-[1.25rem] bg-stone-200 p-4 px-4 py-2 dark:bg-stone-800"
+              class="rounded-[1.25rem] bg-stone-200 py-2 pr-2 pl-4 dark:bg-stone-800"
             >
-              <div class="flex justify-between">
+              <div class="flex items-center justify-between">
                 <div class="flex flex-col sm:flex-row sm:items-center">
                   <p class="mr-2 font-bold">{wishlist.name}</p>
                   <p class="text-xs text-stone-600 dark:text-stone-400">
                     (Sidst opdateret: {wishlist.wishesUpdatedAt
-                      ? new Date(wishlist.wishesUpdatedAt).toLocaleDateString()
+                      ? formatRelativeDate(wishlist.wishesUpdatedAt)
                       : "Aldrig"})
                   </p>
                 </div>
                 <AuthAs minRole={AuthRole.Admin}>
                   {#if !formOpen}
-                    <div class="flex gap-1">
+                    <div class="flex gap-1 self-start">
                       <Button
                         emphasis={InteractionEmphasis.Secondary}
                         class="px-3 py-1 text-sm"

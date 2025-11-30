@@ -102,15 +102,20 @@ wishesServer.post("/:wishlistId/wishes", requireUser(), async (c) => {
     });
   }
 
-  await db.insert(wishes).values({
-    wishlistId,
-    title: data.title,
-    brand: data.brand,
-    description: data.description,
-    price: data.price,
-    url: data.url,
-  });
-
+  await Promise.all([
+    db.insert(wishes).values({
+      wishlistId,
+      title: data.title,
+      brand: data.brand,
+      description: data.description,
+      price: data.price,
+      url: data.url,
+    }),
+    db
+      .update(wishlists)
+      .set({ wishesUpdatedAt: new Date() })
+      .where(eq(wishlists.id, wishlistId)),
+  ]);
   return response<WishesCreateResponse>(c, {
     status: 201,
     content: { message: "Wish created successfully" },
@@ -140,6 +145,7 @@ wishesServer.put("/:wishlistId/wishes/:wishId", requireUser(), async (c) => {
       description: data.description,
       price: data.price,
       url: data.url,
+      updatedAt: new Date(),
     })
     .where(and(eq(wishes.wishlistId, wishlistId), eq(wishes.id, wishId)));
 
@@ -149,6 +155,11 @@ wishesServer.put("/:wishlistId/wishes/:wishId", requireUser(), async (c) => {
       content: { message: "Wish not found" },
     });
   }
+
+  await db
+    .update(wishlists)
+    .set({ wishesUpdatedAt: new Date() })
+    .where(eq(wishlists.id, wishlistId));
 
   return response<WishesUpdateResponse>(c, {
     content: { message: "Wish updated successfully" },
@@ -168,6 +179,11 @@ wishesServer.delete("/:wishlistId/wishes/:wishId", requireUser(), async (c) => {
       content: { message: "Wish not found" },
     });
   }
+
+  await db
+    .update(wishlists)
+    .set({ wishesUpdatedAt: new Date() })
+    .where(eq(wishlists.id, wishlistId));
 
   return response(c, {
     content: { message: "Wish deleted successfully" },

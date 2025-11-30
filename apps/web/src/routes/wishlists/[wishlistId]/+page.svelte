@@ -28,45 +28,53 @@
 </script>
 
 {#snippet wishListItem(wish: WishesGetResponse)}
-  <div class="flex justify-between">
-    <div class="flex flex-col sm:flex-row sm:items-center">
-      <p class="mr-2 font-bold">{wish.title}</p>
+  <div class="rounded-[1.25rem] bg-stone-200 py-2 pr-2 pl-4 dark:bg-stone-800">
+    <div class="flex justify-between">
+      <div class="flex flex-col sm:flex-row sm:items-center">
+        <p class="mr-2 font-bold">{wish.title}</p>
+        <p class="text-xs text-stone-600 dark:text-stone-400">
+          {wish.brand}
+        </p>
+      </div>
+      <AuthAs minRole={AuthRole.User}>
+        {#if !formOpen}
+          <div class="flex gap-1">
+            <Button
+              emphasis={InteractionEmphasis.Secondary}
+              class="px-3 py-1 text-sm"
+              onclick={(e) => {
+                e.preventDefault();
+                editItem = wish;
+                formOpen = true;
+              }}
+            >
+              Rediger
+            </Button>
+            <Button
+              emphasis={InteractionEmphasis.Secondary}
+              class="px-3 py-1 text-sm"
+              onclick={async (e) => {
+                e.preventDefault();
+                await apiClient.wishlists.wishes.delete(
+                  data.wishlist.id,
+                  wish.id,
+                );
+                await invalidateAll();
+              }}
+            >
+              Slet
+            </Button>
+          </div>
+        {/if}
+      </AuthAs>
     </div>
-    <AuthAs minRole={AuthRole.User}>
-      {#if !formOpen}
-        <div class="flex gap-1">
-          <Button
-            emphasis={InteractionEmphasis.Secondary}
-            class="px-3 py-1 text-sm"
-            onclick={(e) => {
-              e.preventDefault();
-              editItem = wish;
-              formOpen = true;
-            }}
-          >
-            Rediger
-          </Button>
-          <Button
-            emphasis={InteractionEmphasis.Secondary}
-            class="px-3 py-1 text-sm"
-            onclick={async (e) => {
-              e.preventDefault();
-              await apiClient.wishlists.wishes.delete(
-                data.wishlist.id,
-                wish.id,
-              );
-              await invalidateAll();
-            }}
-          >
-            Slet
-          </Button>
-        </div>
-      {/if}
-    </AuthAs>
+    {#if wish.description}
+      <p>{wish.description}</p>
+    {/if}
+    {#if wish.price}
+      <p>Pris: {wish.price}</p>
+    {/if}
   </div>
-  <p>{wish.brand}</p>
-  <p>{wish.description}</p>
-  <p>{wish.price}</p>
 {/snippet}
 
 <main class="mx-auto flex h-full w-full max-w-3xl flex-col px-2">
@@ -115,15 +123,13 @@
                 href={wish.url}
                 target="_blank"
                 rel="external noopener noreferrer"
-                class="rounded-[1.25rem] bg-stone-200 p-4 px-4 py-2 dark:bg-stone-800"
+                class="contents"
               >
                 {@render wishListItem(wish)}
               </a>
             </li>
           {:else}
-            <li
-              class="rounded-[1.25rem] bg-stone-200 p-4 px-4 py-2 dark:bg-stone-800"
-            >
+            <li class="contents">
               {@render wishListItem(wish)}
             </li>
           {/if}
