@@ -12,12 +12,12 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^6.0.0",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.3",
     "prettier-plugin-svelte": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tailwindcss": "^4.1.17",
     "turbo": "^2.6.1",
-    "wrangler": "^4.49.1"
+    "wrangler": "^4.51.0"
   },
   "packageManager": "pnpm@10.22.0",
   "pnpm": {
