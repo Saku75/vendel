@@ -87,10 +87,10 @@ pnpm --filter @app/web cf-typegen
 
 ```typescript
 type ServerEnv = {
-  Bindings: CloudflareBindings;  // D1, KV, env vars
+  Bindings: CloudflareBindings; // D1, KV, env vars
   Variables: {
-    auth: AuthContext;           // Authenticated | Expired | Unauthenticated
-    captcha: CaptchaService;     // Turnstile verification
+    auth: AuthContext; // Authenticated | Expired | Unauthenticated
+    captcha: CaptchaService; // Turnstile verification
   };
 };
 ```
@@ -184,15 +184,16 @@ type ServerEnv = {
 
 #### Token Types
 
-| Token | Payload | Expiry | Cookie | Purpose |
-|-------|---------|--------|--------|---------|
-| Access | `{ user: { id, role } }` | 15 min | `{prefix}-access` | API authorization |
-| Refresh | `{ family, id, accessTokenId }` | 30 days | `{prefix}-refresh` | Token rotation |
-| Confirm Email | `{ userId }` | 24 hours | N/A (in email link) | Email verification |
+| Token         | Payload                         | Expiry   | Cookie              | Purpose            |
+| ------------- | ------------------------------- | -------- | ------------------- | ------------------ |
+| Access        | `{ user: { id, role } }`        | 15 min   | `{prefix}-access`   | API authorization  |
+| Refresh       | `{ family, id, accessTokenId }` | 30 days  | `{prefix}-refresh`  | Token rotation     |
+| Confirm Email | `{ userId }`                    | 24 hours | N/A (in email link) | Email verification |
 
 #### Auth Middleware (`src/lib/server/middleware/auth.ts`)
 
 Runs on every request:
+
 1. Extracts access + refresh cookies
 2. Validates via TokenService (decrypt + verify signature)
 3. Validates token linkage (access.id === refresh.accessTokenId)
@@ -204,38 +205,42 @@ Runs on every request:
 **Role Hierarchy**: Guest (0) < User (1) < Admin (2) < SuperAdmin (3)
 
 ```typescript
-requireGuest()      // Minimum Guest
-requireUser()       // Minimum User
-requireAdmin()      // Minimum Admin
-requireSuperAdmin() // SuperAdmin only
+requireGuest(); // Minimum Guest
+requireUser(); // Minimum User
+requireAdmin(); // Minimum Admin
+requireSuperAdmin(); // SuperAdmin only
 
 // With options
 requireAuth({
   minRole: AuthRole.Admin,
-  allowExpired: true,      // For sign-out
+  allowExpired: true, // For sign-out
   customAuth: async (c, auth) => boolean,
-  errorMessage: "Custom 401 message"
-})
+  errorMessage: "Custom 401 message",
+});
 ```
 
 #### Auth Flows
 
 **Sign-Up** (`/auth/sign-up`):
+
 1. Start: Validate email unique, generate salts, create KV session (60s), return sessionId + clientSalt
 2. Client hashes password with clientSalt
 3. Finish: Retrieve session, hash with serverSalt, create user, send confirmation email, sign in
 
 **Sign-In** (`/auth/sign-in`):
+
 1. Start: Look up user, create KV session with clientSalt (fake salt if user doesn't exist - timing attack prevention)
 2. Client hashes password
 3. Finish: Validate password hash, sign in (generic 401 prevents email enumeration)
 
 **Token Refresh** (`/auth/refresh`):
+
 - Early return if access token valid for 5+ more minutes
 - Verify refresh token in DB, not used, not expired, family not invalidated
 - Mark old token as used, create new tokens in same family
 
 **Sign-Out** (`/auth/sign-out`):
+
 - Delete entire token family (cascade deletes all tokens)
 - Signs out all devices using tokens from that family
 
@@ -267,6 +272,7 @@ if (result.ok) {
 **Framework**: Vitest with `@cloudflare/vitest-pool-workers`
 
 **Infrastructure** (`apps/api/src/test/`):
+
 - `setups/01-migrations.ts` - Applies D1 migrations before tests
 - `setups/02-users.ts` - Seeds test users (SuperAdmin, Admin, UserOne, UserTwo)
 - `fixtures/users.ts` - Test user data with known passwords
@@ -283,7 +289,7 @@ if (result.ok) {
 // Creates API client with service binding
 const api = createClient({
   prefix: `${event.url.origin}/api`,
-  fetch: event.platform?.env.API.fetch,  // Direct worker call
+  fetch: event.platform?.env.API.fetch, // Direct worker call
   // Cookie forwarding logic...
 });
 event.locals.api = api;
@@ -320,17 +326,17 @@ event.locals.api = api;
 
 ```typescript
 // auth.svelte.ts - Authentication state
-authStore.setAuthenticated(whoAmI)
-authStore.setUnauthenticated()
+authStore.setAuthenticated(whoAmI);
+authStore.setUnauthenticated();
 
 // layout.svelte.ts - UI state
-layoutStore.theme        // "light" | "dark" | "system"
-layoutStore.menu.open    // Mobile menu state
-layoutStore.size         // Viewport dimensions
+layoutStore.theme; // "light" | "dark" | "system"
+layoutStore.menu.open; // Mobile menu state
+layoutStore.size; // Viewport dimensions
 
 // config.svelte.ts - App config
-configStore.version
-configStore.turnstileSiteKey
+configStore.version;
+configStore.turnstileSiteKey;
 
 // navigation.svelte.ts - Nav structure with role-based visibility
 ```
@@ -346,6 +352,7 @@ configStore.turnstileSiteKey
 5. `formContext.resetCaptchas()` clears CAPTCHA on failure
 
 **Components**:
+
 - `text-input.svelte` - Text/email/password with validation
 - `number-input.svelte` - Numeric input
 - `captcha-input.svelte` - Turnstile integration
@@ -369,6 +376,7 @@ configStore.turnstileSiteKey
 ### Styling
 
 **TailwindCSS 4.x** with:
+
 - Custom fonts: Inter Variable (body), Playwrite DK Loopet Variable (headings)
 - Color palette: Sky (primary), Stone (neutral)
 - Custom `hocus` variant for hover OR focus
@@ -379,18 +387,18 @@ configStore.turnstileSiteKey
 
 ```typescript
 // Byte conversions
-bytesToHex / hexToBytes
-bytesToBase64 / base64ToBytes  // URL-safe, no padding
-utf8ToBytes / bytesToUtf8
-randomBytes(length)
+bytesToHex / hexToBytes;
+bytesToBase64 / base64ToBytes; // URL-safe, no padding
+utf8ToBytes / bytesToUtf8;
+randomBytes(length);
 
 // Cryptography
-scrypt(password, salt)         // N=65536, r=8, p=1, 256-byte output
-hmac(key, hash).sign(data)     // HMAC-SHA256 (default)
-hmac(key).verify(data, sig)
-gcm(key, nonce).encrypt(data)  // AES-256-GCM
-gcm(key, nonce).decrypt(data)
-createId()                     // CUID2
+scrypt(password, salt); // N=65536, r=8, p=1, 256-byte output
+hmac(key, hash).sign(data); // HMAC-SHA256 (default)
+hmac(key).verify(data, sig);
+gcm(key, nonce).encrypt(data); // AES-256-GCM
+gcm(key, nonce).decrypt(data);
+createId(); // CUID2
 ```
 
 ### @package/token-service
@@ -398,14 +406,18 @@ createId()                     // CUID2
 ```typescript
 const tokenService = new TokenService(
   { encryption: key32, signing: key32 },
-  { issuer: "...", audience: "..." }
+  { issuer: "...", audience: "..." },
 );
 
 // Create encrypted + signed token
 const { id, token } = await tokenService.create(data, { purpose, expiresAt });
 
 // Verify and decrypt
-const { verified, expired, token: parsed } = await tokenService.read(tokenString);
+const {
+  verified,
+  expired,
+  token: parsed,
+} = await tokenService.read(tokenString);
 ```
 
 Token format: `v1.<metadata>.<encrypted-data>.<signature>`
@@ -418,7 +430,7 @@ const mailService = new MailService(resendApiKey, { baseURL }, isDev);
 await mailService.send({
   to: { name, address },
   template: MailTemplate.ConfirmEmail,
-  data: { name, token }
+  data: { name, token },
 });
 ```
 
@@ -430,33 +442,35 @@ await mailService.send({
 Zod schemas with Danish error messages:
 
 ```typescript
-emailValidator          // Required, max 320, email format
-firstNameValidator      // Required, max 64
-middleNameValidator     // Optional, max 256
-lastNameValidator       // Optional, max 64
-passwordValidator       // Required, 10-64 chars, complexity rules
-passwordHashValidator   // Base64url format
-captchaValidator        // Required, max 2048
-tokenValidator          // v1.x.x.x format
-idValidator             // CUID2 format
-wishlistNameValidator   // Required, max 128
-wishlistDescriptionValidator // Optional, max 256
-wishTitleValidator      // Required, max 256
-wishBrandValidator      // Optional, max 128
-wishDescriptionValidator // Optional, max 512
-wishPriceValidator      // Optional number
-wishUrlValidator        // Optional, max 2048
+emailValidator; // Required, max 320, email format
+firstNameValidator; // Required, max 64
+middleNameValidator; // Optional, max 256
+lastNameValidator; // Optional, max 64
+passwordValidator; // Required, 10-64 chars, complexity rules
+passwordHashValidator; // Base64url format
+captchaValidator; // Required, max 2048
+tokenValidator; // v1.x.x.x format
+idValidator; // CUID2 format
+wishlistNameValidator; // Required, max 128
+wishlistDescriptionValidator; // Optional, max 256
+wishTitleValidator; // Required, max 256
+wishBrandValidator; // Optional, max 128
+wishDescriptionValidator; // Optional, max 512
+wishPriceValidator; // Optional number
+wishUrlValidator; // Optional, max 2048
 ```
 
 ## Environment Configuration
 
 **Required Secrets** (`.dev.vars` locally, Cloudflare dashboard remotely):
+
 - `TOKEN_ENCRYPTION_KEY` - 32 bytes, hex-encoded
 - `TOKEN_SIGNING_KEY` - 32 bytes, hex-encoded
 - `RESEND_API_KEY` - Resend API key
 - `TURNSTILE_SECRET_KEY` - Cloudflare Turnstile secret
 
 **Environment Variables** (in `wrangler.json`):
+
 - `MODE`: local | dev | prod
 - `API_ORIGINS`: Valid API origins (comma-separated)
 - `CORS_ORIGINS`: Valid CORS origins
@@ -465,28 +479,31 @@ wishUrlValidator        // Optional, max 2048
 - `TURNSTILE_SITE_KEY`: Cloudflare Turnstile site key
 
 **Cookie Domains**:
+
 - Local: No domain (localhost)
 - Dev/Prod: `.vendel.dk`
 
 ## Deployment
 
 **GitHub Actions** (`.github/workflows/`):
+
 - `deploy_dev.yaml`: Push to main → deploy to dev
 - `deploy_prod.yaml`: Push tag `v*` → deploy to prod
 - `_checks.yaml`: Format → lint → test
 - `_deploy.yaml`: Checks → db migrations → deploy
 
 **Domains**:
+
 - Dev: `api.dev.vendel.dk`, `dev.vendel.dk`
 - Prod: `api.vendel.dk`, `vendel.dk`, `www.vendel.dk`
 
 ## Path Aliases
 
-| Context | Aliases |
-|---------|---------|
-| API | `$lib`, `$routes`, `$test` → `./src/*` |
-| Web | `$lib`, `$routes`, `$test` → `./src/*` |
-| Workspace | `@app/*`, `@package/*`, `@config/*` |
+| Context   | Aliases                                |
+| --------- | -------------------------------------- |
+| API       | `$lib`, `$routes`, `$test` → `./src/*` |
+| Web       | `$lib`, `$routes`, `$test` → `./src/*` |
+| Workspace | `@app/*`, `@package/*`, `@config/*`    |
 
 ## Important Notes
 
@@ -509,6 +526,7 @@ wishUrlValidator        // Optional, max 2048
 ### Common Tasks
 
 **Adding an endpoint**:
+
 1. Create route in `src/routes/` following existing patterns
 2. Define types with Zod schemas
 3. Implement handler with `requireAuth()` if needed
@@ -516,6 +534,7 @@ wishUrlValidator        // Optional, max 2048
 5. Add tests as `*.spec.ts`
 
 **Adding a database table**:
+
 1. Create schema in `src/lib/database/schema/`
 2. Export from `schema/index.ts`
 3. Run `db:generate` then `db:apply`
