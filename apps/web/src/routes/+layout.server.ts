@@ -5,36 +5,23 @@ import { LayoutTheme } from "$lib/enums/layout/theme";
 import type { LayoutServerLoad } from "./$types";
 
 export const load: LayoutServerLoad = async ({ platform, cookies, locals }) => {
-  const themePreferenceCookie =
-    (cookies.get("theme-preference") as LayoutTheme) || LayoutTheme.System;
-
-  if (
+  const authCookiesPresent = Boolean(
     cookies.get(`${platform?.env.COOKIE_PREFIX}-access`) &&
-    cookies.get(`${platform?.env.COOKIE_PREFIX}-refresh`)
-  ) {
-    const refresh = await locals.api.auth.refresh();
+      cookies.get(`${platform?.env.COOKIE_PREFIX}-refresh`),
+  );
 
-    if (refresh.ok) {
-      const whoAmI = await locals.api.user.whoAmI();
-
-      return {
-        config: {
-          themePreference: themePreferenceCookie,
-          version: npm_package_version,
-          canonicalOrigin: platform!.env.CANONICAL_ORIGIN,
-          turnstileSiteKey: platform!.env.TURNSTILE_SITE_KEY,
-        },
-        whoAmI: whoAmI.ok ? whoAmI.data : undefined,
-      };
-    }
-  }
+  const refresh = authCookiesPresent && (await locals.api.auth.refresh());
+  const whoAmI =
+    refresh && refresh.ok ? await locals.api.user.whoAmI() : undefined;
 
   return {
     config: {
-      themePreference: themePreferenceCookie,
+      theme:
+        (cookies.get("theme-preference") as LayoutTheme) || LayoutTheme.System,
       version: npm_package_version,
       canonicalOrigin: platform!.env.CANONICAL_ORIGIN,
       turnstileSiteKey: platform!.env.TURNSTILE_SITE_KEY,
     },
+    whoAmI: whoAmI && whoAmI.ok ? whoAmI.data : undefined,
   };
 };

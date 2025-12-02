@@ -21,7 +21,7 @@
   configStore.version = data.config.version;
   configStore.turnstileSiteKey = data.config.turnstileSiteKey;
 
-  layoutStore.theme = data.config.themePreference;
+  layoutStore.theme = data.config.theme;
 </script>
 
 <svelte:window
