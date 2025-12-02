@@ -1,10 +1,8 @@
 import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
-import { parseString } from "set-cookie-parser";
-
-import { createClient } from "@app/api/client";
 
 import { LayoutTheme } from "$lib/enums/layout/theme";
+import { createServerApi } from "$lib/server/api";
 
 const theme: Handle = async ({ event, resolve }) => {
   const themePreferenceCookie =
@@ -51,38 +49,8 @@ const preload: Handle = async ({ event, resolve }) => {
 };
 
 const initiateLocals: Handle = async ({ event, resolve }) => {
-  const cookieHeader = event.request.headers.get("cookie") ?? "";
-
   event.locals = {
-    api: createClient({
-      prefix: `${event.url.origin}/api`,
-      headers: {
-        cookie: cookieHeader,
-      },
-      fetch: event.platform?.env.API.fetch.bind(event.platform?.env.API),
-
-      hooks: {
-        afterResponse: (_, res) => {
-          const cookies = res.headers.getSetCookie();
-
-          for (const key in cookies) {
-            const cookie = cookies[key];
-            const { name, value, path, sameSite, ...rest } =
-              parseString(cookie);
-            event.cookies.set(name, value, {
-              ...rest,
-              path: path || "/",
-              sameSite: sameSite as
-                | boolean
-                | "lax"
-                | "strict"
-                | "none"
-                | undefined,
-            });
-          }
-        },
-      },
-    }),
+    api: createServerApi(event),
   };
 
   return await resolve(event);
