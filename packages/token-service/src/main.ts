@@ -23,16 +23,16 @@ import type { TokenMetadata } from "./types/token/metadata";
 
 class TokenService {
   private readonly keys: TokenServiceKeys;
-  private readonly issuer: string;
-  private readonly audience: string;
+  private readonly issuer?: string;
+  private readonly audience?: string;
 
   constructor(
     keys: TokenServiceKeys,
-    options: Pick<TokenMetadata, "issuer" | "audience">,
+    options?: Pick<TokenMetadata, "issuer" | "audience">,
   ) {
     this.keys = keys;
-    this.issuer = options.issuer;
-    this.audience = options.audience;
+    this.issuer = options?.issuer;
+    this.audience = options?.audience;
   }
 
   public async create<TData extends TokenData = null>(

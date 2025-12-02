@@ -1,8 +1,8 @@
 type TokenMetadata = {
   id: string;
 
-  issuer: string;
-  audience: string;
+  issuer?: string;
+  audience?: string;
   purpose?: string;
 
   issuedAt: number;
