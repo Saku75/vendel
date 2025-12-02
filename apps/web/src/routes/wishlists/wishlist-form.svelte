@@ -8,7 +8,7 @@
 
   import { invalidateAll } from "$app/navigation";
 
-  import { apiClient } from "$lib/api/client";
+  import { api } from "$lib/api";
   import TextInput from "$lib/components/form/components/text-input.svelte";
   import FormSubmit from "$lib/components/form/components/utils/form-submit.svelte";
   import { setFormContext } from "$lib/components/form/context.svelte";
@@ -35,11 +35,11 @@
     const formValues = formContext.getValues();
 
     const response = editItem
-      ? await apiClient.wishlists.update(editItem.id, {
+      ? await api.wishlists.update(editItem.id, {
           name: formValues.name,
           description: formValues.description,
         })
-      : await apiClient.wishlists.create({
+      : await api.wishlists.create({
           name: formValues.name,
           description: formValues.description,
         });

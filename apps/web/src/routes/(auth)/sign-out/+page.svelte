@@ -2,7 +2,7 @@
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
 
-  import { apiClient } from "$lib/api/client";
+  import { api } from "$lib/api";
   import Button from "$lib/components/common/interactions/button.svelte";
   import { InteractionEmphasis } from "$lib/components/common/interactions/enums/emphasis";
   import { authStore } from "$lib/stores/auth.svelte";
@@ -21,7 +21,7 @@
     <Button
       class="w-full"
       onclick={async () => {
-        await apiClient.auth.signOut().then((res) => {
+        await api.auth.signOut().then((res) => {
           if (res.ok) {
             authStore.setUnauthenticated();
           }

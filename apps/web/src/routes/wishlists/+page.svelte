@@ -7,7 +7,7 @@
   import { invalidateAll } from "$app/navigation";
   import { resolve } from "$app/paths";
 
-  import { apiClient } from "$lib/api/client";
+  import { api } from "$lib/api";
   import AuthAs from "$lib/components/common/auth/auth-as.svelte";
   import Button from "$lib/components/common/interactions/button.svelte";
   import { InteractionEmphasis } from "$lib/components/common/interactions/enums/emphasis";
@@ -101,7 +101,7 @@
                         class="px-3 py-1 text-sm"
                         onclick={async (e) => {
                           e.preventDefault();
-                          await apiClient.wishlists.delete(wishlist.id);
+                          await api.wishlists.delete(wishlist.id);
                           await invalidateAll();
                         }}
                       >

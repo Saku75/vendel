@@ -1,7 +1,7 @@
 import { createClient } from "@app/api/client";
 
-const apiClient = createClient({
+const api = createClient({
   prefix: "/api",
 });
 
-export { apiClient };
+export { api };

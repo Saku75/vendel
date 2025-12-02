@@ -10,7 +10,7 @@
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
 
-  import { apiClient } from "$lib/api/client";
+  import { api } from "$lib/api";
   import CaptchaInput from "$lib/components/form/components/captcha-input.svelte";
   import TextInput from "$lib/components/form/components/text-input.svelte";
   import FormSubmit from "$lib/components/form/components/utils/form-submit.svelte";
@@ -42,7 +42,7 @@
   async function onsubmit() {
     const formValues = formContext.getValues();
 
-    const response = await apiClient.auth.signUp(formValues);
+    const response = await api.auth.signUp(formValues);
 
     if (!response.ok) {
       formContext.setErrors(response.errors);
@@ -50,7 +50,7 @@
       return;
     }
 
-    await apiClient.user.whoAmI().then((res) => {
+    await api.user.whoAmI().then((res) => {
       if (res.ok) {
         authStore.setAuthenticated(res.data!);
       }
