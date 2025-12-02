@@ -21,6 +21,7 @@ export const load: LayoutServerLoad = async ({ platform, cookies, locals }) => {
         config: {
           themePreference: themePreferenceCookie,
           version: npm_package_version,
+          canonicalOrigin: platform!.env.CANONICAL_ORIGIN,
           turnstileSiteKey: platform!.env.TURNSTILE_SITE_KEY,
         },
         whoAmI: whoAmI.ok ? whoAmI.data : undefined,
@@ -32,6 +33,7 @@ export const load: LayoutServerLoad = async ({ platform, cookies, locals }) => {
     config: {
       themePreference: themePreferenceCookie,
       version: npm_package_version,
+      canonicalOrigin: platform!.env.CANONICAL_ORIGIN,
       turnstileSiteKey: platform!.env.TURNSTILE_SITE_KEY,
     },
   };

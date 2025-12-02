@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { page } from "$app/state";
+
   import Footer from "$lib/components/layout/footer.svelte";
   import Header from "$lib/components/layout/header.svelte";
   import { authStore } from "$lib/stores/auth.svelte";
@@ -29,6 +31,10 @@
 
 <svelte:head>
   <title>Vendel.dk</title>
+  <link
+    rel="canonical"
+    href={data.config.canonicalOrigin + page.url.pathname}
+  />
 </svelte:head>
 
 <Header />
