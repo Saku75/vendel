@@ -91,7 +91,7 @@ describe("Who Am I", () => {
       const response = await testFetch("/user/who-am-i", {
         method: "GET",
         headers: {
-          Cookie: "localhost-5173:access=invalid-token",
+          Cookie: "vendel_local-access=invalid-token",
         },
       });
 

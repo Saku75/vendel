@@ -115,7 +115,7 @@ describe("Sign-out", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Cookie: "localhost-5173:refresh=invalid-token",
+          Cookie: "vendel_local-refresh=invalid-token",
         },
       });
 

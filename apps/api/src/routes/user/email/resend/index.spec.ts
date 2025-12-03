@@ -141,7 +141,7 @@ describe("Resend Confirm Email", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Cookie: "localhost-5173:access=invalid-token",
+          Cookie: "vendel_local-access=invalid-token",
         },
       });
 
