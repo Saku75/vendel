@@ -11,6 +11,11 @@
   "no_bundle": false,
   "minify": true,
 
+  "dev": {
+    "port": 6000,
+    "inspector_port": 6001
+  },
+
   "main": "./.svelte-kit/cloudflare/_worker.js",
   "assets": {
     "binding": "ASSETS",
@@ -24,7 +29,7 @@
 
   "vars": {
     "MODE": "local",
-    "CANONICAL_ORIGIN": "http://localhost:5173",
+    "CANONICAL_ORIGIN": "http://localhost:6000",
     "COOKIE_PREFIX": "vendel_local",
     "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
   },

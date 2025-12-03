@@ -11,6 +11,11 @@
   "no_bundle": false,
   "minify": true,
 
+  "dev": {
+    "port": 7000,
+    "inspector_port": 7001
+  },
+
   "main": "./src/main.ts",
   "assets": {
     "binding": "ASSETS",
@@ -24,8 +29,8 @@
 
   "vars": {
     "MODE": "local",
-    "API_ORIGINS": "http://localhost:8787",
-    "CORS_ORIGINS": "http://localhost:5173",
+    "API_ORIGINS": "http://localhost:7000",
+    "CORS_ORIGINS": "http://localhost:6000",
     "COOKIE_PREFIX": "vendel_local"
   },
 
