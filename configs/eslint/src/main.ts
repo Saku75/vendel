@@ -11,6 +11,7 @@ function customConfig(): Config[] {
       "./dist",
       "./node_modules",
       "./.svelte-kit",
+      "./.wrangler",
       "./src/worker-env.d.ts",
     ]),
 
