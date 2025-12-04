@@ -28,7 +28,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.10.11",
+    "@cloudflare/vitest-pool-workers": "^0.10.13",
     "@config/eslint": "workspace:*",
     "@config/typescript": "workspace:*",
     "@types/node": "^24.10.1",
@@ -39,7 +39,7 @@
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
-    "wrangler": "^4.51.0"
+    "wrangler": "^4.52.1"
   },
   "exports": {
     "./client": {
