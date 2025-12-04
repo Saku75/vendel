@@ -29,8 +29,6 @@ export default {
 
     const origin = new URL(request.url).origin;
 
-    console.log("Request origin:", origin);
-
     server.route(
       env.API_ORIGINS.split(",").includes(origin) ? "/" : "/api",
       routes,
