@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 
+import { createId } from "@package/crypto-utils/cuid";
 import {
   TokenExpiresIn,
   TokenPurpose,
@@ -86,33 +87,37 @@ async function refresh(c: ServerContext): Promise<RefreshResult> {
 
   const newExpiresAt = newRefreshToken.expiresAt.valueOf();
 
-  const accessTokenResult = await setCookieWithToken<AuthAccessToken>(
-    c,
-    "access",
-    {
-      user: user!,
-    },
-    {
-      purpose: TokenPurpose.Auth,
-      expiresAt: TokenService.getExpiresAt(TokenExpiresIn.FifteenMinutes),
-    },
-    { expires: new Date(newExpiresAt) },
-  );
+  const accessTokenId = createId();
 
-  await setCookieWithToken<AuthRefreshToken>(
-    c,
-    "refresh",
-    {
-      family: refresh.family,
-      id: newRefreshToken.id,
-      accessTokenId: accessTokenResult.id,
-    },
-    {
-      purpose: TokenPurpose.Refresh,
-      expiresAt: newExpiresAt,
-    },
-    { expires: new Date(newExpiresAt) },
-  );
+  await Promise.all([
+    setCookieWithToken<AuthAccessToken>(
+      c,
+      "access",
+      {
+        id: accessTokenId,
+        user: user!,
+      },
+      {
+        purpose: TokenPurpose.Auth,
+        expiresAt: TokenService.getExpiresAt(TokenExpiresIn.FifteenMinutes),
+      },
+      { expires: new Date(newExpiresAt) },
+    ),
+    setCookieWithToken<AuthRefreshToken>(
+      c,
+      "refresh",
+      {
+        family: refresh.family,
+        id: newRefreshToken.id,
+        accessTokenId: accessTokenId,
+      },
+      {
+        purpose: TokenPurpose.Refresh,
+        expiresAt: newExpiresAt,
+      },
+      { expires: new Date(newExpiresAt) },
+    ),
+  ]);
 
   return { success: true };
 }

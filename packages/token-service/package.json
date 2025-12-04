@@ -7,9 +7,6 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
-  "dependencies": {
-    "@paralleldrive/cuid2": "^3.0.4"
-  },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.10.13",
     "@config/eslint": "workspace:*",

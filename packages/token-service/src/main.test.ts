@@ -38,8 +38,6 @@ describe("TokenService", () => {
       const svc = createTestService();
       const result = await svc.create(null);
 
-      expect(result.id).toBeDefined();
-      expect(typeof result.id).toBe("string");
       expect(result.token).toBeDefined();
       expect(typeof result.token).toBe("string");
     });
@@ -48,7 +46,6 @@ describe("TokenService", () => {
       const svc = createTestService();
       const result = await svc.create("test-data");
 
-      expect(result.id).toBeDefined();
       expect(result.token).toBeDefined();
     });
 
@@ -57,7 +54,6 @@ describe("TokenService", () => {
       const data = { userId: "123", name: "Test User" };
       const result = await svc.create(data);
 
-      expect(result.id).toBeDefined();
       expect(result.token).toBeDefined();
     });
 
@@ -66,7 +62,6 @@ describe("TokenService", () => {
       const data = [1, 2, 3, 4, 5];
       const result = await svc.create(data);
 
-      expect(result.id).toBeDefined();
       expect(result.token).toBeDefined();
     });
 
@@ -76,7 +71,6 @@ describe("TokenService", () => {
         purpose: "email-verification",
       });
 
-      expect(result.id).toBeDefined();
       expect(result.token).toBeDefined();
     });
 
@@ -85,7 +79,6 @@ describe("TokenService", () => {
       const expiresAt = TokenService.getExpiresAt(TokenExpiresIn.FiveMinutes);
       const result = await svc.create(null, { expiresAt });
 
-      expect(result.id).toBeDefined();
       expect(result.token).toBeDefined();
     });
 
@@ -107,7 +100,6 @@ describe("TokenService", () => {
       const result1 = await svc.create(data);
       const result2 = await svc.create(data);
 
-      expect(result1.id).not.toBe(result2.id);
       expect(result1.token).not.toBe(result2.token);
     });
   });
@@ -122,7 +114,6 @@ describe("TokenService", () => {
       expect(readResult.verified).toBe(true);
       expect(readResult.expired).toBe(false);
       expect(readResult.token.data).toEqual(data);
-      expect(readResult.token.metadata.id).toBe(createResult.id);
       expect(readResult.token.metadata.issuer).toBe("test-issuer");
       expect(readResult.token.metadata.audience).toBe("test-audience");
     });
@@ -179,7 +170,6 @@ describe("TokenService", () => {
 
       expect(readResult.verified).toBe(true);
       expect(readResult.expired).toBe(false);
-      expect(readResult.metadata.id).toBe(createResult.id);
       expect(readResult.metadata.purpose).toBe("test-purpose");
       expect(readResult.metadata.issuer).toBe("test-issuer");
       expect(readResult.metadata.audience).toBe("test-audience");
@@ -454,7 +444,6 @@ describe("TokenService", () => {
       const createResult = await svc.create(null);
       const readResult = await svc.read(createResult.token);
 
-      expect(readResult.token.metadata.id).toBeDefined();
       expect(readResult.token.metadata.issuer).toBe("test-issuer");
       expect(readResult.token.metadata.audience).toBe("test-audience");
       expect(readResult.token.metadata.issuedAt).toBeDefined();

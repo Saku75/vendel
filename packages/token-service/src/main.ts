@@ -5,7 +5,6 @@ import {
   randomBytes,
   utf8ToBytes,
 } from "@package/crypto-utils/bytes";
-import { createId } from "@package/crypto-utils/cuid";
 import { gcm } from "@package/crypto-utils/gcm";
 import { hmac } from "@package/crypto-utils/hmac";
 
@@ -41,12 +40,10 @@ class TokenService {
   ): Promise<TokenServiceCreateResult> {
     const version = TokenVersion.V1;
 
-    const tokenId = createId();
     const nonce = randomBytes(12);
     const now = TokenService.now();
 
     const metadata: TokenMetadata = {
-      id: tokenId,
       issuer: this.issuer,
       audience: this.audience,
       purpose: options?.purpose,
@@ -70,7 +67,6 @@ class TokenService {
     const token = `${version}.${metadataPart}.${dataPart}.${signaturePart}`;
 
     return {
-      id: tokenId,
       token,
     };
   }

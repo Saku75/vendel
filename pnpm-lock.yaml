@@ -282,10 +282,6 @@ importers:
         version: 5.9.3
 
   packages/token-service:
-    dependencies:
-      '@paralleldrive/cuid2':
-        specifier: ^3.0.4
-        version: 3.0.4
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.10.13

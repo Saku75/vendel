@@ -25,7 +25,7 @@ const authMiddleware = createMiddleware<ServerEnv>(async (c, next) => {
       !access.verified ||
       !refresh ||
       !refresh.verified ||
-      access.token.metadata.id !== refresh.token.data.accessTokenId
+      access.token.data.id !== refresh.token.data.accessTokenId
     ) {
       clearAuthAndSetUnauthenticated(c);
       await next();
