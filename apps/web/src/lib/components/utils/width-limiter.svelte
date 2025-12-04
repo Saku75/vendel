@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
+  import { type Snippet } from "svelte";
 
   import { LayoutSize } from "$lib/enums/layout/size";
   import { layoutStore } from "$lib/stores/layout.svelte";
@@ -34,22 +34,24 @@
     }
   });
 
-  const classes = cn(
-    "hidden",
-    {
-      "sm:contents": from === LayoutSize.Small,
-      "md:contents": from === LayoutSize.Medium,
-      "lg:contents": from === LayoutSize.Large,
-      "xl:contents": from === LayoutSize.ExtraLarge,
-      "2xl::contents": from === LayoutSize.DoubleExtraLarge,
-    },
-    {
-      "max-sm:contents": to === LayoutSize.Small,
-      "max-md:contents": to === LayoutSize.Medium,
-      "max-lg:contents": to === LayoutSize.Large,
-      "max-xl:contents": to === LayoutSize.ExtraLarge,
-      "max-2xl::contents": to === LayoutSize.DoubleExtraLarge,
-    },
+  const classes = $derived.by(() =>
+    cn(
+      "hidden",
+      {
+        "sm:contents": from === LayoutSize.Small,
+        "md:contents": from === LayoutSize.Medium,
+        "lg:contents": from === LayoutSize.Large,
+        "xl:contents": from === LayoutSize.ExtraLarge,
+        "2xl::contents": from === LayoutSize.DoubleExtraLarge,
+      },
+      {
+        "max-sm:contents": to === LayoutSize.Small,
+        "max-md:contents": to === LayoutSize.Medium,
+        "max-lg:contents": to === LayoutSize.Large,
+        "max-xl:contents": to === LayoutSize.ExtraLarge,
+        "max-2xl::contents": to === LayoutSize.DoubleExtraLarge,
+      },
+    ),
   );
 </script>
 

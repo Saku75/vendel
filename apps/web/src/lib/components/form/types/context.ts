@@ -14,7 +14,7 @@ interface FormContext<T extends Fields> {
   majorityRequired?: boolean;
 
   fields: Partial<T>;
-  addField: <F extends Field>(field: F) => [string, F];
+  addField: <F extends Field>(field: F) => { fieldId: string; fieldContext: F };
   removeField: (key: string) => void;
 
   reset: () => void;

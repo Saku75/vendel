@@ -52,7 +52,7 @@
   const formConfig = getFormConfig();
   const formContext = getFormContext(formConfig.name);
 
-  const [fieldId, fieldContext] = formContext.addField<NumberField>({
+  const { fieldId, fieldContext } = formContext.addField<NumberField>({
     key,
     type: FieldType.Number,
     label,

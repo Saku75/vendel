@@ -54,7 +54,7 @@
   const formConfig = getFormConfig();
   const formContext = getFormContext(formConfig.name);
 
-  const [fieldId, fieldContext] = formContext.addField<TextField>({
+  const { fieldId, fieldContext } = formContext.addField<TextField>({
     key,
     type,
     label,

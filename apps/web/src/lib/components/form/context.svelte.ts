@@ -22,7 +22,7 @@ function setFormContext<T extends Fields>(name: string) {
 
     fields: {},
 
-    addField<F extends Field>(field: F): [string, F] {
+    addField<F extends Field>(field: F): { fieldId: string; fieldContext: F } {
       if (this.fields[field.key])
         throw new Error(`Form: '${field.key}' field already exists`);
 
@@ -32,10 +32,10 @@ function setFormContext<T extends Fields>(name: string) {
         field.value = field.initialValue;
       }
 
-      return [
-        `${this.name}-field-${field.key}`,
-        this.fields[field.key],
-      ] as unknown as [string, F];
+      return {
+        fieldId: `${this.name}-field-${field.key}`,
+        fieldContext: this.fields[field.key] as unknown as F,
+      };
     },
     removeField(key) {
       delete this.fields[key];

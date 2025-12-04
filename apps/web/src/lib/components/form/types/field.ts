@@ -35,7 +35,7 @@ interface TextField extends CommonField {
 interface NumberField extends CommonField {
   readonly type: FieldType.Number;
 
-  value?: number;
+  value?: number | null;
   initialValue: number | null;
 
   validator?:

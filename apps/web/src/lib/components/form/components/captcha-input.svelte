@@ -31,8 +31,7 @@
   const formConfig = getFormConfig();
   const formContext = getFormContext(formConfig.name);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, fieldContext] = formContext.addField<CaptchaField>({
+  const { fieldContext } = formContext.addField<CaptchaField>({
     key,
     type: FieldType.Captcha,
     isValid: false,
