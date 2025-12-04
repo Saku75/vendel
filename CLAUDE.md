@@ -43,7 +43,7 @@ Vendel is a Cloudflare Workers-based wishlist application for friends and family
 
 ```bash
 # Root-level commands
-pnpm dev              # Start all dev servers (API :7000, web :6000)
+pnpm dev              # Start all dev servers (API :7100, web :7000)
 pnpm build            # Build all apps
 pnpm lint             # Run all linters
 pnpm test             # Run all tests

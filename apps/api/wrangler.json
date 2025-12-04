@@ -12,8 +12,8 @@
   "minify": true,
 
   "dev": {
-    "port": 7000,
-    "inspector_port": 7001
+    "port": 7100,
+    "inspector_port": 7101
   },
 
   "main": "./src/main.ts",
@@ -29,8 +29,8 @@
 
   "vars": {
     "MODE": "local",
-    "API_ORIGINS": "http://localhost:7000",
-    "CORS_ORIGINS": "http://localhost:6000",
+    "API_ORIGINS": "http://localhost:7100",
+    "CORS_ORIGINS": "http://localhost:7000",
     "COOKIE_PREFIX": "vendel_local"
   },
 

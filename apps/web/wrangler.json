@@ -12,7 +12,7 @@
   "minify": true,
 
   "dev": {
-    "port": 6000,
+    "port": 7000,
     "inspector_port": 6001
   },
 
@@ -29,7 +29,7 @@
 
   "vars": {
     "MODE": "local",
-    "CANONICAL_ORIGIN": "http://localhost:6000",
+    "CANONICAL_ORIGIN": "http://localhost:7000",
     "COOKIE_PREFIX": "vendel_local",
     "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
   },
