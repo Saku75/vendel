@@ -11,7 +11,7 @@ export const templateConfirmEmail: MailTemplateStructure = {
     <p>Hej {{name}},</p>
 
     <p>Klik på linket herunder for at bekræfte din e-mailadresse:<br />
-    <a href="{{${MailTemplatePlaceholder.BaseURL}}}/confirm-email?token={{token}}">Bekræft e-mail</a></p>
+    <a href="{{${MailTemplatePlaceholder.BaseUrl}}}/confirm-email?token={{token}}">Bekræft e-mail</a></p>
 
     <p>Linket udløber om 24 timer. Du kan få et nyt ved at logge ind igen.</p>
 
@@ -21,7 +21,7 @@ export const templateConfirmEmail: MailTemplateStructure = {
     <p>Hvis du ikke selv har oprettet en konto hos Vendel.dk, kan du bare ignorere denne mail.</p>
 
     <p>Venlig hilsen<br />
-    <a href="{{${MailTemplatePlaceholder.BaseURL}}}">Vendel.dk</a></p>
+    <a href="{{${MailTemplatePlaceholder.BaseUrl}}}">Vendel.dk</a></p>
   </body>
 </html>`,
 };

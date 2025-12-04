@@ -1,5 +1,5 @@
 enum MailTemplatePlaceholder {
-  BaseURL = "baseURL",
+  BaseUrl = "baseUrl",
 }
 
 export { MailTemplatePlaceholder };

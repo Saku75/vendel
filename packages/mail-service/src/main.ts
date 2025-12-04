@@ -40,7 +40,6 @@ class MailService {
     to: MailAddress,
     subject: string,
     html: string,
-    text: string,
   ) {
     if (this.dev) {
       console.log(
@@ -51,7 +50,6 @@ class MailService {
             to,
             subject,
             html,
-            text,
           },
           null,
           2,
@@ -72,7 +70,6 @@ class MailService {
         to: `${to.name} <${to.address}>`,
         subject: subject,
         html: html,
-        text: text,
       } satisfies CreateEmailOptions),
     });
 
@@ -97,27 +94,19 @@ class MailService {
     }
 
     const html = this.replacePlaceholders(templateContent.html, data);
-    const text = this.htmlToText(html);
 
     return await this._send(
       from ? from : templateContent.from,
       to,
       templateContent.subject,
       html,
-      text,
     );
   }
 
   private async handleCustomMail(mail: MailOptionsWithCustomMail) {
-    const { from, to, subject, html, text } = mail;
+    const { from, to, subject, html } = mail;
 
-    return await this._send(from, to, subject, html, text);
-  }
-
-  private htmlToText(html: string) {
-    return html
-      .replace(/<a.*?href="(.*?)".*?>(.*?)<\/a>/g, "$2 ($1)")
-      .replace(/<.*?>/g, "");
+    return await this._send(from, to, subject, html);
   }
 
   private replacePlaceholders(
@@ -125,8 +114,8 @@ class MailService {
     data: Record<string, string | number | boolean>,
   ) {
     const builtInPlaceholders = html.replace(
-      this.constructPlaceholderRegExp(MailTemplatePlaceholder.BaseURL),
-      this.builtInPlaceholderValues.baseURL,
+      this.constructPlaceholderRegExp(MailTemplatePlaceholder.BaseUrl),
+      this.builtInPlaceholderValues.baseUrl,
     );
 
     const dataPlaceholders = Object.entries(data).reduce(

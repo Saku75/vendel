@@ -6,7 +6,7 @@ import { createAddress } from "../../utils/create-address";
 
 const MailTemplateSender: Record<MailTemplate, MailAddress> = {
   [MailTemplate.ConfirmEmail]: {
-    name: "Vendel.dk - Bekræftelser",
+    name: "Vendel.dk - Support",
     address: createAddress(MailSender.Accounts, MailDomain.SupportVendel),
   },
 } as const;
