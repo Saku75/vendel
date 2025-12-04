@@ -20,12 +20,15 @@
 
   const { name, onsubmit, onreset, class: classes, children }: Props = $props();
 
+  // svelte-ignore state_referenced_locally
   if (!hasContext(formContextName(name)))
     throw new Error(
       `Form: '${name}' form context could not be found, does it exist?`,
     );
 
+  // svelte-ignore state_referenced_locally
   setFormConfig({ name });
+  // svelte-ignore state_referenced_locally
   const formContext = getFormContext(name);
 
   $effect(() => {

@@ -31,6 +31,7 @@
   const formConfig = getFormConfig();
   const formContext = getFormContext(formConfig.name);
 
+  // svelte-ignore state_referenced_locally
   const { fieldContext } = formContext.addField<CaptchaField>({
     key,
     type: FieldType.Captcha,

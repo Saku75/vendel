@@ -54,6 +54,7 @@
   const formConfig = getFormConfig();
   const formContext = getFormContext(formConfig.name);
 
+  // svelte-ignore state_referenced_locally
   const { fieldId, fieldContext } = formContext.addField<TextField>({
     key,
     type,

@@ -14,6 +14,7 @@
 
   const { from, to, children }: Props = $props();
 
+  // svelte-ignore state_referenced_locally
   if (!from && !to) {
     console.warn(
       "WidthLimiter: You must provide either 'from' or 'to' prop. Otherwise, The component will always be hidden.",

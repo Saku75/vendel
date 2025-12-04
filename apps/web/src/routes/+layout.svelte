@@ -12,16 +12,22 @@
 
   const { data, children }: LayoutProps = $props();
 
-  if (data.whoAmI) {
-    authStore.setAuthenticated(data.whoAmI);
-  } else {
-    authStore.setUnauthenticated();
-  }
+  $effect(() => {
+    if (data.whoAmI) {
+      authStore.setAuthenticated(data.whoAmI);
+    } else {
+      authStore.setUnauthenticated();
+    }
+  });
 
-  configStore.version = data.config.version;
-  configStore.turnstileSiteKey = data.config.turnstileSiteKey;
+  $effect(() => {
+    configStore.version = data.config.version;
+    configStore.turnstileSiteKey = data.config.turnstileSiteKey;
+  });
 
-  layoutStore.theme = data.config.theme;
+  $effect(() => {
+    layoutStore.theme = data.config.theme;
+  });
 </script>
 
 <svelte:window
