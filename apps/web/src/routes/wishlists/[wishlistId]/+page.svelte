@@ -16,7 +16,7 @@
 
   const { data }: PageProps = $props();
 
-  let formOpen = $state(data.wishes.length === 0);
+  let formOpen = $derived(data.wishes.length === 0);
   let editItem = $state<WishesGetResponse | undefined>();
 
   function toggleForm() {
@@ -32,9 +32,11 @@
     <div class="flex justify-between">
       <div class="flex flex-col sm:flex-row sm:items-center">
         <p class="mr-2 font-bold">{wish.title}</p>
-        <p class="text-xs text-stone-600 dark:text-stone-400">
-          {wish.brand}
-        </p>
+        {#if wish.brand}
+          <p class="text-xs text-stone-600 dark:text-stone-400">
+            {wish.brand}
+          </p>
+        {/if}
       </div>
       <AuthAs minRole={AuthRole.User}>
         {#if !formOpen}

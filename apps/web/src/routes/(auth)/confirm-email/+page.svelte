@@ -5,7 +5,7 @@
 
   const { data }: PageProps = $props();
 
-  const { status, message } = data.emailConfirmed;
+  const { status, message } = $derived(data.emailConfirmed);
 </script>
 
 <main class="mx-auto flex w-full max-w-xs flex-col items-center text-center">

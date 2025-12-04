@@ -18,7 +18,7 @@
 
   const { data }: PageProps = $props();
 
-  let formOpen = $state(data.wishlists.length === 0);
+  let formOpen = $derived(data.wishlists.length === 0);
   let editItem = $state<WishlistsGetResponse | undefined>();
 
   function toggleForm() {
