@@ -3,7 +3,7 @@ import { parseString } from "set-cookie-parser";
 
 import { createClient } from "@app/api/client";
 
-function createServerApi(event: RequestEvent) {
+function createApiLocal(event: RequestEvent) {
   const cookieHeader = event.request.headers.get("cookie") ?? "";
 
   return createClient({
@@ -36,4 +36,4 @@ function createServerApi(event: RequestEvent) {
   });
 }
 
-export { createServerApi };
+export { createApiLocal };

@@ -2,7 +2,8 @@ import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
 import { LayoutTheme } from "$lib/enums/layout/theme";
-import { createServerApi } from "$lib/server/api";
+import { createApiLocal } from "$lib/server/locals/api";
+import { createTokenServiceLocal } from "$lib/server/locals/token-service";
 
 const theme: Handle = async ({ event, resolve }) => {
   const themePreferenceCookie =
@@ -50,7 +51,8 @@ const preload: Handle = async ({ event, resolve }) => {
 
 const initiateLocals: Handle = async ({ event, resolve }) => {
   event.locals = {
-    api: createServerApi(event),
+    api: createApiLocal(event),
+    tokenService: createTokenServiceLocal(event),
   };
 
   return await resolve(event);

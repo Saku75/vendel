@@ -7,6 +7,7 @@ declare global {
     }
     interface Locals {
       api: import("@app/api/client").Client;
+      tokenService: import("@package/token-service").TokenService;
     }
   }
 }
