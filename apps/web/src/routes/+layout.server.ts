@@ -2,7 +2,8 @@ import { TokenExpiresIn, TokenService } from "@package/token-service";
 
 import { npm_package_version } from "$env/static/private";
 
-import { LayoutTheme } from "$lib/enums/layout/theme";
+import type { ConfigContext } from "$lib/contexts/config.svelte";
+import { Theme } from "$lib/enums/theme";
 
 import type { LayoutServerLoad } from "./$types";
 
@@ -11,12 +12,11 @@ export const load: LayoutServerLoad = async ({ platform, cookies, locals }) => {
 
   return {
     config: {
-      theme:
-        (cookies.get("theme-preference") as LayoutTheme) || LayoutTheme.System,
       version: npm_package_version,
       canonicalOrigin: platform!.env.CANONICAL_ORIGIN,
       turnstileSiteKey: platform!.env.TURNSTILE_SITE_KEY,
-    },
+    } as ConfigContext,
+    theme: (cookies.get("theme-preference") as Theme) || Theme.System,
     whoAmI,
   };
 };

@@ -7,24 +7,25 @@
   import { SvelteDate } from "svelte/reactivity";
 
   import { LayoutMenuContent } from "$lib/enums/layout/menu/content";
-  import { LayoutTheme } from "$lib/enums/layout/theme";
+  import { Theme } from "$lib/enums/theme";
   import { layoutStore } from "$lib/stores/layout.svelte";
+  import { themeStore } from "$lib/stores/theme.svelte";
 
   import Button from "../common/interactions/button.svelte";
   import { InteractionEmphasis } from "../common/interactions/enums/emphasis";
 
   $effect(() => {
-    if (layoutStore.theme != LayoutTheme.System) {
-      document.documentElement.dataset.theme = layoutStore.theme;
+    if (themeStore.current != Theme.System) {
+      document.documentElement.dataset.theme = themeStore.current;
       const currentTime = new SvelteDate();
       currentTime.setFullYear(currentTime.getFullYear() + 1);
-      document.cookie = `theme-preference=${layoutStore.theme}; SameSite=Strict; Secure; Path=/; Expires=${currentTime.toUTCString()}`;
+      document.cookie = `theme-preference=${themeStore.current}; SameSite=Strict; Secure; Path=/; Expires=${currentTime.toUTCString()}`;
     } else {
       document.documentElement.dataset.theme = window.matchMedia(
         "(prefers-color-scheme: dark)",
       ).matches
-        ? LayoutTheme.Dark
-        : LayoutTheme.Light;
+        ? Theme.Dark
+        : Theme.Light;
       document.cookie =
         "theme-preference=; SameSite=Strict; Secure; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
@@ -34,10 +35,10 @@
     window
       .matchMedia("(prefers-color-scheme: dark)")
       .addEventListener("change", (event) => {
-        if (layoutStore.theme === LayoutTheme.System)
+        if (themeStore.current === Theme.System)
           document.documentElement.dataset.theme = event.matches
-            ? LayoutTheme.Dark
-            : LayoutTheme.Light;
+            ? Theme.Dark
+            : Theme.Light;
       });
   });
 </script>
@@ -51,13 +52,13 @@
   {#if layoutStore.menu.open && layoutStore.menu.content === LayoutMenuContent.Theme}
     <X class="h-8 w-8" />
   {:else}
-    {#if layoutStore.theme === LayoutTheme.System}
+    {#if themeStore.current === Theme.System}
       <SunMoon class="h-7 w-7" />
     {/if}
-    {#if layoutStore.theme === LayoutTheme.Light}
+    {#if themeStore.current === Theme.Light}
       <Sun class="h-7 w-7" />
     {/if}
-    {#if layoutStore.theme === LayoutTheme.Dark}
+    {#if themeStore.current === Theme.Dark}
       <Moon class="h-7 w-7" />
     {/if}
   {/if}

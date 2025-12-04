@@ -42,7 +42,7 @@
     url: TextField;
   }
 
-  const formContext = setFormContext<WishFrom>("wishlist");
+  const formContext = setFormContext<WishFrom>("wish");
 
   async function handleSubmit() {
     const formValues = formContext.getValues();

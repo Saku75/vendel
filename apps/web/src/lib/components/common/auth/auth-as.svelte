@@ -3,7 +3,7 @@
 
   import { hasRequiredRole, type AuthRole } from "@app/api/enums";
 
-  import { authStore } from "$lib/stores/auth.svelte";
+  import { getAuthContext } from "$lib/contexts/auth.svelte";
 
   interface Props {
     minRole: AuthRole;
@@ -13,11 +13,13 @@
 
   const { minRole, children }: Props = $props();
 
+  const authContext = getAuthContext();
+
   const shouldShow = $derived.by(() => {
-    if (authStore.status !== "authenticated") {
+    if (authContext.status !== "authenticated") {
       return false;
     }
-    return hasRequiredRole(authStore.user?.role ?? null, minRole);
+    return hasRequiredRole(authContext.user?.role ?? null, minRole);
   });
 </script>
 

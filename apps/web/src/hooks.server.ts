@@ -1,19 +1,18 @@
 import type { Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
-import { LayoutTheme } from "$lib/enums/layout/theme";
+import { Theme } from "$lib/enums/theme";
 import { createApiLocal } from "$lib/server/locals/api";
 import { createTokenServiceLocal } from "$lib/server/locals/token-service";
 
 const theme: Handle = async ({ event, resolve }) => {
   const themePreferenceCookie =
-    (event.cookies.get("theme-preference") as LayoutTheme) ||
-    LayoutTheme.System;
+    (event.cookies.get("theme-preference") as Theme) || Theme.System;
   return await resolve(event, {
     transformPageChunk: ({ html }) =>
       html.replace(
         "%theme-preference%",
-        themePreferenceCookie && themePreferenceCookie != LayoutTheme.System
+        themePreferenceCookie && themePreferenceCookie != Theme.System
           ? `data-theme="${themePreferenceCookie}"`
           : "",
       ),

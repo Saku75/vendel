@@ -2,8 +2,8 @@
   import { onDestroy } from "svelte";
   import { Turnstile } from "svelte-turnstile";
 
-  import { configStore } from "$lib/stores/config.svelte";
-  import { layoutStore } from "$lib/stores/layout.svelte";
+  import { getConfigContext } from "$lib/contexts/config.svelte";
+  import { themeStore } from "$lib/stores/theme.svelte";
   import cn from "$lib/utils/cn";
 
   import { getFormConfig } from "../config.svelte";
@@ -30,6 +30,7 @@
 
   const formConfig = getFormConfig();
   const formContext = getFormContext(formConfig.name);
+  const configContext = getConfigContext();
 
   // svelte-ignore state_referenced_locally
   const { fieldContext } = formContext.addField<CaptchaField>({
@@ -53,8 +54,8 @@
     class="h-[65px]"
     size="flexible"
     language="da"
-    theme={layoutStore.theme !== "system" ? layoutStore.theme : "auto"}
-    siteKey={configStore.turnstileSiteKey}
+    theme={themeStore.current !== "system" ? themeStore.current : "auto"}
+    siteKey={configContext.turnstileSiteKey}
     {action}
     bind:reset={fieldContext.reset}
     on:callback={(event) => (fieldContext.value = event.detail.token)}

@@ -19,7 +19,7 @@
     Require,
     TextField,
   } from "$lib/components/form/types/field";
-  import { authStore } from "$lib/stores/auth.svelte";
+  import { getAuthContext } from "$lib/contexts/auth.svelte";
 
   interface SignInForm extends Fields {
     email: Require<TextField>;
@@ -29,6 +29,7 @@
   }
 
   const formContext = setFormContext<SignInForm>("signIn");
+  const authContext = getAuthContext();
 
   async function onsubmit() {
     const formValues = formContext.getValues();
@@ -46,7 +47,7 @@
 
     await api.user.whoAmI().then((res) => {
       if (res.ok) {
-        authStore.setAuthenticated(res.data!);
+        authContext.setAuthenticated(res.data!);
       }
     });
     await goto(resolve("/"));

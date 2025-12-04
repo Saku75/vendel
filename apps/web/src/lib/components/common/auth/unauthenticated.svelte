@@ -3,15 +3,17 @@
 
   import { AuthStatus } from "@app/api/enums";
 
-  import { authStore } from "$lib/stores/auth.svelte";
+  import { getAuthContext } from "$lib/contexts/auth.svelte";
 
   interface Props {
     children: Snippet;
   }
 
   const { children }: Props = $props();
+
+  const authContext = getAuthContext();
 </script>
 
-{#if authStore.status === AuthStatus.Unauthenticated}
+{#if authContext.status === AuthStatus.Unauthenticated}
   {@render children()}
 {/if}

@@ -3,7 +3,7 @@
 
   import { AuthStatus, type AuthRole } from "@app/api/enums";
 
-  import { authStore } from "$lib/stores/auth.svelte";
+  import { getAuthContext } from "$lib/contexts/auth.svelte";
 
   interface Props {
     role?: AuthRole | AuthRole[];
@@ -13,14 +13,17 @@
 
   const { role, children }: Props = $props();
 
-  const show = $derived.by(() => {
-    if (authStore.status === AuthStatus.Unauthenticated) return false;
-    if (!role && authStore.status === AuthStatus.Authenticated) return true;
+  const authContext = getAuthContext();
 
-    if (role && !authStore.user?.role) return false;
+  const show = $derived.by(() => {
+    if (authContext.status === AuthStatus.Unauthenticated) return false;
+    if (!role && authContext.status === AuthStatus.Authenticated) return true;
+
+    if (role && !authContext.user?.role) return false;
     if (
       role &&
-      (role !== authStore.user?.role || !role.includes(authStore.user?.role))
+      (role !== authContext.user?.role ||
+        !role.includes(authContext.user?.role))
     )
       return false;
 

@@ -5,7 +5,9 @@
   import { api } from "$lib/api";
   import Button from "$lib/components/common/interactions/button.svelte";
   import { InteractionEmphasis } from "$lib/components/common/interactions/enums/emphasis";
-  import { authStore } from "$lib/stores/auth.svelte";
+  import { getAuthContext } from "$lib/contexts/auth.svelte";
+
+  const authContext = getAuthContext();
 </script>
 
 <main class="mx-auto flex w-full max-w-xs flex-col items-center">
@@ -23,7 +25,7 @@
       onclick={async () => {
         await api.auth.signOut().then((res) => {
           if (res.ok) {
-            authStore.setUnauthenticated();
+            authContext.setUnauthenticated();
           }
         });
         await goto(resolve("/"));

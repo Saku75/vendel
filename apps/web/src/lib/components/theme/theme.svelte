@@ -1,32 +1,33 @@
 <script lang="ts">
   import { Moon, Sun, SunMoon, type Icon } from "@lucide/svelte";
 
-  import { LayoutTheme } from "$lib/enums/layout/theme";
+  import { Theme } from "$lib/enums/theme";
   import { layoutStore } from "$lib/stores/layout.svelte";
+  import { themeStore } from "$lib/stores/theme.svelte";
 
   import Button from "../common/interactions/button.svelte";
   import { InteractionEmphasis } from "../common/interactions/enums/emphasis";
 
   type ThemeItem = {
     name: string;
-    theme: LayoutTheme;
+    theme: Theme;
     Icon?: typeof Icon;
   };
 
   const themes: ThemeItem[] = [
     {
       name: "System",
-      theme: LayoutTheme.System,
+      theme: Theme.System,
       Icon: SunMoon,
     },
     {
       name: "Lys",
-      theme: LayoutTheme.Light,
+      theme: Theme.Light,
       Icon: Sun,
     },
     {
       name: "Mørk",
-      theme: LayoutTheme.Dark,
+      theme: Theme.Dark,
       Icon: Moon,
     },
   ];
@@ -39,7 +40,7 @@
         emphasis={InteractionEmphasis.Header}
         class="h-10 w-auto gap-1"
         onclick={() => (
-          (layoutStore.theme = theme),
+          (themeStore.current = theme),
           (layoutStore.menu.open = false)
         )}
       >

@@ -1,5 +1,4 @@
 import type { LayoutMenuContent } from "$lib/enums/layout/menu/content";
-import { LayoutTheme } from "$lib/enums/layout/theme";
 
 type LayoutStore = {
   menu: {
@@ -11,7 +10,6 @@ type LayoutStore = {
     height?: number;
     width?: number;
   };
-  theme: LayoutTheme;
 };
 
 const layoutStore = $state<LayoutStore>({
@@ -30,7 +28,6 @@ const layoutStore = $state<LayoutStore>({
     width: undefined,
     height: undefined,
   },
-  theme: LayoutTheme.System,
 });
 
 export { layoutStore };
