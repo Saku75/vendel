@@ -1,4 +1,10 @@
-import { Gift, LogIn, LogOut, UserPlus, type Icon } from "@lucide/svelte";
+import {
+  GiftIcon,
+  LogInIcon,
+  LogOutIcon,
+  UserPlusIcon,
+  type Icon,
+} from "@lucide/svelte";
 import type { HTMLAttributeAnchorTarget } from "svelte/elements";
 
 import type { AuthRole } from "@app/api/enums";
@@ -25,12 +31,12 @@ type NavigationStore =
   | [NavigationItem[], NavigationItem[]];
 
 const navigationStore = $state<NavigationStore>([
-  [{ text: "Ønskelister", href: "/wishlists", Icon: Gift }],
+  [{ text: "Ønskelister", href: "/wishlists", Icon: GiftIcon }],
   [
     {
       text: "Opret",
       href: "/sign-up",
-      Icon: UserPlus,
+      Icon: UserPlusIcon,
       showWhen: {
         authenticated: false,
       },
@@ -38,7 +44,7 @@ const navigationStore = $state<NavigationStore>([
     {
       text: "Log ind",
       href: "/sign-in",
-      Icon: LogIn,
+      Icon: LogInIcon,
       showWhen: {
         authenticated: false,
       },
@@ -46,7 +52,7 @@ const navigationStore = $state<NavigationStore>([
     {
       text: "Log ud",
       href: "/sign-out",
-      Icon: LogOut,
+      Icon: LogOutIcon,
       showWhen: {
         authenticated: true,
       },

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Moon, Sun, SunMoon, type Icon } from "@lucide/svelte";
+  import { MoonIcon, SunIcon, SunMoonIcon, type Icon } from "@lucide/svelte";
 
   import { Theme } from "$lib/enums/theme";
   import { layoutStore } from "$lib/stores/layout.svelte";
@@ -18,17 +18,17 @@
     {
       name: "System",
       theme: Theme.System,
-      Icon: SunMoon,
+      Icon: SunMoonIcon,
     },
     {
       name: "Lys",
       theme: Theme.Light,
-      Icon: Sun,
+      Icon: SunIcon,
     },
     {
       name: "Mørk",
       theme: Theme.Dark,
-      Icon: Moon,
+      Icon: MoonIcon,
     },
   ];
 </script>

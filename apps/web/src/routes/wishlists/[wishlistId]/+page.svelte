@@ -16,7 +16,8 @@
 
   const { data }: PageProps = $props();
 
-  let formOpen = $derived(data.wishes.length === 0);
+  // svelte-ignore state_referenced_locally
+  let formOpen = $state(data.wishes.length === 0);
   let editItem = $state<WishesGetResponse | undefined>();
 
   function toggleForm() {
@@ -28,51 +29,51 @@
 </script>
 
 {#snippet wishListItem(wish: WishesGetResponse)}
-  <div class="rounded-[1.25rem] bg-stone-200 py-2 pr-2 pl-4 dark:bg-stone-800">
-    <div class="flex justify-between">
-      <div class="flex flex-col sm:flex-row sm:items-center">
-        <p class="mr-2 font-bold">{wish.title}</p>
-        {#if wish.brand}
-          <p class="text-xs text-stone-600 dark:text-stone-400">
-            {wish.brand}
-          </p>
-        {/if}
-      </div>
-      <AuthAs minRole={AuthRole.User}>
-        {#if !formOpen}
-          <div class="flex gap-1">
-            <Button
-              emphasis={InteractionEmphasis.Secondary}
-              class="px-3 py-1 text-sm"
-              onclick={(e) => {
-                e.preventDefault();
-                editItem = wish;
-                formOpen = true;
-              }}
-            >
-              Rediger
-            </Button>
-            <Button
-              emphasis={InteractionEmphasis.Secondary}
-              class="px-3 py-1 text-sm"
-              onclick={async (e) => {
-                e.preventDefault();
-                await api.wishlists.wishes.delete(data.wishlist.id, wish.id);
-                await invalidateAll();
-              }}
-            >
-              Slet
-            </Button>
-          </div>
-        {/if}
-      </AuthAs>
+  <div
+    class="flex justify-between rounded-[1.25rem] bg-stone-200 py-2 pr-2 pl-4 dark:bg-stone-800"
+  >
+    <div class="flex flex-col">
+      {#if wish.brand}
+        <small class="text-xs text-stone-600 dark:text-stone-400">
+          {wish.brand}
+        </small>
+      {/if}
+      <p class="mr-2 font-bold">{wish.title}</p>
+      {#if wish.description}
+        <p>{wish.description}</p>
+      {/if}
+      {#if wish.price}
+        <p>Pris: {wish.price}</p>
+      {/if}
     </div>
-    {#if wish.description}
-      <p>{wish.description}</p>
-    {/if}
-    {#if wish.price}
-      <p>Pris: {wish.price}</p>
-    {/if}
+    <AuthAs minRole={AuthRole.User}>
+      {#if !formOpen}
+        <div class="flex gap-1 self-start">
+          <Button
+            emphasis={InteractionEmphasis.Secondary}
+            class="px-3 py-1 text-sm"
+            onclick={(e) => {
+              e.preventDefault();
+              editItem = wish;
+              formOpen = true;
+            }}
+          >
+            Rediger
+          </Button>
+          <Button
+            emphasis={InteractionEmphasis.Secondary}
+            class="px-3 py-1 text-sm"
+            onclick={async (e) => {
+              e.preventDefault();
+              await api.wishlists.wishes.delete(data.wishlist.id, wish.id);
+              await invalidateAll();
+            }}
+          >
+            Slet
+          </Button>
+        </div>
+      {/if}
+    </AuthAs>
   </div>
 {/snippet}
 

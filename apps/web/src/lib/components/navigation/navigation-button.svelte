@@ -1,6 +1,5 @@
 <script lang="ts">
-  import Menu from "@lucide/svelte/icons/menu";
-  import X from "@lucide/svelte/icons/x";
+  import { MenuIcon, XIcon } from "@lucide/svelte";
 
   import { LayoutMenuContent } from "$lib/enums/layout/menu/content";
   import { layoutStore } from "$lib/stores/layout.svelte";
@@ -18,8 +17,8 @@
   onclick={() => layoutStore.menu.toggle(LayoutMenuContent.Navigation)}
 >
   {#if layoutStore.menu.open && layoutStore.menu.content === LayoutMenuContent.Navigation}
-    <X class="h-8 w-8" />
+    <XIcon class="h-8 w-8" />
   {:else}
-    <Menu class="h-7 w-7" />
+    <MenuIcon class="h-7 w-7" />
   {/if}
 </Button>

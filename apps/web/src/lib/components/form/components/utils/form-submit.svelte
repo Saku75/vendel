@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LoaderCircle } from "@lucide/svelte";
+  import { LoaderCircleIcon } from "@lucide/svelte";
 
   import Button from "$lib/components/common/interactions/button.svelte";
   import cn from "$lib/utils/cn";
@@ -29,7 +29,7 @@
     formContext.isSubmitting}
 >
   {#if submittingLabel && formContext.isSubmitting}
-    <LoaderCircle class="animate-spin" />
+    <LoaderCircleIcon class="animate-spin" />
     {submittingLabel}...
   {:else}
     {label}

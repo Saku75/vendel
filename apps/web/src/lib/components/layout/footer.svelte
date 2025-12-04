@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Copyright } from "@lucide/svelte";
+  import { CopyrightIcon } from "@lucide/svelte";
 
   import Link from "../common/interactions/link.svelte";
 </script>
@@ -11,7 +11,7 @@
     <small><Link href="/privacy">Privatlivspolitik</Link></small>
   </div>
   <small class="flex items-center gap-1">
-    <Copyright class="h-3 w-3" />
+    <CopyrightIcon class="h-3 w-3" />
     <span>Vendel - {new Date().getFullYear()}</span>
   </small>
 </footer>

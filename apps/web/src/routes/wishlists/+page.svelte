@@ -18,7 +18,8 @@
 
   const { data }: PageProps = $props();
 
-  let formOpen = $derived(data.wishlists.length === 0);
+  // svelte-ignore state_referenced_locally
+  let formOpen = $state(data.wishlists.length === 0);
   let editItem = $state<WishlistsGetResponse | undefined>();
 
   function toggleForm() {
@@ -71,47 +72,45 @@
               href={resolve("/wishlists/[wishlistId]", {
                 wishlistId: wishlist.id,
               })}
-              class="rounded-[1.25rem] bg-stone-200 py-2 pr-2 pl-4 dark:bg-stone-800"
+              class="flex justify-between rounded-[1.25rem] bg-stone-200 py-2 pr-2 pl-4 dark:bg-stone-800"
             >
-              <div class="flex items-center justify-between">
-                <div class="flex flex-col sm:flex-row sm:items-center">
-                  <p class="mr-2 font-bold">{wishlist.name}</p>
-                  <p class="text-xs text-stone-600 dark:text-stone-400">
-                    (Sidst opdateret: {wishlist.wishesUpdatedAt
-                      ? formatRelativeDate(wishlist.wishesUpdatedAt)
-                      : "Aldrig"})
-                  </p>
-                </div>
-                <AuthAs minRole={AuthRole.Admin}>
-                  {#if !formOpen}
-                    <div class="flex gap-1 self-start">
-                      <Button
-                        emphasis={InteractionEmphasis.Secondary}
-                        class="px-3 py-1 text-sm"
-                        onclick={(e) => {
-                          e.preventDefault();
-                          editItem = wishlist;
-                          formOpen = true;
-                        }}
-                      >
-                        Rediger
-                      </Button>
-                      <Button
-                        emphasis={InteractionEmphasis.Secondary}
-                        class="px-3 py-1 text-sm"
-                        onclick={async (e) => {
-                          e.preventDefault();
-                          await api.wishlists.delete(wishlist.id);
-                          await invalidateAll();
-                        }}
-                      >
-                        Slet
-                      </Button>
-                    </div>
-                  {/if}
-                </AuthAs>
+              <div class="flex flex-col">
+                <p class="mr-2 font-bold">{wishlist.name}</p>
+                <small class="text-xs text-stone-600 dark:text-stone-400">
+                  (Sidst opdateret: {wishlist.wishesUpdatedAt
+                    ? formatRelativeDate(wishlist.wishesUpdatedAt)
+                    : "Aldrig"})
+                </small>
+                <p>{wishlist.description}</p>
               </div>
-              <p>{wishlist.description}</p>
+              <AuthAs minRole={AuthRole.Admin}>
+                {#if !formOpen}
+                  <div class="flex gap-1 self-start">
+                    <Button
+                      emphasis={InteractionEmphasis.Secondary}
+                      class="px-3 py-1 text-sm"
+                      onclick={(e) => {
+                        e.preventDefault();
+                        editItem = wishlist;
+                        formOpen = true;
+                      }}
+                    >
+                      Rediger
+                    </Button>
+                    <Button
+                      emphasis={InteractionEmphasis.Secondary}
+                      class="px-3 py-1 text-sm"
+                      onclick={async (e) => {
+                        e.preventDefault();
+                        await api.wishlists.delete(wishlist.id);
+                        await invalidateAll();
+                      }}
+                    >
+                      Slet
+                    </Button>
+                  </div>
+                {/if}
+              </AuthAs>
             </a>
           </li>
         {/each}
