@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { object, ZodIssueCode } from "zod";
+import { object } from "zod/mini";
 
 import { bytesToHex, randomBytes } from "@package/crypto-utils/bytes";
 import { createId } from "@package/crypto-utils/cuid";
@@ -30,31 +30,30 @@ signInStartServer.post("/", async (c) => {
   const body = await c.req.json<SignInStartRequest>();
   const captchaIdempotencyKey = c.var.captcha.createIdempotencyKey();
 
-  const parsedBody = await signInStartSchema
-    .superRefine(async (values, context) => {
-      const result = await c.var.captcha.verify(
-        values.captcha,
-        captchaIdempotencyKey,
-      );
-
-      if (!result) {
-        context.addIssue({
-          code: ZodIssueCode.custom,
-          message: ValidatorCode.Invalid,
-          path: ["captcha"],
-        });
-      }
-    })
-    .safeParseAsync(body);
-
+  const parsedBody = signInStartSchema.safeParse(body);
   if (!parsedBody.success) {
     return response(c, {
       status: 400,
-      content: { errors: parsedBody.error.errors },
+      content: { errors: parsedBody.error.issues },
     });
   }
 
   const { data } = parsedBody;
+
+  const captchaValid = await c.var.captcha.verify(
+    data.captcha,
+    captchaIdempotencyKey,
+  );
+  if (!captchaValid) {
+    return response(c, {
+      status: 400,
+      content: {
+        errors: [
+          { code: "custom", message: ValidatorCode.Invalid, path: ["captcha"] },
+        ],
+      },
+    });
+  }
 
   const [user] = await db
     .select({

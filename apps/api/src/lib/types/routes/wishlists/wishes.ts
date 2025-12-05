@@ -1,8 +1,8 @@
-import z from "zod";
+import type { z } from "zod/mini";
 
-import { wishes } from "$lib/database/schema/wishes";
+import type { wishes } from "$lib/database/schema/wishes";
 
-import { wishesSchema } from "$routes/wishlists/wishes";
+import type { wishesSchema } from "$routes/wishlists/wishes";
 
 type WishesListResponse = Omit<
   typeof wishes.$inferSelect,

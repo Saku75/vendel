@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import type { z } from "zod/mini";
 
 import type { signUpFinishSchema } from "$routes/auth/sign-up/finish";
 import type { signUpStartSchema } from "$routes/auth/sign-up/start";

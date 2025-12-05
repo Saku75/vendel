@@ -1,18 +1,28 @@
-import { string } from "zod";
+import {
+  maxLength,
+  minLength,
+  nonoptional,
+  optional,
+  string,
+  trim,
+} from "zod/mini";
 
 import { ValidatorCode } from "../main";
 
-const wishlistNameValidator = string({
-  required_error: ValidatorCode.Required,
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .nonempty(ValidatorCode.Required)
-  .max(128, ValidatorCode.TooLong);
+const wishlistNameValidator = nonoptional(
+  string(ValidatorCode.InvalidType).check(
+    trim(),
+    minLength(1, ValidatorCode.Required),
+    maxLength(128, ValidatorCode.TooLong),
+  ),
+  ValidatorCode.Required,
+);
 
-const wishlistDescriptionValidator = string({
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .max(256, ValidatorCode.TooLong)
-  .optional();
+const wishlistDescriptionValidator = optional(
+  string(ValidatorCode.InvalidType).check(
+    trim(),
+    maxLength(256, ValidatorCode.TooLong),
+  ),
+);
 
 export { wishlistDescriptionValidator, wishlistNameValidator };

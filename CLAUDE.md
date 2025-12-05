@@ -26,14 +26,14 @@ Vendel is a Cloudflare Workers-based wishlist application for friends and family
   - Svelte 5 with `$state` reactive primitives
   - Service binding to API worker (direct worker-to-worker, no HTTP roundtrip)
   - TailwindCSS 4.x with custom theme support (light/dark/system)
-  - Context-based form system with Zod validation
+  - Context-based form system with Zod Mini validation
   - Cloudflare Turnstile for CAPTCHA
 
 - **Shared Packages (`packages/`)**:
   - `@package/crypto-utils`: scrypt hashing, AES-256-GCM encryption, HMAC-SHA256, byte utilities
   - `@package/mail-service`: Email sending via Resend with Danish templates
   - `@package/token-service`: Encrypted and signed JWT-like tokens
-  - `@package/validators`: Zod schemas with Danish error messages
+  - `@package/validators`: Zod Mini schemas with Danish error messages
 
 - **Shared Configs (`configs/`)**:
   - `@config/eslint`: Function-based ESLint flat config with TypeScript + Svelte support
@@ -347,7 +347,7 @@ configStore.turnstileSiteKey;
 
 1. `<Form>` creates unique context with field registry
 2. Fields register on mount, unregister on destroy
-3. Zod validators run on value change
+3. Zod Mini validators run on value change
 4. `formContext.setErrors()` maps API errors to fields
 5. `formContext.resetCaptchas()` clears CAPTCHA on failure
 
@@ -439,7 +439,7 @@ await mailService.send({
 
 ### @package/validators
 
-Zod schemas with Danish error messages:
+Zod Mini schemas with Danish error messages (`zod/mini` for smaller bundle size):
 
 ```typescript
 emailValidator; // Required, max 320, email format
@@ -528,7 +528,7 @@ wishUrlValidator; // Optional, max 2048
 **Adding an endpoint**:
 
 1. Create route in `src/routes/` following existing patterns
-2. Define types with Zod schemas
+2. Define types with Zod Mini schemas
 3. Implement handler with `requireAuth()` if needed
 4. Export client function
 5. Add tests as `*.spec.ts`

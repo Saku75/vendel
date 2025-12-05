@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { object } from "zod";
+import { object } from "zod/mini";
 
 import {
   wishBrandValidator,
@@ -83,7 +83,7 @@ wishesServer.post("/:wishlistId/wishes", requireUser(), async (c) => {
   if (!parsedBody.success) {
     return response(c, {
       status: 400,
-      content: { errors: parsedBody.error.errors },
+      content: { errors: parsedBody.error.issues },
     });
   }
 
@@ -131,7 +131,7 @@ wishesServer.put("/:wishlistId/wishes/:wishId", requireUser(), async (c) => {
   if (!parsedBody.success) {
     return response(c, {
       status: 400,
-      content: { errors: parsedBody.error.errors },
+      content: { errors: parsedBody.error.issues },
     });
   }
 

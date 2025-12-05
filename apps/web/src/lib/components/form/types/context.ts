@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import type { z } from "zod/mini";
 
 import type { Field, Fields, FieldValues } from "./field";
 
@@ -23,7 +23,7 @@ interface FormContext<T extends Fields> {
   getValues: () => FieldValues<T>;
 
   setGeneralError: (error: string | undefined) => void;
-  setErrors: (errors: z.ZodIssue[] | undefined) => void;
+  setErrors: (errors: z.core.$ZodIssue[] | undefined) => void;
 }
 
 export type { FormContext };

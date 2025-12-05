@@ -1,29 +1,36 @@
-import { string } from "zod";
+import {
+  base64url,
+  maxLength,
+  minLength,
+  nonoptional,
+  regex,
+  string,
+} from "zod/mini";
 
 import { ValidatorCode } from "../main";
 
-const passwordValidator = string({
-  required_error: ValidatorCode.Required,
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .nonempty(ValidatorCode.Required)
-  .min(10, ValidatorCode.TooShort)
-  .max(64, ValidatorCode.TooLong)
-  .regex(
-    /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])/,
-    ValidatorCode.InvalidFormat,
-  );
+const passwordValidator = nonoptional(
+  string(ValidatorCode.InvalidType).check(
+    minLength(10, ValidatorCode.TooShort),
+    maxLength(64, ValidatorCode.TooLong),
+    regex(
+      /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])/,
+      ValidatorCode.InvalidFormat,
+    ),
+  ),
+  ValidatorCode.Required,
+);
 
-const passwordConfirmValidator = string({
-  required_error: ValidatorCode.Required,
-  invalid_type_error: ValidatorCode.InvalidType,
-});
+const passwordConfirmValidator = nonoptional(
+  string(ValidatorCode.InvalidType).check(minLength(1, ValidatorCode.Required)),
+  ValidatorCode.Required,
+);
 
-const passwordHashValidator = string({
-  required_error: ValidatorCode.Required,
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .nonempty(ValidatorCode.Required)
-  .base64url(ValidatorCode.InvalidFormat);
+const passwordHashValidator = nonoptional(
+  string(ValidatorCode.InvalidType).check(
+    base64url(ValidatorCode.InvalidFormat),
+  ),
+  ValidatorCode.Required,
+);
 
 export { passwordConfirmValidator, passwordHashValidator, passwordValidator };

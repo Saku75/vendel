@@ -1,11 +1,11 @@
-import {
+import type {
   ClientErrorStatusCode,
   ContentlessStatusCode,
   ServerErrorStatusCode,
   SuccessStatusCode,
 } from "hono/utils/http-status";
-import { JSONValue } from "hono/utils/types";
-import { ZodIssue } from "zod";
+import type { JSONValue } from "hono/utils/types";
+import type { z } from "zod/mini";
 
 type Ok<T extends JSONValue | undefined = undefined> = {
   status: Omit<SuccessStatusCode, ContentlessStatusCode>;
@@ -17,8 +17,8 @@ type Err = {
     ContentlessStatusCode
   >;
 } & (
-  | { message: string; errors?: ZodIssue[] }
-  | { errors: ZodIssue[]; message?: string }
+  | { message: string; errors?: z.core.$ZodIssue[] }
+  | { errors: z.core.$ZodIssue[]; message?: string }
 );
 
 type Result<T extends JSONValue | undefined = undefined> = Ok<T> | Err;

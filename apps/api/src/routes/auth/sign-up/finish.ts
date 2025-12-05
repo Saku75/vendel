@@ -1,4 +1,4 @@
-import { object, ZodIssueCode } from "zod";
+import { object } from "zod/mini";
 
 import { base64ToBytes } from "@package/crypto-utils/bytes";
 import { scrypt } from "@package/crypto-utils/scrypt";
@@ -40,44 +40,47 @@ const signUpFinishServer = createServer();
 
 signUpFinishServer.post("/", async (c) => {
   const body = await c.req.json<SignUpFinishRequest>();
-  const session = await signUpSessions.get(body.sessionId);
 
-  const parsedBody = await signUpFinishSchema
-    .superRefine(async (_values, context) => {
-      if (!session) {
-        context.addIssue({
-          code: ZodIssueCode.custom,
-          message: ValidatorCode.NotFound,
-          path: ["sessionId"],
-        });
-      }
-    })
-    .superRefine(async (values, context) => {
-      if (session) {
-        const result = await c.var.captcha.verify(
-          values.captcha,
-          session.captchaIdempotencyKey,
-        );
-
-        if (!result) {
-          context.addIssue({
-            code: ZodIssueCode.custom,
-            message: ValidatorCode.Invalid,
-            path: ["captcha"],
-          });
-        }
-      }
-    })
-    .safeParseAsync(body);
-
-  if (!parsedBody.success || !session) {
+  const parsedBody = signUpFinishSchema.safeParse(body);
+  if (!parsedBody.success) {
     return response(c, {
       status: 400,
-      content: { errors: parsedBody.error!.errors },
+      content: { errors: parsedBody.error.issues },
     });
   }
 
   const { data } = parsedBody;
+
+  const session = await signUpSessions.get(data.sessionId);
+  if (!session) {
+    return response(c, {
+      status: 400,
+      content: {
+        errors: [
+          {
+            code: "custom",
+            message: ValidatorCode.NotFound,
+            path: ["sessionId"],
+          },
+        ],
+      },
+    });
+  }
+
+  const captchaValid = await c.var.captcha.verify(
+    data.captcha,
+    session.captchaIdempotencyKey,
+  );
+  if (!captchaValid) {
+    return response(c, {
+      status: 400,
+      content: {
+        errors: [
+          { code: "custom", message: ValidatorCode.Invalid, path: ["captcha"] },
+        ],
+      },
+    });
+  }
 
   const passwordServerHash = await scrypt(
     base64ToBytes(data.passwordClientHash),

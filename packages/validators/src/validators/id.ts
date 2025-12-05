@@ -1,12 +1,13 @@
-import { string } from "zod";
+import { cuid2, nonoptional, string, trim } from "zod/mini";
 
 import { ValidatorCode } from "../main";
 
-const idValidator = string({
-  required_error: ValidatorCode.Required,
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .nonempty(ValidatorCode.Required)
-  .cuid2(ValidatorCode.InvalidFormat);
+const idValidator = nonoptional(
+  string(ValidatorCode.InvalidType).check(
+    trim(),
+    cuid2(ValidatorCode.InvalidFormat),
+  ),
+  ValidatorCode.Required,
+);
 
 export { idValidator };

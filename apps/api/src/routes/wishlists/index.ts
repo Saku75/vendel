@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { object } from "zod";
+import { object } from "zod/mini";
 
 import {
   wishlistDescriptionValidator,
@@ -73,7 +73,7 @@ wishlistsServer.post("/", requireAdmin(), async (c) => {
   if (!parsedBody.success) {
     return response(c, {
       status: 400,
-      content: { errors: parsedBody.error.errors },
+      content: { errors: parsedBody.error.issues },
     });
   }
 
@@ -99,7 +99,7 @@ wishlistsServer.put("/:wishlistId", requireAdmin(), async (c) => {
   if (!parsedBody.success) {
     return response(c, {
       status: 400,
-      content: { errors: parsedBody.error.errors },
+      content: { errors: parsedBody.error.issues },
     });
   }
 

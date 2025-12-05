@@ -1,6 +1,6 @@
-import { z } from "zod";
+import type { z } from "zod/mini";
 
-import { confirmEmailSchema } from "$routes/user/email/confirm";
+import type { confirmEmailSchema } from "$routes/user/email/confirm";
 
 type ConfirmEmailRequest = z.infer<typeof confirmEmailSchema>;
 type ConfirmEmailResponse = undefined;

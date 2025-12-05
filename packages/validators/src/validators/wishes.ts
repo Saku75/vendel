@@ -1,37 +1,49 @@
-import { number, string } from "zod";
+import {
+  maxLength,
+  minLength,
+  nonoptional,
+  nullable,
+  number,
+  optional,
+  string,
+  trim,
+} from "zod/mini";
 
 import { ValidatorCode } from "../main";
 
-const wishTitleValidator = string({
-  required_error: ValidatorCode.Required,
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .nonempty(ValidatorCode.Required)
-  .max(256, ValidatorCode.TooLong);
+const wishTitleValidator = nonoptional(
+  string(ValidatorCode.InvalidType).check(
+    trim(),
+    minLength(1, ValidatorCode.Required),
+    maxLength(256, ValidatorCode.TooLong),
+  ),
+  ValidatorCode.Required,
+);
 
-const wishBrandValidator = string({
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .max(128, ValidatorCode.TooLong)
-  .optional();
+const wishBrandValidator = optional(
+  string(ValidatorCode.InvalidType).check(
+    trim(),
+    maxLength(128, ValidatorCode.TooLong),
+  ),
+);
 
-const wishDescriptionValidator = string({
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .max(512, ValidatorCode.TooLong)
-  .optional();
+const wishDescriptionValidator = optional(
+  string(ValidatorCode.InvalidType).check(
+    trim(),
+    maxLength(512, ValidatorCode.TooLong),
+  ),
+);
 
-const wishPriceValidator = number({
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .nullable()
-  .optional();
+const wishPriceValidator = optional(
+  nullable(number(ValidatorCode.InvalidType)),
+);
 
-const wishUrlValidator = string({
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .max(2048, ValidatorCode.TooLong)
-  .optional();
+const wishUrlValidator = optional(
+  string(ValidatorCode.InvalidType).check(
+    trim(),
+    maxLength(2048, ValidatorCode.TooLong),
+  ),
+);
 
 export {
   wishBrandValidator,

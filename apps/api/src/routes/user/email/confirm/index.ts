@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { object } from "zod";
+import { object } from "zod/mini";
 
 import { TokenPurpose } from "@package/token-service";
 import { tokenValidator } from "@package/validators/token";
@@ -29,7 +29,7 @@ confirmEmailServer.post("/", async (c) => {
   if (!parsedBody.success) {
     return response(c, {
       status: 400,
-      content: { errors: parsedBody.error.errors },
+      content: { errors: parsedBody.error.issues },
     });
   }
 

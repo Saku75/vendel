@@ -1,14 +1,14 @@
-import {
+import type {
   ClientErrorStatusCode,
   ContentfulStatusCode,
   ContentlessStatusCode,
   ServerErrorStatusCode,
   SuccessStatusCode,
 } from "hono/utils/http-status";
-import { JSONValue } from "hono/utils/types";
-import { ZodIssue } from "zod";
+import type { JSONValue } from "hono/utils/types";
+import { z } from "zod/mini";
 
-import { Result } from "$lib/types/result";
+import type { Result } from "$lib/types/result";
 
 import type { ServerContext } from ".";
 
@@ -27,10 +27,10 @@ type ErrorResponse = {
   content:
     | {
         message: string;
-        errors?: ZodIssue[];
+        errors?: z.core.$ZodIssue[];
       }
     | {
-        errors: ZodIssue[];
+        errors: z.core.$ZodIssue[];
         message?: string;
       };
 };

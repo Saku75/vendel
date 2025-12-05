@@ -1,24 +1,35 @@
-import { string } from "zod";
+import {
+  maxLength,
+  minLength,
+  nonoptional,
+  optional,
+  string,
+  trim,
+} from "zod/mini";
 
 import { ValidatorCode } from "../main";
 
-const firstNameValidator = string({
-  required_error: ValidatorCode.Required,
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .nonempty(ValidatorCode.Required)
-  .max(64, ValidatorCode.TooLong);
+const firstNameValidator = nonoptional(
+  string(ValidatorCode.InvalidType).check(
+    trim(),
+    minLength(1, ValidatorCode.Required),
+    maxLength(64, ValidatorCode.TooLong),
+  ),
+  ValidatorCode.Required,
+);
 
-const middleNameValidator = string({
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .max(256, ValidatorCode.TooLong)
-  .optional();
+const middleNameValidator = optional(
+  string(ValidatorCode.InvalidType).check(
+    trim(),
+    maxLength(256, ValidatorCode.TooLong),
+  ),
+);
 
-const lastNameValidator = string({
-  invalid_type_error: ValidatorCode.InvalidType,
-})
-  .max(64, ValidatorCode.TooLong)
-  .optional();
+const lastNameValidator = optional(
+  string(ValidatorCode.InvalidType).check(
+    trim(),
+    maxLength(64, ValidatorCode.TooLong),
+  ),
+);
 
 export { firstNameValidator, lastNameValidator, middleNameValidator };

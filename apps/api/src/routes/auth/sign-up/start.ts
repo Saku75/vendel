@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { object, ZodIssueCode } from "zod";
+import { object } from "zod/mini";
 
 import { bytesToHex, randomBytes } from "@package/crypto-utils/bytes";
 import { createId } from "@package/crypto-utils/cuid";
@@ -39,46 +39,51 @@ signUpStartServer.post("/", async (c) => {
   const body = await c.req.json<SignUpStartRequest>();
   const captchaIdempotencyKey = c.var.captcha.createIdempotencyKey();
 
-  const parsedBody = await signUpStartSchema
-    .superRefine(async (values, context) => {
-      const existingUser = await db
-        .select({ id: users.id })
-        .from(users)
-        .where(eq(users.email, values.email))
-        .limit(1);
-
-      if (existingUser.length > 0) {
-        context.addIssue({
-          code: ZodIssueCode.custom,
-          message: ValidatorCode.AlreadyExists,
-          path: ["email"],
-        });
-      }
-    })
-    .superRefine(async (values, context) => {
-      const result = await c.var.captcha.verify(
-        values.captcha,
-        captchaIdempotencyKey,
-      );
-
-      if (!result) {
-        context.addIssue({
-          code: ZodIssueCode.custom,
-          message: ValidatorCode.Invalid,
-          path: ["captcha"],
-        });
-      }
-    })
-    .safeParseAsync(body);
-
+  const parsedBody = signUpStartSchema.safeParse(body);
   if (!parsedBody.success) {
     return response(c, {
       status: 400,
-      content: { errors: parsedBody.error.errors },
+      content: { errors: parsedBody.error.issues },
     });
   }
 
   const { data } = parsedBody;
+
+  const existingUser = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.email, data.email))
+    .limit(1);
+
+  if (existingUser.length > 0) {
+    return response(c, {
+      status: 400,
+      content: {
+        errors: [
+          {
+            code: "custom",
+            message: ValidatorCode.AlreadyExists,
+            path: ["email"],
+          },
+        ],
+      },
+    });
+  }
+
+  const captchaValid = await c.var.captcha.verify(
+    data.captcha,
+    captchaIdempotencyKey,
+  );
+  if (!captchaValid) {
+    return response(c, {
+      status: 400,
+      content: {
+        errors: [
+          { code: "custom", message: ValidatorCode.Invalid, path: ["captcha"] },
+        ],
+      },
+    });
+  }
 
   const clientSalt = bytesToHex(randomBytes(32));
   const serverSalt = bytesToHex(randomBytes(32));
