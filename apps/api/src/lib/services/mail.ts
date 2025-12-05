@@ -5,7 +5,7 @@ import { MailService } from "@package/mail-service";
 const mailService = new MailService(
   env.RESEND_API_KEY,
   {
-    baseURL: env.CORS_ORIGINS.split(",")[0],
+    baseUrl: env.CORS_ORIGINS.split(",")[0],
   },
   env.MODE === "local",
 );
