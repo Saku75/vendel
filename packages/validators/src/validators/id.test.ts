@@ -53,7 +53,11 @@ describe("idValidator", () => {
 
   describe("invalid formats", () => {
     it("should fail for random string with InvalidFormat", () => {
-      expectInvalid(idValidator, "not-a-valid-cuid", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        idValidator,
+        "not-a-valid-cuid",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should fail for UUID with InvalidFormat", () => {

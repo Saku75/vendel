@@ -2,7 +2,10 @@ import { describe, it } from "vitest";
 
 import { ValidatorCode } from "../main";
 import { expectInvalid, expectValid } from "../test/utils/assertions";
-import { wishlistDescriptionValidator, wishlistNameValidator } from "./wishlist";
+import {
+  wishlistDescriptionValidator,
+  wishlistNameValidator,
+} from "./wishlist";
 
 describe("wishlistNameValidator", () => {
   describe("valid names", () => {
@@ -54,7 +57,11 @@ describe("wishlistNameValidator", () => {
 
   describe("type validation", () => {
     it("should reject undefined with InvalidType error", () => {
-      expectInvalid(wishlistNameValidator, undefined, ValidatorCode.InvalidType);
+      expectInvalid(
+        wishlistNameValidator,
+        undefined,
+        ValidatorCode.InvalidType,
+      );
     });
 
     it("should reject null with InvalidType error", () => {
@@ -162,14 +169,22 @@ describe("wishlistDescriptionValidator", () => {
     });
 
     it("should reject non-string types with InvalidType error", () => {
-      expectInvalid(wishlistDescriptionValidator, 123, ValidatorCode.InvalidType);
+      expectInvalid(
+        wishlistDescriptionValidator,
+        123,
+        ValidatorCode.InvalidType,
+      );
     });
   });
 
   describe("length validation", () => {
     it("should reject string over 256 characters with TooLong error", () => {
       const longString = "a".repeat(257);
-      expectInvalid(wishlistDescriptionValidator, longString, ValidatorCode.TooLong);
+      expectInvalid(
+        wishlistDescriptionValidator,
+        longString,
+        ValidatorCode.TooLong,
+      );
     });
   });
 });

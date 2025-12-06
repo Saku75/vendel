@@ -100,29 +100,53 @@ describe("tokenValidator", () => {
     });
 
     it("should reject token with 6 parts (too many)", () => {
-      expectInvalid(tokenValidator, "v1.a.b.c.d.e", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        tokenValidator,
+        "v1.a.b.c.d.e",
+        ValidatorCode.InvalidFormat,
+      );
     });
   });
 
   describe("invalid tokens - invalid version format", () => {
     it("should reject version without number (just 'v')", () => {
-      expectInvalid(tokenValidator, "v.abc.def.ghi", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        tokenValidator,
+        "v.abc.def.ghi",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should reject version with letter instead of number", () => {
-      expectInvalid(tokenValidator, "vX.abc.def.ghi", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        tokenValidator,
+        "vX.abc.def.ghi",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should reject version without 'v' prefix", () => {
-      expectInvalid(tokenValidator, "1.abc.def.ghi", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        tokenValidator,
+        "1.abc.def.ghi",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should reject uppercase 'V' prefix", () => {
-      expectInvalid(tokenValidator, "V1.abc.def.ghi", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        tokenValidator,
+        "V1.abc.def.ghi",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should reject version with multiple digits after 'v'", () => {
-      expectInvalid(tokenValidator, "v12.abc.def.ghi", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        tokenValidator,
+        "v12.abc.def.ghi",
+        ValidatorCode.InvalidFormat,
+      );
     });
   });
 

@@ -54,7 +54,11 @@ describe("captchaValidator", () => {
     });
 
     it("should fail for object", () => {
-      expectInvalid(captchaValidator, { token: "test" }, ValidatorCode.InvalidType);
+      expectInvalid(
+        captchaValidator,
+        { token: "test" },
+        ValidatorCode.InvalidType,
+      );
     });
 
     it("should fail for array", () => {

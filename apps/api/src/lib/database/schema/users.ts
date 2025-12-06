@@ -1,12 +1,6 @@
 import { sql } from "drizzle-orm";
-import type {
-  AnySQLiteColumn} from "drizzle-orm/sqlite-core";
-import {
-  blob,
-  int,
-  sqliteTable,
-  text,
-} from "drizzle-orm/sqlite-core";
+import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
+import { blob, int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import { createId } from "@package/crypto-utils/cuid";
 

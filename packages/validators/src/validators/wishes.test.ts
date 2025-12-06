@@ -24,7 +24,11 @@ describe("wishTitleValidator", () => {
 
   describe("whitespace handling", () => {
     it("should trim whitespace from valid title", () => {
-      expectValid(wishTitleValidator, "  Valid wish title  ", "Valid wish title");
+      expectValid(
+        wishTitleValidator,
+        "  Valid wish title  ",
+        "Valid wish title",
+      );
     });
   });
 
@@ -147,7 +151,11 @@ describe("wishDescriptionValidator", () => {
   describe("length validation", () => {
     it("should reject description over 512 characters with TooLong error", () => {
       const longDescription = "a".repeat(513);
-      expectInvalid(wishDescriptionValidator, longDescription, ValidatorCode.TooLong);
+      expectInvalid(
+        wishDescriptionValidator,
+        longDescription,
+        ValidatorCode.TooLong,
+      );
     });
   });
 });
@@ -214,7 +222,11 @@ describe("wishUrlValidator", () => {
 
   describe("whitespace handling", () => {
     it("should trim whitespace from URL", () => {
-      expectValid(wishUrlValidator, "  https://example.com  ", "https://example.com");
+      expectValid(
+        wishUrlValidator,
+        "  https://example.com  ",
+        "https://example.com",
+      );
     });
   });
 

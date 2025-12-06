@@ -53,19 +53,35 @@ describe("passwordValidator", () => {
 
   describe("format validation", () => {
     it("should reject password missing lowercase letter", () => {
-      expectInvalid(passwordValidator, "UPPERCASE123!", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        passwordValidator,
+        "UPPERCASE123!",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should reject password missing uppercase letter", () => {
-      expectInvalid(passwordValidator, "lowercase123!", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        passwordValidator,
+        "lowercase123!",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should reject password missing digit", () => {
-      expectInvalid(passwordValidator, "ValidPassword!", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        passwordValidator,
+        "ValidPassword!",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should reject password missing special character", () => {
-      expectInvalid(passwordValidator, "ValidPassword123", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        passwordValidator,
+        "ValidPassword123",
+        ValidatorCode.InvalidFormat,
+      );
     });
   });
 
@@ -108,7 +124,11 @@ describe("passwordConfirmValidator", () => {
 
   describe("type validation", () => {
     it("should reject undefined", () => {
-      expectInvalid(passwordConfirmValidator, undefined, ValidatorCode.InvalidType);
+      expectInvalid(
+        passwordConfirmValidator,
+        undefined,
+        ValidatorCode.InvalidType,
+      );
     });
 
     it("should reject null", () => {
@@ -151,25 +171,45 @@ describe("passwordHashValidator", () => {
 
   describe("format validation", () => {
     it("should reject base64 with plus sign (not base64url)", () => {
-      expectInvalid(passwordHashValidator, "SGVs+G8gV29ybGQ", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        passwordHashValidator,
+        "SGVs+G8gV29ybGQ",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should reject base64 with slash (not base64url)", () => {
-      expectInvalid(passwordHashValidator, "SGVs/G8gV29ybGQ", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        passwordHashValidator,
+        "SGVs/G8gV29ybGQ",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should reject base64url with padding", () => {
-      expectInvalid(passwordHashValidator, "SGVsbG8=", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        passwordHashValidator,
+        "SGVsbG8=",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should reject string with invalid characters", () => {
-      expectInvalid(passwordHashValidator, "SGVs bG8", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        passwordHashValidator,
+        "SGVs bG8",
+        ValidatorCode.InvalidFormat,
+      );
     });
   });
 
   describe("type validation", () => {
     it("should reject undefined", () => {
-      expectInvalid(passwordHashValidator, undefined, ValidatorCode.InvalidType);
+      expectInvalid(
+        passwordHashValidator,
+        undefined,
+        ValidatorCode.InvalidType,
+      );
     });
 
     it("should reject null", () => {

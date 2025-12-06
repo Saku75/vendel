@@ -93,7 +93,11 @@ describe("emailValidator", () => {
     });
 
     it("should fail for string with @ but no local part", () => {
-      expectInvalid(emailValidator, "@example.com", ValidatorCode.InvalidFormat);
+      expectInvalid(
+        emailValidator,
+        "@example.com",
+        ValidatorCode.InvalidFormat,
+      );
     });
 
     it("should fail for multiple @ symbols", () => {
