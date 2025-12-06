@@ -1,7 +1,7 @@
 import { MailDomain } from "../../enums/domain";
 import { MailSender } from "../../enums/sender";
 import { MailTemplate } from "../../enums/template";
-import { MailAddress } from "../../types/address";
+import type { MailAddress } from "../../types/address";
 import { createAddress } from "../../utils/create-address";
 
 const MailTemplateSender: Record<MailTemplate, MailAddress> = {

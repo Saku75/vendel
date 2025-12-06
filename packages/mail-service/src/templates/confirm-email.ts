@@ -1,7 +1,7 @@
 import { MailTemplate } from "../enums/template";
 import { MailTemplatePlaceholder } from "./enums/placeholder";
 import { MailTemplateSender } from "./enums/sender";
-import { MailTemplateStructure } from "./types/structure";
+import type { MailTemplateStructure } from "./types/structure";
 
 export const templateConfirmEmail: MailTemplateStructure = {
   from: MailTemplateSender[MailTemplate.ConfirmEmail],

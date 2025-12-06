@@ -1,4 +1,4 @@
-import { MailTemplatePlaceholder } from "../enums/placeholder";
+import type { MailTemplatePlaceholder } from "../enums/placeholder";
 
 type MailTemplateBuiltInPlaceholders = {
   [MailTemplatePlaceholder.BaseUrl]: string;

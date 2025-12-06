@@ -3,10 +3,10 @@ import type { CreateEmailOptions, CreateEmailResponse } from "resend";
 import { MailTemplate } from "./enums/template";
 import { templateConfirmEmail } from "./templates/confirm-email";
 import { MailTemplatePlaceholder } from "./templates/enums/placeholder";
-import { MailTemplateBuiltInPlaceholders } from "./templates/types/built-in-placeholders";
-import { MailTemplateStructure } from "./templates/types/structure";
-import { MailAddress } from "./types/address";
-import {
+import type { MailTemplateBuiltInPlaceholders } from "./templates/types/built-in-placeholders";
+import type { MailTemplateStructure } from "./templates/types/structure";
+import type { MailAddress } from "./types/address";
+import type {
   MailOptions,
   MailOptionsWithCustomMail,
   MailOptionsWithTemplateMail,
@@ -90,7 +90,7 @@ class MailService {
         templateContent = templateConfirmEmail;
         break;
       default:
-        throw new Error(`Mail: Unknown template: ${template}`);
+        throw new Error(`Mail: Unknown template: ${String(template)}`);
     }
 
     const html = this.replacePlaceholders(templateContent.html, data);

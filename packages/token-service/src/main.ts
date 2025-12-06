@@ -143,7 +143,9 @@ class TokenService {
         return hmac(this.keys.signing, "SHA-256").sign(data);
       }
       default:
-        throw new Error(`TokenService: Unsupported version: ${version}`);
+        throw new Error(
+          `TokenService: Unsupported version: ${String(version)}`,
+        );
     }
   }
   private verify(
@@ -156,7 +158,9 @@ class TokenService {
         return hmac(this.keys.signing, "SHA-256").verify(data, signature);
       }
       default:
-        throw new Error(`TokenService: Unsupported version: ${version}`);
+        throw new Error(
+          `TokenService: Unsupported version: ${String(version)}`,
+        );
     }
   }
 
@@ -170,7 +174,9 @@ class TokenService {
         return await gcm(this.keys.encryption, nonce).encrypt(data);
       }
       default:
-        throw new Error(`TokenService: Unsupported version: ${version}`);
+        throw new Error(
+          `TokenService: Unsupported version: ${String(version)}`,
+        );
     }
   }
   private async decrypt(
@@ -183,7 +189,9 @@ class TokenService {
         return gcm(this.keys.encryption, nonce).decrypt(payload);
       }
       default:
-        throw new Error(`TokenService: Unsupported version: ${version}`);
+        throw new Error(
+          `TokenService: Unsupported version: ${String(version)}`,
+        );
     }
   }
 

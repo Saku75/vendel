@@ -9,6 +9,7 @@ import {
 import { gcm } from "@package/crypto-utils/gcm";
 
 import { TokenExpiresIn } from "./enums/expires-in";
+import type { TokenMetadata } from "./main";
 import { TokenService } from "./main";
 
 describe("TokenService", () => {
@@ -209,7 +210,7 @@ describe("TokenService", () => {
 
       const parts = createResult.token.split(".");
       const metadataBytes = base64ToBytes(parts[1]);
-      const metadata = JSON.parse(bytesToUtf8(metadataBytes));
+      const metadata = JSON.parse(bytesToUtf8(metadataBytes)) as TokenMetadata;
       const nonce = base64ToBytes(metadata.nonce);
 
       const tamperedData = { tampered: "different data" };
@@ -236,7 +237,7 @@ describe("TokenService", () => {
 
       const parts = createResult.token.split(".");
       const metadataBytes = base64ToBytes(parts[1]);
-      const metadata = JSON.parse(bytesToUtf8(metadataBytes));
+      const metadata = JSON.parse(bytesToUtf8(metadataBytes)) as TokenMetadata;
 
       metadata.purpose = "tampered-purpose";
 
