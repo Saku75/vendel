@@ -311,6 +311,9 @@ importers:
         specifier: ^4.1.13
         version: 4.1.13
     devDependencies:
+      '@cloudflare/vitest-pool-workers':
+        specifier: ^0.10.13
+        version: 0.10.13(@cloudflare/workers-types@4.20251202.0)(@vitest/runner@3.2.4)(@vitest/snapshot@3.2.4)(vitest@3.2.4(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2))
       '@config/eslint':
         specifier: workspace:*
         version: link:../../configs/eslint
@@ -323,6 +326,9 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)
 
 packages:
 
