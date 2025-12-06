@@ -47,7 +47,7 @@
 
     await api.user.whoAmI().then((res) => {
       if (res.ok) {
-        authContext.setAuthenticated(res.data!);
+        authContext.setAuthenticated(res.data);
       }
     });
     await goto(resolve("/"));

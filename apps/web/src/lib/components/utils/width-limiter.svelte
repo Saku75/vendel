@@ -6,8 +6,8 @@
   import cn from "$lib/utils/cn";
 
   interface Props {
-    from?: LayoutSize;
-    to?: LayoutSize;
+    from?: LayoutSize | number;
+    to?: LayoutSize | number;
 
     children: Snippet;
   }

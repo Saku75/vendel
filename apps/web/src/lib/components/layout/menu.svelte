@@ -17,7 +17,7 @@
   $effect(() => {
     if (
       layoutStore.size.width &&
-      layoutStore.size.width > LayoutSize.Medium &&
+      layoutStore.size.width > Number(LayoutSize.Medium) &&
       layoutStore.menu.content === LayoutMenuContent.Navigation
     ) {
       layoutStore.menu.open = false;

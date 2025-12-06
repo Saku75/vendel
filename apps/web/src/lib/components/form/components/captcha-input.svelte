@@ -3,6 +3,7 @@
   import { Turnstile } from "svelte-turnstile";
 
   import { getConfigContext } from "$lib/contexts/config.svelte";
+  import { Theme } from "$lib/enums/theme";
   import { themeStore } from "$lib/stores/theme.svelte";
   import cn from "$lib/utils/cn";
 
@@ -54,7 +55,7 @@
     class="h-[65px]"
     size="flexible"
     language="da"
-    theme={themeStore.current !== "system" ? themeStore.current : "auto"}
+    theme={themeStore.current !== Theme.System ? themeStore.current : "auto"}
     siteKey={configContext.turnstileSiteKey}
     {action}
     bind:reset={fieldContext.reset}

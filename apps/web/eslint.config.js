@@ -8,8 +8,20 @@ import svelteConfig from "./svelte.config.ts";
 
 export default defineConfig(
   customConfig(),
-  ...svelte.configs.recommended,
-  ...svelte.configs.prettier,
+
+  svelte.configs.recommended,
+  svelte.configs.prettier,
+
+  {
+    files: ["eslint.config.js", "svelte.config.ts"],
+    languageOptions: {
+      parserOptions: {
+        projectService: {
+          allowDefaultProject: ["eslint.config.js", "svelte.config.ts"],
+        },
+      },
+    },
+  },
   {
     files: ["**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"],
     languageOptions: {
@@ -22,6 +34,7 @@ export default defineConfig(
     },
     rules: {
       "svelte/no-navigation-without-resolve": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
     },
   },
 );

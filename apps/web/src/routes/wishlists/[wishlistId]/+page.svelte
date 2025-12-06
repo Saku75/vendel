@@ -7,7 +7,7 @@
   import { invalidateAll } from "$app/navigation";
 
   import { api } from "$lib/api";
-  import AuthAs from "$lib/components/common/auth/auth-as.svelte";
+  import Authenticated from "$lib/components/common/auth/authenticated.svelte";
   import Button from "$lib/components/common/interactions/button.svelte";
   import { InteractionEmphasis } from "$lib/components/common/interactions/enums/emphasis";
 
@@ -46,13 +46,13 @@
         <p>Pris: {wish.price}</p>
       {/if}
     </div>
-    <AuthAs minRole={AuthRole.User}>
+    <Authenticated minRole={AuthRole.User}>
       {#if !formOpen}
         <div class="flex gap-1 self-start">
           <Button
             emphasis={InteractionEmphasis.Secondary}
             class="px-3 py-1 text-sm"
-            onclick={(e) => {
+            onclick={(e: MouseEvent) => {
               e.preventDefault();
               editItem = wish;
               formOpen = true;
@@ -63,7 +63,7 @@
           <Button
             emphasis={InteractionEmphasis.Secondary}
             class="px-3 py-1 text-sm"
-            onclick={async (e) => {
+            onclick={async (e: MouseEvent) => {
               e.preventDefault();
               await api.wishlists.wishes.delete(data.wishlist.id, wish.id);
               await invalidateAll();
@@ -73,7 +73,7 @@
           </Button>
         </div>
       {/if}
-    </AuthAs>
+    </Authenticated>
   </div>
 {/snippet}
 
@@ -83,7 +83,7 @@
   >
     <h1 class="text-3xl">{data.wishlist.name}</h1>
 
-    <AuthAs minRole={AuthRole.User}>
+    <Authenticated minRole={AuthRole.User}>
       {#if data.wishes.length !== 0}
         <Button
           emphasis={InteractionEmphasis.Secondary}
@@ -93,10 +93,10 @@
           {formOpen ? "Luk" : "Opret nyt ønske"}
         </Button>
       {/if}
-    </AuthAs>
+    </Authenticated>
   </div>
 
-  <AuthAs minRole={AuthRole.User}>
+  <Authenticated minRole={AuthRole.User}>
     {#if formOpen}
       <div transition:slide={{ duration: 200 }} class="mb-6">
         {#if data.wishes.length === 0}
@@ -111,7 +111,7 @@
         />
       </div>
     {/if}
-  </AuthAs>
+  </Authenticated>
 
   <div>
     {#if data.wishes.length !== 0}

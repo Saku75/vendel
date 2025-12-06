@@ -17,8 +17,7 @@ function createApiLocal(event: RequestEvent) {
       afterResponse: (_, res) => {
         const cookies = res.headers.getSetCookie();
 
-        for (const key in cookies) {
-          const cookie = cookies[key];
+        for (const cookie of cookies) {
           const { name, value, path, sameSite, ...rest } = parseString(cookie);
           event.cookies.set(name, value, {
             ...rest,

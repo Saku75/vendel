@@ -52,7 +52,7 @@
       {#each items as item (item.href)}
         {#if item.showWhen}
           {#if item.showWhen.authenticated}
-            <Authenticated role={item.showWhen.role}>
+            <Authenticated minRole={item.showWhen.minRole}>
               {@render navigationItem(item)}
             </Authenticated>
           {:else}

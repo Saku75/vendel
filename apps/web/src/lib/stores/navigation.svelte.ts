@@ -15,7 +15,7 @@ type ShowWhenUnauthenticated = {
 
 type ShowWhenAuthenticated = {
   authenticated: true;
-  role?: AuthRole | AuthRole[];
+  minRole?: AuthRole;
 };
 
 type NavigationItem = {

@@ -1,4 +1,4 @@
-import type { z } from "zod/mini";
+import type { ZodMiniType } from "zod/mini";
 
 import type { ValidatorCode } from "@package/validators";
 
@@ -16,7 +16,7 @@ interface CommonField {
   value?: unknown;
   initialValue: unknown;
 
-  validator?: z.core.$ZodType;
+  validator?: ZodMiniType;
   error?: ValidatorCode;
 
   isTouched: boolean;
@@ -29,7 +29,7 @@ interface TextField extends CommonField {
   value?: string;
   initialValue: string;
 
-  validator?: z.core.$ZodString | z.core.$ZodOptional<z.core.$ZodString>;
+  validator?: ZodMiniType<string>;
 }
 
 interface NumberField extends CommonField {
@@ -38,11 +38,7 @@ interface NumberField extends CommonField {
   value?: number | null;
   initialValue: number | null;
 
-  validator?:
-    | z.core.$ZodNumber
-    | z.core.$ZodOptional<z.core.$ZodNumber>
-    | z.core.$ZodNullable<z.core.$ZodNumber>
-    | z.core.$ZodOptional<z.core.$ZodNullable<z.core.$ZodNumber>>;
+  validator?: ZodMiniType<number | null | undefined>;
 }
 
 interface CaptchaField

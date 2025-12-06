@@ -8,7 +8,7 @@
   import { resolve } from "$app/paths";
 
   import { api } from "$lib/api";
-  import AuthAs from "$lib/components/common/auth/auth-as.svelte";
+  import Authenticated from "$lib/components/common/auth/authenticated.svelte";
   import Button from "$lib/components/common/interactions/button.svelte";
   import { InteractionEmphasis } from "$lib/components/common/interactions/enums/emphasis";
   import { formatRelativeDate } from "$lib/utils/format-relative-date";
@@ -36,7 +36,7 @@
   >
     <h1 class="text-3xl">Ønskelister</h1>
 
-    <AuthAs minRole={AuthRole.Admin}>
+    <Authenticated minRole={AuthRole.Admin}>
       {#if data.wishlists.length !== 0}
         <Button
           emphasis={InteractionEmphasis.Secondary}
@@ -46,10 +46,10 @@
           {formOpen ? "Luk" : "Opret ny ønskeliste"}
         </Button>
       {/if}
-    </AuthAs>
+    </Authenticated>
   </div>
 
-  <AuthAs minRole={AuthRole.Admin}>
+  <Authenticated minRole={AuthRole.Admin}>
     {#if formOpen}
       <div transition:slide={{ duration: 200 }} class="mb-6">
         {#if data.wishlists.length === 0}
@@ -61,7 +61,7 @@
         <WishlistForm {editItem} onsubmit={() => toggleForm()} />
       </div>
     {/if}
-  </AuthAs>
+  </Authenticated>
 
   <div>
     {#if data.wishlists.length !== 0}
@@ -83,13 +83,13 @@
                 </small>
                 <p>{wishlist.description}</p>
               </div>
-              <AuthAs minRole={AuthRole.Admin}>
+              <Authenticated minRole={AuthRole.Admin}>
                 {#if !formOpen}
                   <div class="flex gap-1 self-start">
                     <Button
                       emphasis={InteractionEmphasis.Secondary}
                       class="px-3 py-1 text-sm"
-                      onclick={(e) => {
+                      onclick={(e: MouseEvent) => {
                         e.preventDefault();
                         editItem = wishlist;
                         formOpen = true;
@@ -100,7 +100,7 @@
                     <Button
                       emphasis={InteractionEmphasis.Secondary}
                       class="px-3 py-1 text-sm"
-                      onclick={async (e) => {
+                      onclick={async (e: MouseEvent) => {
                         e.preventDefault();
                         await api.wishlists.delete(wishlist.id);
                         await invalidateAll();
@@ -110,7 +110,7 @@
                     </Button>
                   </div>
                 {/if}
-              </AuthAs>
+              </Authenticated>
             </a>
           </li>
         {/each}

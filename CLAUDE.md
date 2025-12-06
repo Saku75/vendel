@@ -361,9 +361,8 @@ configStore.turnstileSiteKey;
 ### Auth Components
 
 ```svelte
-<Authenticated>          <!-- Show if authenticated -->
-<AuthAs minRole={...}>   <!-- Show if has minimum role -->
-<Unauthenticated>        <!-- Show if NOT authenticated -->
+<AuthenticatedminRole={...}>   <!-- Show if has minimum role -->
+<Unauthenticated>              <!-- Show if NOT authenticated -->
 ```
 
 ### Theme System

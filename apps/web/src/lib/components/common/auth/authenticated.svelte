@@ -1,33 +1,27 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  import { AuthStatus, type AuthRole } from "@app/api/enums";
+  import { AuthStatus, hasRequiredRole, type AuthRole } from "@app/api/enums";
 
   import { getAuthContext } from "$lib/contexts/auth.svelte";
 
   interface Props {
-    role?: AuthRole | AuthRole[];
+    minRole?: AuthRole;
 
     children: Snippet;
   }
 
-  const { role, children }: Props = $props();
+  const { minRole, children }: Props = $props();
 
   const authContext = getAuthContext();
 
   const show = $derived.by(() => {
-    if (authContext.status === AuthStatus.Unauthenticated) return false;
-    if (!role && authContext.status === AuthStatus.Authenticated) return true;
-
-    if (role && !authContext.user?.role) return false;
-    if (
-      role &&
-      (role !== authContext.user?.role ||
-        !role.includes(authContext.user?.role))
-    )
+    if (authContext.status !== AuthStatus.Authenticated) {
       return false;
-
-    return true;
+    }
+    return minRole
+      ? hasRequiredRole(authContext.user?.role ?? null, minRole)
+      : true;
   });
 </script>
 
