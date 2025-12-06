@@ -1,7 +1,7 @@
-import { AuthStatus } from "$lib/enums";
+import type { AuthStatus } from "$lib/enums";
 
-import { AuthAccessToken } from "./tokens/access";
-import { AuthRefreshToken } from "./tokens/refresh";
+import type { AuthAccessToken } from "./tokens/access";
+import type { AuthRefreshToken } from "./tokens/refresh";
 
 type AuthContextAuthenticatedOrExpired = {
   status: AuthStatus.Authenticated | AuthStatus.Expired;

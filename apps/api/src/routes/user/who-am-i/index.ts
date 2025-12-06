@@ -5,7 +5,7 @@ import { users } from "$lib/database/schema/users";
 import { createServer } from "$lib/server";
 import { getAuth, requireAuth } from "$lib/server/middleware/require-auth";
 import { response } from "$lib/server/response";
-import type { WhoAmIResponse } from "$lib/types/routes/user/who-am-i";
+import type { WhoAmIResponse } from "$lib/types";
 
 const whoAmIServer = createServer();
 

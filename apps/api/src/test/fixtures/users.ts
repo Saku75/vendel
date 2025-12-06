@@ -1,6 +1,6 @@
 import { AuthRole } from "$lib/enums/auth/role";
 
-import { TestUser } from "../types/user";
+import type { TestUser } from "../types/user";
 
 const testUsers: Record<string, TestUser> = {
   SuperAdmin: {

@@ -20,10 +20,7 @@ import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
 import { mailService } from "$lib/services/mail";
 import { tokenService } from "$lib/services/token";
-import type {
-  SignUpFinishRequest,
-  SignUpFinishResponse,
-} from "$lib/types/routes/auth/sign-up";
+import type { SignUpFinishRequest, SignUpFinishResponse } from "$lib/types";
 import type { UserConfirmEmailToken } from "$lib/types/user/tokens/confirm-email";
 
 import { signUpSessions } from "./index";

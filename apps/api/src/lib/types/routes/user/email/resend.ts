@@ -1,3 +1,4 @@
+type ResendConfirmEmailRequest = undefined;
 type ResendConfirmEmailResponse = undefined;
 
-export type { ResendConfirmEmailResponse };
+export type { ResendConfirmEmailRequest, ResendConfirmEmailResponse };

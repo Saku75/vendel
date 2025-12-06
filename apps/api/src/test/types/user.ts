@@ -1,4 +1,4 @@
-import { users } from "$lib/database/schema/users";
+import type { users } from "$lib/database/schema/users";
 
 type TestUser = Pick<
   typeof users.$inferSelect,

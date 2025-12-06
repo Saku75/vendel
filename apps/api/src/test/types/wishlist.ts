@@ -1,4 +1,4 @@
-import { wishlists } from "$lib/database/schema/wishlists";
+import type { wishlists } from "$lib/database/schema/wishlists";
 
 type TestWishlist = Pick<
   typeof wishlists.$inferSelect,

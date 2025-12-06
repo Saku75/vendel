@@ -1,5 +1,6 @@
-import { users } from "$lib/database/schema/users";
+import type { users } from "$lib/database/schema/users";
 
+type WhoAmIRequest = undefined;
 type WhoAmIResponse = {
   user: Omit<
     typeof users.$inferSelect,
@@ -10,4 +11,4 @@ type WhoAmIResponse = {
   };
 };
 
-export type { WhoAmIResponse };
+export type { WhoAmIRequest, WhoAmIResponse };

@@ -11,10 +11,7 @@ import { db } from "$lib/database";
 import { users } from "$lib/database/schema/users";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
-import type {
-  SignInStartRequest,
-  SignInStartResponse,
-} from "$lib/types/routes/auth/sign-in";
+import type { SignInStartRequest, SignInStartResponse } from "$lib/types";
 
 import { signInSessions } from "./index";
 

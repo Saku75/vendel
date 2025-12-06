@@ -8,7 +8,7 @@ import type {
   SignInRequest,
   SignInResponse,
   SignInStartResponse,
-} from "$lib/types/routes/auth/sign-in";
+} from "$lib/types";
 
 const signInClient = defineRoute((context) => {
   return async (data: SignInRequest): Promise<ClientResult<SignInResponse>> => {

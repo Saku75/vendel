@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import type { Err, Ok } from "$lib/types/result";
 import type {
+  WishlistsCreateResponse,
+  WishlistsDeleteResponse,
   WishlistsGetResponse,
   WishlistsListResponse,
-} from "$lib/types/routes/wishlists";
+  WishlistsUpdateResponse,
+} from "$lib/types";
+import type { Err, Ok } from "$lib/types/result";
 
 import { testUsers } from "$test/fixtures/users";
 import { testWishlists } from "$test/fixtures/wishlists";
@@ -18,17 +21,17 @@ describe("Wishlists", () => {
 
       expect(response.status).toBe(200);
 
-      const json = (await response.json()) as Ok<WishlistsListResponse>;
+      const json = await response.json<Ok<WishlistsListResponse>>();
       expect(json.status).toBe(200);
       expect(json.data).toBeDefined();
-      expect(json.data!.length).toBe(Object.keys(testWishlists).length);
+      expect(json.data.length).toBe(Object.keys(testWishlists).length);
     });
 
     it("should return wishlists ordered by name", async () => {
       const response = await testFetch("/wishlists");
 
-      const json = (await response.json()) as Ok<WishlistsListResponse>;
-      const names = json.data!.map((w) => w.name);
+      const json = await response.json<Ok<WishlistsListResponse>>();
+      const names = json.data.map((w) => w.name);
 
       expect(names).toEqual([...names].sort());
     });
@@ -42,12 +45,12 @@ describe("Wishlists", () => {
 
       expect(response.status).toBe(200);
 
-      const json = (await response.json()) as Ok<WishlistsGetResponse>;
+      const json = await response.json<Ok<WishlistsGetResponse>>();
       expect(json.status).toBe(200);
       expect(json.data).toBeDefined();
-      expect(json.data!.id).toBe(testWishlists.Birthday.id);
-      expect(json.data!.name).toBe(testWishlists.Birthday.name);
-      expect(json.data!.description).toBe(testWishlists.Birthday.description);
+      expect(json.data.id).toBe(testWishlists.Birthday.id);
+      expect(json.data.name).toBe(testWishlists.Birthday.name);
+      expect(json.data.description).toBe(testWishlists.Birthday.description);
     });
 
     it("should return 404 for non-existent wishlist", async () => {
@@ -55,7 +58,7 @@ describe("Wishlists", () => {
 
       expect(response.status).toBe(404);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
       expect(json.status).toBe(404);
       expect(json.message).toBe("Wishlist not found");
     });
@@ -76,7 +79,7 @@ describe("Wishlists", () => {
 
       expect(response.status).toBe(201);
 
-      const json = (await response.json()) as Ok<undefined>;
+      const json = await response.json<Ok<WishlistsCreateResponse>>();
       expect(json.status).toBe(201);
       expect(json.message).toBe("Wishlist created");
     });
@@ -134,7 +137,7 @@ describe("Wishlists", () => {
 
       expect(response.status).toBe(400);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
       expect(json.status).toBe(400);
       expect(json.errors).toBeDefined();
     });
@@ -158,7 +161,7 @@ describe("Wishlists", () => {
 
       expect(response.status).toBe(200);
 
-      const json = (await response.json()) as Ok<undefined>;
+      const json = await response.json<Ok<WishlistsUpdateResponse>>();
       expect(json.message).toBe("Wishlist updated");
     });
 
@@ -222,7 +225,7 @@ describe("Wishlists", () => {
 
       expect(response.status).toBe(200);
 
-      const json = (await response.json()) as Ok<undefined>;
+      const json = await response.json<Ok<WishlistsDeleteResponse>>();
       expect(json.message).toBe("Wishlist deleted");
 
       const getResponse = await testFetch(

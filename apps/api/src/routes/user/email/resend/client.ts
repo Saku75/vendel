@@ -1,6 +1,6 @@
 import { defineRoute, request } from "$lib/client/route";
 import type { ClientResult } from "$lib/client/types";
-import type { ResendConfirmEmailResponse } from "$lib/types/routes/user/email/resend";
+import type { ResendConfirmEmailResponse } from "$lib/types";
 
 const resendConfirmEmailClient = defineRoute((context) => {
   return async (): Promise<ClientResult<ResendConfirmEmailResponse>> => {

@@ -14,11 +14,12 @@ import { response } from "$lib/server/response";
 import type {
   WishlistsCreateRequest,
   WishlistsCreateResponse,
+  WishlistsDeleteResponse,
   WishlistsGetResponse,
   WishlistsListResponse,
   WishlistsUpdateRequest,
   WishlistsUpdateResponse,
-} from "$lib/types/routes/wishlists";
+} from "$lib/types";
 
 import { wishesServer } from "./wishes";
 
@@ -139,7 +140,7 @@ wishlistsServer.delete("/:wishlistId", requireAdmin(), async (c) => {
     });
   }
 
-  return response(c, {
+  return response<WishlistsDeleteResponse>(c, {
     content: { message: "Wishlist deleted" },
   });
 });

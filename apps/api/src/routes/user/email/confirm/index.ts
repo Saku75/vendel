@@ -9,10 +9,7 @@ import { users } from "$lib/database/schema/users";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
 import { tokenService } from "$lib/services/token";
-import type {
-  ConfirmEmailRequest,
-  ConfirmEmailResponse,
-} from "$lib/types/routes/user/email/confirm";
+import type { ConfirmEmailRequest, ConfirmEmailResponse } from "$lib/types";
 import type { UserConfirmEmailToken } from "$lib/types/user/tokens/confirm-email";
 
 const confirmEmailSchema = object({

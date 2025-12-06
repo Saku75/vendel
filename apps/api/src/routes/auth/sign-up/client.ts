@@ -8,7 +8,7 @@ import type {
   SignUpRequest,
   SignUpResponse,
   SignUpStartResponse,
-} from "$lib/types/routes/auth/sign-up";
+} from "$lib/types";
 
 const signUpClient = defineRoute((context) => {
   return async (data: SignUpRequest): Promise<ClientResult<SignUpResponse>> => {

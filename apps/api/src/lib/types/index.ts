@@ -1,4 +1,5 @@
 export type { Err, Ok, Result } from "./result";
+export type { RefreshRequest, RefreshResponse } from "./routes/auth/refresh";
 export type {
   SignInFinishRequest,
   SignInFinishResponse,
@@ -7,6 +8,7 @@ export type {
   SignInStartRequest,
   SignInStartResponse,
 } from "./routes/auth/sign-in";
+export type { SignOutRequest, SignOutResponse } from "./routes/auth/sign-out";
 export type {
   SignUpFinishRequest,
   SignUpFinishResponse,
@@ -19,13 +21,19 @@ export type {
   ConfirmEmailRequest,
   ConfirmEmailResponse,
 } from "./routes/user/email/confirm";
-export type { ResendConfirmEmailResponse } from "./routes/user/email/resend";
-export type { WhoAmIResponse } from "./routes/user/who-am-i";
+export type {
+  ResendConfirmEmailRequest,
+  ResendConfirmEmailResponse,
+} from "./routes/user/email/resend";
+export type { WhoAmIRequest, WhoAmIResponse } from "./routes/user/who-am-i";
 export type {
   WishlistsCreateRequest,
   WishlistsCreateResponse,
+  WishlistsDeleteRequest,
   WishlistsDeleteResponse,
+  WishlistsGetRequest,
   WishlistsGetResponse,
+  WishlistsListRequest,
   WishlistsListResponse,
   WishlistsUpdateRequest,
   WishlistsUpdateResponse,
@@ -33,8 +41,11 @@ export type {
 export type {
   WishesCreateRequest,
   WishesCreateResponse,
+  WishesDeleteRequest,
   WishesDeleteResponse,
+  WishesGetRequest,
   WishesGetResponse,
+  WishesListRequest,
   WishesListResponse,
   WishesUpdateRequest,
   WishesUpdateResponse,

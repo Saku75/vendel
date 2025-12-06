@@ -22,7 +22,7 @@ class CaptchaService {
       },
     );
 
-    const data = (await result.json()) as { success: boolean };
+    const data = await result.json<{ success: boolean }>();
 
     return data.success;
   }

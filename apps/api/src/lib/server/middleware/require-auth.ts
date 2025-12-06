@@ -1,11 +1,11 @@
-import { Context } from "hono";
+import type { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 
 import { AuthRole, hasRequiredRole } from "$lib/enums/auth/role";
 import { AuthStatus } from "$lib/enums/auth/status";
-import { ServerEnv } from "$lib/server";
+import type { ServerEnv } from "$lib/server";
 import { response } from "$lib/server/response";
-import {
+import type {
   AuthContext,
   AuthContextAuthenticatedOrExpired,
 } from "$lib/types/auth/context";

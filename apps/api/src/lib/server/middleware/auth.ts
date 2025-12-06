@@ -1,10 +1,10 @@
-import { Context } from "hono";
+import type { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 
 import { AuthStatus } from "$lib/enums/auth/status";
-import { ServerEnv } from "$lib/server";
-import { AuthAccessToken } from "$lib/types/auth/tokens/access";
-import { AuthRefreshToken } from "$lib/types/auth/tokens/refresh";
+import type { ServerEnv } from "$lib/server";
+import type { AuthAccessToken } from "$lib/types/auth/tokens/access";
+import type { AuthRefreshToken } from "$lib/types/auth/tokens/refresh";
 import { deleteCookie, getCookieWithToken } from "$lib/utils/cookies";
 
 function clearAuthAndSetUnauthenticated(c: Context<ServerEnv>) {

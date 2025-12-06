@@ -10,7 +10,7 @@ import { wishlistsServer } from "./wishlists";
 const routes = createServer();
 
 routes.get("/", (c) => {
-  return response(c, {
+  return response<undefined>(c, {
     content: {
       message: `Vendel API - ${env.MODE[0].toUpperCase() + env.MODE.slice(1)}`,
     },

@@ -9,6 +9,7 @@ import {
 
 import { users } from "$lib/database/schema/users";
 import { tokenService } from "$lib/services/token";
+import type { ConfirmEmailResponse } from "$lib/types";
 import type { Err, Ok } from "$lib/types/result";
 import type { UserConfirmEmailToken } from "$lib/types/user/tokens/confirm-email";
 
@@ -37,7 +38,7 @@ describe("Confirm Email", () => {
 
       expect(response.status).toBe(200);
 
-      const json = (await response.json()) as Ok;
+      const json = await response.json<Ok<ConfirmEmailResponse>>();
       expect(json.status).toBe(200);
 
       const [user] = await testDatabase
@@ -59,7 +60,7 @@ describe("Confirm Email", () => {
 
       expect(response.status).toBe(400);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
       expect(json.status).toBe(400);
       expect(json.errors).toBeDefined();
     });
@@ -83,7 +84,7 @@ describe("Confirm Email", () => {
 
       expect(response.status).toBe(400);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
       expect(json.status).toBe(400);
       expect(json.message).toBe("Invalid or expired token");
     });
@@ -107,7 +108,7 @@ describe("Confirm Email", () => {
 
       expect(response.status).toBe(400);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
       expect(json.status).toBe(400);
       expect(json.message).toBe("Invalid or expired token");
     });
@@ -131,7 +132,7 @@ describe("Confirm Email", () => {
 
       expect(response.status).toBe(404);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
       expect(json.status).toBe(404);
       expect(json.message).toBe("User not found");
     });

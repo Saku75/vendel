@@ -3,6 +3,7 @@ import { parseString } from "set-cookie-parser";
 import { bytesToBase64 } from "@package/crypto-utils/bytes";
 import { scrypt } from "@package/crypto-utils/scrypt";
 
+import type { SignInStartResponse } from "$lib/types";
 import type { Ok } from "$lib/types/result";
 
 import type { TestUser } from "../types/user";
@@ -18,20 +19,17 @@ async function signInAs(user: TestUser): Promise<string> {
     }),
   });
 
-  const signInStartJson = (await signInStart.json()) as Ok<{
-    sessionId: string;
-    clientSalt: string;
-  }>;
+  const signInStartJson = await signInStart.json<Ok<SignInStartResponse>>();
 
   const passwordClientHash = bytesToBase64(
-    await scrypt(user.password, signInStartJson.data!.clientSalt),
+    await scrypt(user.password, signInStartJson.data.clientSalt),
   );
 
   const signInFinish = await testFetch("/auth/sign-in/finish", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      sessionId: signInStartJson.data!.sessionId,
+      sessionId: signInStartJson.data.sessionId,
       passwordClientHash,
       captcha: "test-captcha-token",
     }),
@@ -52,10 +50,7 @@ async function signInAs(user: TestUser): Promise<string> {
 async function createAuthenticatedFetch(user: TestUser) {
   const cookieHeader = await signInAs(user);
 
-  return function authenticatedFetch(
-    input: RequestInfo | URL,
-    init?: RequestInit,
-  ) {
+  return function authenticatedFetch(input: string, init?: RequestInit) {
     return testFetch(input, {
       ...init,
       headers: {

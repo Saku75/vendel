@@ -1,7 +1,7 @@
 import { getConnInfo } from "hono/cloudflare-workers";
 import { createMiddleware } from "hono/factory";
 
-import { ServerEnv } from "$lib/server";
+import type { ServerEnv } from "$lib/server";
 import { CaptchaService } from "$lib/services/captcha";
 
 const captchaMiddleware = createMiddleware<ServerEnv>(async (c, next) => {

@@ -14,7 +14,7 @@ import { getAuth, requireAuth } from "$lib/server/middleware/require-auth";
 import { response } from "$lib/server/response";
 import { mailService } from "$lib/services/mail";
 import { tokenService } from "$lib/services/token";
-import type { ResendConfirmEmailResponse } from "$lib/types/routes/user/email/resend";
+import type { ResendConfirmEmailResponse } from "$lib/types";
 import type { UserConfirmEmailToken } from "$lib/types/user/tokens/confirm-email";
 
 const resendConfirmEmailServer = createServer();

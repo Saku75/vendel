@@ -6,6 +6,7 @@ import { scrypt } from "@package/crypto-utils/scrypt";
 
 import { users } from "$lib/database/schema/users";
 import { AuthRole } from "$lib/enums/auth/role";
+import type { SignUpFinishResponse, SignUpStartResponse } from "$lib/types";
 import type { Err, Ok } from "$lib/types/result";
 
 import { testUsers } from "$test/fixtures/users";
@@ -31,15 +32,12 @@ describe("Sign-up", () => {
 
       expect(response.status).toBe(201);
 
-      const json = (await response.json()) as Ok<{
-        sessionId: string;
-        clientSalt: string;
-      }>;
+      const json = await response.json<Ok<SignUpStartResponse>>();
 
       expect(json.status).toBe(201);
       expect(json.data).toBeDefined();
-      expect(json.data!.sessionId).toMatch(/^[a-z0-9]{24}$/);
-      expect(json.data!.clientSalt).toMatch(/^[a-f0-9]{64}$/);
+      expect(json.data.sessionId).toMatch(/^[a-z0-9]{24}$/);
+      expect(json.data.clientSalt).toMatch(/^[a-f0-9]{64}$/);
     });
 
     it("should reject if email already exists", async () => {
@@ -54,7 +52,7 @@ describe("Sign-up", () => {
 
       expect(response.status).toBe(400);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
 
       expect(json.status).toBe(400);
       expect(json.errors).toBeDefined();
@@ -74,10 +72,7 @@ describe("Sign-up", () => {
 
       expect(response.status).toBe(201);
 
-      const json = (await response.json()) as Ok<{
-        sessionId: string;
-        clientSalt: string;
-      }>;
+      const json = await response.json<Ok<SignUpStartResponse>>();
 
       expect(json.status).toBe(201);
       expect(json.data).toBeDefined();
@@ -95,7 +90,7 @@ describe("Sign-up", () => {
 
       expect(response.status).toBe(400);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
 
       expect(json.status).toBe(400);
       expect(json.errors).toBeDefined();
@@ -114,7 +109,7 @@ describe("Sign-up", () => {
 
       expect(response.status).toBe(400);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
 
       expect(json.status).toBe(400);
       expect(json.errors).toBeDefined();
@@ -139,13 +134,10 @@ describe("Sign-up", () => {
         }),
       });
 
-      const startJson = (await startResponse.json()) as Ok<{
-        sessionId: string;
-        clientSalt: string;
-      }>;
+      const startJson = await startResponse.json<Ok<SignUpStartResponse>>();
 
-      sessionId = startJson.data!.sessionId;
-      clientSalt = startJson.data!.clientSalt;
+      sessionId = startJson.data.sessionId;
+      clientSalt = startJson.data.clientSalt;
     });
 
     it("should create user and sign them in", async () => {
@@ -166,7 +158,7 @@ describe("Sign-up", () => {
 
       expect(response.status).toBe(201);
 
-      const json = (await response.json()) as Ok;
+      const json = await response.json<Ok<SignUpFinishResponse>>();
 
       expect(json.status).toBe(201);
       expect(json.message).toBe("User signed up");
@@ -209,7 +201,7 @@ describe("Sign-up", () => {
 
       expect(response.status).toBe(400);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
 
       expect(json.status).toBe(400);
       expect(json.errors).toBeDefined();
@@ -246,7 +238,7 @@ describe("Sign-up", () => {
 
       expect(secondResponse.status).toBe(400);
 
-      const json = (await secondResponse.json()) as Err;
+      const json = await secondResponse.json<Err>();
 
       expect(json.status).toBe(400);
       expect(json.errors!.some((e) => e.path[0] === "sessionId")).toBe(true);
@@ -264,7 +256,7 @@ describe("Sign-up", () => {
 
       expect(response.status).toBe(400);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
 
       expect(json.status).toBe(400);
       expect(json.errors).toBeDefined();
@@ -292,20 +284,17 @@ describe("Sign-up", () => {
 
       expect(startResponse.status).toBe(201);
 
-      const startJson = (await startResponse.json()) as Ok<{
-        sessionId: string;
-        clientSalt: string;
-      }>;
+      const startJson = await startResponse.json<Ok<SignUpStartResponse>>();
 
       const passwordClientHash = bytesToBase64(
-        await scrypt(password, startJson.data!.clientSalt),
+        await scrypt(password, startJson.data.clientSalt),
       );
 
       const finishResponse = await testFetch("/auth/sign-up/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sessionId: startJson.data!.sessionId,
+          sessionId: startJson.data.sessionId,
           passwordClientHash,
           captcha: "test-captcha-token",
         }),
@@ -340,20 +329,17 @@ describe("Sign-up", () => {
         }),
       });
 
-      const firstStartJson = (await firstStart.json()) as Ok<{
-        sessionId: string;
-        clientSalt: string;
-      }>;
+      const firstStartJson = await firstStart.json<Ok<SignUpStartResponse>>();
 
       const passwordHash = bytesToBase64(
-        await scrypt("password123", firstStartJson.data!.clientSalt),
+        await scrypt("password123", firstStartJson.data.clientSalt),
       );
 
       await testFetch("/auth/sign-up/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sessionId: firstStartJson.data!.sessionId,
+          sessionId: firstStartJson.data.sessionId,
           passwordClientHash: passwordHash,
           captcha: "test-captcha-token",
         }),
@@ -371,7 +357,7 @@ describe("Sign-up", () => {
 
       expect(secondStart.status).toBe(400);
 
-      const json = (await secondStart.json()) as Err;
+      const json = await secondStart.json<Err>();
 
       expect(json.errors!.some((e) => e.path[0] === "email")).toBe(true);
     });

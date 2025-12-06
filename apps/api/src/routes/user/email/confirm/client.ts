@@ -1,9 +1,6 @@
 import { defineRoute, request } from "$lib/client/route";
 import type { ClientResult } from "$lib/client/types";
-import type {
-  ConfirmEmailRequest,
-  ConfirmEmailResponse,
-} from "$lib/types/routes/user/email/confirm";
+import type { ConfirmEmailRequest, ConfirmEmailResponse } from "$lib/types";
 
 const confirmEmailClient = defineRoute((context) => {
   return async (

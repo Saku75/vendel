@@ -6,7 +6,7 @@ import type {
   SuccessStatusCode,
 } from "hono/utils/http-status";
 import type { JSONValue } from "hono/utils/types";
-import { z } from "zod/mini";
+import type { z } from "zod/mini";
 
 import type { Result } from "$lib/types/result";
 

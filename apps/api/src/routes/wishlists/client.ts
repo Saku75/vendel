@@ -8,7 +8,7 @@ import type {
   WishlistsListResponse,
   WishlistsUpdateRequest,
   WishlistsUpdateResponse,
-} from "$lib/types/routes/wishlists";
+} from "$lib/types";
 
 import { wishesClient } from "./wishes/client";
 

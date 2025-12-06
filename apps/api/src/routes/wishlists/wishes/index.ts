@@ -15,14 +15,14 @@ import { wishlists } from "$lib/database/schema/wishlists";
 import { createServer } from "$lib/server";
 import { requireUser } from "$lib/server/middleware/require-auth";
 import { response } from "$lib/server/response";
-import {
+import type {
   WishesCreateRequest,
   WishesCreateResponse,
+  WishesDeleteResponse,
   WishesUpdateRequest,
   WishesUpdateResponse,
-  type WishesGetResponse,
-  type WishesListResponse,
-} from "$lib/types/routes/wishlists/wishes";
+} from "$lib/types";
+import { type WishesGetResponse, type WishesListResponse } from "$lib/types";
 
 const wishesServer = createServer({});
 
@@ -185,7 +185,7 @@ wishesServer.delete("/:wishlistId/wishes/:wishId", requireUser(), async (c) => {
     .set({ wishesUpdatedAt: new Date() })
     .where(eq(wishlists.id, wishlistId));
 
-  return response(c, {
+  return response<WishesDeleteResponse>(c, {
     content: { message: "Wish deleted successfully" },
   });
 });

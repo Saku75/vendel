@@ -3,13 +3,15 @@ import { parseString } from "set-cookie-parser";
 import { describe, expect, it } from "vitest";
 
 import { bytesToBase64 } from "@package/crypto-utils/bytes";
+import { createId } from "@package/crypto-utils/cuid";
 import { scrypt } from "@package/crypto-utils/scrypt";
 import { TokenPurpose } from "@package/token-service";
 
 import { refreshTokenFamilies } from "$lib/database/schema/refresh-token-families";
 import { refreshTokens } from "$lib/database/schema/refresh-tokens";
-import { AuthRole } from "$lib/enums/auth/role";
+import type { AuthRole } from "$lib/enums/auth/role";
 import { tokenService } from "$lib/services/token";
+import type { RefreshResponse, SignInStartResponse } from "$lib/types";
 import type { AuthAccessToken } from "$lib/types/auth/tokens/access";
 import type { AuthRefreshToken } from "$lib/types/auth/tokens/refresh";
 import type { Err, Ok } from "$lib/types/result";
@@ -30,20 +32,17 @@ async function signInAndGetTokenInfo(
     }),
   });
 
-  const signInStartJson = (await signInStart.json()) as Ok<{
-    sessionId: string;
-    clientSalt: string;
-  }>;
+  const signInStartJson = await signInStart.json<Ok<SignInStartResponse>>();
 
   const passwordClientHash = bytesToBase64(
-    await scrypt(user.password, signInStartJson.data!.clientSalt),
+    await scrypt(user.password, signInStartJson.data.clientSalt),
   );
 
   const signInFinish = await testFetch("/auth/sign-in/finish", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      sessionId: signInStartJson.data!.sessionId,
+      sessionId: signInStartJson.data.sessionId,
       passwordClientHash,
       captcha: "test-captcha-token",
     }),
@@ -92,8 +91,10 @@ async function createExpiringTokens(
     .values({ refreshTokenFamilyId: family.id })
     .returning({ id: refreshTokens.id, expiresAt: refreshTokens.expiresAt });
 
+  const accessTokenId = createId();
+
   const accessTokenResult = await tokenService.create<AuthAccessToken>(
-    { user: { id: user.id, role: user.role as AuthRole } },
+    { id: accessTokenId, user: { id: user.id, role: user.role as AuthRole } },
     {
       purpose: TokenPurpose.Auth,
       expiresAt: Date.now() + 60 * 1000,
@@ -105,7 +106,7 @@ async function createExpiringTokens(
     {
       family: family.id,
       id: refreshTokenRecord.id,
-      accessTokenId: accessTokenResult.id,
+      accessTokenId: accessTokenId,
     },
     {
       purpose: TokenPurpose.Refresh,
@@ -137,7 +138,7 @@ describe("Refresh", () => {
 
       expect(response.status).toBe(200);
 
-      const json = (await response.json()) as Ok;
+      const json = await response.json<Ok<RefreshResponse>>();
       expect(json.status).toBe(200);
       expect(json.message).toBe("Session refresh not required");
     });
@@ -150,7 +151,7 @@ describe("Refresh", () => {
 
       expect(response.status).toBe(401);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
       expect(json.status).toBe(401);
       expect(json.message).toBe("Not authenticated");
     });
@@ -182,7 +183,7 @@ describe("Refresh", () => {
 
       expect(response.status).toBe(200);
 
-      const json = (await response.json()) as Ok;
+      const json = await response.json<Ok<RefreshResponse>>();
       expect(json.message).toBe("Session refreshed");
 
       const originalToken = await testDatabase
@@ -226,7 +227,7 @@ describe("Refresh", () => {
 
       expect(response.status).toBe(401);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
       expect(json.message).toBe("Refresh token invalid");
 
       const family = await testDatabase
@@ -259,7 +260,7 @@ describe("Refresh", () => {
 
       expect(response.status).toBe(401);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
       expect(json.message).toBe("Refresh token family invalid");
     });
 
@@ -284,7 +285,7 @@ describe("Refresh", () => {
 
       expect(response.status).toBe(401);
 
-      const json = (await response.json()) as Err;
+      const json = await response.json<Err>();
       expect(json.message).toBe("Refresh token expired");
     });
   });

@@ -7,6 +7,7 @@ import { scrypt } from "@package/crypto-utils/scrypt";
 
 import { refreshTokenFamilies } from "$lib/database/schema/refresh-token-families";
 import { refreshTokens } from "$lib/database/schema/refresh-tokens";
+import type { SignInStartResponse, SignOutResponse } from "$lib/types";
 import type { Ok } from "$lib/types/result";
 
 import { testUsers } from "$test/fixtures/users";
@@ -25,15 +26,12 @@ describe("Sign-out", () => {
         }),
       });
 
-      const signInStartJson = (await signInStart.json()) as Ok<{
-        sessionId: string;
-        clientSalt: string;
-      }>;
+      const signInStartJson = await signInStart.json<Ok<SignInStartResponse>>();
 
       const passwordClientHash = bytesToBase64(
         await scrypt(
           testUsers.UserOne.password,
-          signInStartJson.data!.clientSalt,
+          signInStartJson.data.clientSalt,
         ),
       );
 
@@ -41,7 +39,7 @@ describe("Sign-out", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sessionId: signInStartJson.data!.sessionId,
+          sessionId: signInStartJson.data.sessionId,
           passwordClientHash,
           captcha: "test-captcha-token",
         }),
@@ -80,7 +78,7 @@ describe("Sign-out", () => {
 
       expect(signOutResponse.status).toBe(200);
 
-      const json = (await signOutResponse.json()) as Ok;
+      const json = await signOutResponse.json<Ok<SignOutResponse>>();
       expect(json.status).toBe(200);
       expect(json.message).toBe("User signed out");
 
@@ -105,7 +103,7 @@ describe("Sign-out", () => {
 
       expect(response.status).toBe(401);
 
-      const json = (await response.json()) as Ok;
+      const json = await response.json<Ok<SignOutResponse>>();
       expect(json.status).toBe(401);
       expect(json.message).toBe("Not authenticated");
     });

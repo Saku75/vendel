@@ -13,10 +13,7 @@ import { db } from "$lib/database";
 import { users } from "$lib/database/schema/users";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
-import type {
-  SignInFinishRequest,
-  SignInFinishResponse,
-} from "$lib/types/routes/auth/sign-in";
+import type { SignInFinishRequest, SignInFinishResponse } from "$lib/types";
 
 import { signInSessions } from "./index";
 

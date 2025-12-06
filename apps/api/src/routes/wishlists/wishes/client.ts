@@ -8,7 +8,7 @@ import type {
   WishesListResponse,
   WishesUpdateRequest,
   WishesUpdateResponse,
-} from "$lib/types/routes/wishlists/wishes";
+} from "$lib/types";
 
 const wishesClient = defineRoute((context) => {
   return {

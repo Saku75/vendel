@@ -1,8 +1,9 @@
-import { Context, Hono } from "hono";
-import { HonoOptions } from "hono/hono-base";
+import type { Context} from "hono";
+import { Hono } from "hono";
+import type { HonoOptions } from "hono/hono-base";
 
-import { CaptchaService } from "$lib/services/captcha";
-import { AuthContext } from "$lib/types/auth/context";
+import type { CaptchaService } from "$lib/services/captcha";
+import type { AuthContext } from "$lib/types/auth/context";
 
 import { response } from "./response";
 
