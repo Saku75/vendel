@@ -16,7 +16,7 @@ function customConfig(): Config[] {
     ]),
 
     js.configs.recommended,
-    ts.configs.recommended,
+    ts.configs.recommendedTypeChecked,
     prettier,
 
     {
@@ -26,10 +26,20 @@ function customConfig(): Config[] {
           ...globals.node,
         },
         parserOptions: {
+          projectService: true,
           tsconfigRootDir: process.cwd(),
         },
       },
-      rules: { "no-undef": "off" },
+      rules: {
+        "no-undef": "off",
+        "@typescript-eslint/consistent-type-imports": [
+          "error",
+          {
+            prefer: "type-imports",
+            fixStyle: "separate-type-imports",
+          },
+        ],
+      },
     },
   );
 }
