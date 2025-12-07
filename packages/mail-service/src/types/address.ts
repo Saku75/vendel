@@ -3,4 +3,4 @@ type MailAddress = {
   address: string;
 };
 
-export { MailAddress };
+export type { MailAddress };

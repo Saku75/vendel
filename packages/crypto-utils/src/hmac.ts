@@ -3,7 +3,7 @@
  * The key is imported once and cached for both signing and verification.
  *
  * @param key - The HMAC secret key
- * @param hash - The hash algorithm to use (SHA-1, SHA-256, SHA-384, SHA-512)
+ * @param hash - The hash algorithm to use (SHA-256, SHA-384, SHA-512)
  */
 function hmac(
   key: Uint8Array,

@@ -8,7 +8,7 @@ const captchaMiddleware = createMiddleware<ServerEnv>(async (c, next) => {
   c.set(
     "captcha",
     new CaptchaService(
-      c.env.TURNSTILE_SECRET_KEY,
+      String(c.env.TURNSTILE_SECRET_KEY),
       getConnInfo(c).remote.address,
     ),
   );

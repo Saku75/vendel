@@ -41,7 +41,7 @@
     },
 
     "lint": {
-      "dependsOn": ["cf-typegen", "@config/eslint#build"],
+      "dependsOn": ["cf-typegen", "^build"],
       "inputs": ["src/**", "eslint.config.js", "tsconfig.json"],
       "outputs": []
     },

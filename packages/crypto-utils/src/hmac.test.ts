@@ -164,17 +164,6 @@ describe("hmac", () => {
       expect(signature.length).toBe(32); // SHA-256 produces 32-byte hash
     });
 
-    it("should work with SHA-1", async () => {
-      const data = new Uint8Array([1, 2, 3, 4, 5]);
-      const signer = hmac(key, "SHA-1");
-
-      const signature = await signer.sign(data);
-      const isValid = await signer.verify(data, signature);
-
-      expect(isValid).toBe(true);
-      expect(signature.length).toBe(20); // SHA-1 produces 20-byte hash
-    });
-
     it("should work with SHA-384", async () => {
       const data = new Uint8Array([1, 2, 3, 4, 5]);
       const signer = hmac(key, "SHA-384");

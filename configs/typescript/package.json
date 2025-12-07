@@ -4,5 +4,9 @@
   "type": "module",
   "devDependencies": {
     "typescript": "^5.9.3"
+  },
+  "exports": {
+    ".": "./src/base.json",
+    "./base": "./src/base.json"
   }
 }

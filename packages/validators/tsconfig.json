@@ -1,4 +1,6 @@
 {
-  "extends": ["@config/typescript/configs/base.json"],
-  "compilerOptions": {}
+  "extends": ["@config/typescript"],
+  "compilerOptions": {
+    "types": ["@cloudflare/vitest-pool-workers"]
+  }
 }

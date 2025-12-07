@@ -11,9 +11,12 @@
     "allowJs": true,
     "skipLibCheck": true,
     "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
 
     "declaration": true,
     "declarationMap": true
   },
-  "exclude": ["./dist/**", "./node_modules/**"]
+  "include": ["${configDir}/src"],
+  "exclude": ["${configDir}/dist", "${configDir}/node_modules"]
 }

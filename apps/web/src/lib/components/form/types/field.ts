@@ -28,8 +28,6 @@ interface TextField extends CommonField {
 
   value?: string;
   initialValue: string;
-
-  validator?: ZodMiniType<string>;
 }
 
 interface NumberField extends CommonField {
@@ -37,8 +35,6 @@ interface NumberField extends CommonField {
 
   value?: number | null;
   initialValue: number | null;
-
-  validator?: ZodMiniType<number | null | undefined>;
 }
 
 interface CaptchaField

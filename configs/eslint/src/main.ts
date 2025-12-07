@@ -1,9 +1,12 @@
 import { includeIgnoreFile } from "@eslint/compat";
 import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
-import { Config, defineConfig, globalIgnores } from "eslint/config";
+import type { Config } from "eslint/config";
+import eslintConfig from "eslint/config";
 import globals from "globals";
 import ts from "typescript-eslint";
+
+const { defineConfig, globalIgnores } = eslintConfig;
 
 function customConfig(): Config[] {
   return defineConfig(
@@ -45,6 +48,17 @@ function customConfig(): Config[] {
       files: ["**/*.d.ts"],
       rules: {
         "@typescript-eslint/consistent-type-imports": "off",
+      },
+    },
+    {
+      files: ["*.config.ts", "*.config.js"],
+      ignores: ["vite.config.ts"],
+      languageOptions: {
+        parserOptions: {
+          projectService: {
+            allowDefaultProject: ["*.config.ts", "*.config.js"],
+          },
+        },
       },
     },
   );

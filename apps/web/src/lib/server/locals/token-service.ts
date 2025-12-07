@@ -5,8 +5,8 @@ import { TokenService } from "@package/token-service";
 
 function createTokenServiceLocal(event: RequestEvent) {
   return new TokenService({
-    encryption: hexToBytes(event.platform!.env.TOKEN_ENCRYPTION_KEY),
-    signing: hexToBytes(event.platform!.env.TOKEN_SIGNING_KEY),
+    encryption: hexToBytes(String(event.platform!.env.TOKEN_ENCRYPTION_KEY)),
+    signing: hexToBytes(String(event.platform!.env.TOKEN_SIGNING_KEY)),
   });
 }
 
