@@ -28,18 +28,18 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.10.13",
+    "@cloudflare/vitest-pool-workers": "^0.10.14",
     "@config/eslint": "workspace:*",
     "@config/typescript": "workspace:*",
     "@types/node": "^24.10.1",
     "@types/set-cookie-parser": "^2.4.10",
-    "drizzle-kit": "^0.31.7",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9.39.1",
     "tsdown": "^0.15.12",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
-    "wrangler": "^4.52.1"
+    "wrangler": "^4.53.0"
   },
   "exports": {
     "./client": {
