@@ -17,6 +17,9 @@
     "declaration": true,
     "declarationMap": true
   },
-  "include": ["${configDir}/src"],
-  "exclude": ["${configDir}/dist", "${configDir}/node_modules"]
+  "include": [
+    "${configDir}/src",
+    "${configDir}/node_modules/@config/typescript/src/types"
+  ],
+  "exclude": ["${configDir}/dist"]
 }

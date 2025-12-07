@@ -13,16 +13,6 @@ export default defineConfig(
   svelte.configs.prettier,
 
   {
-    files: ["eslint.config.js", "svelte.config.ts"],
-    languageOptions: {
-      parserOptions: {
-        projectService: {
-          allowDefaultProject: ["eslint.config.js", "svelte.config.ts"],
-        },
-      },
-    },
-  },
-  {
     files: ["**/*.svelte", "**/*.svelte.ts", "**/*.svelte.js"],
     languageOptions: {
       parserOptions: {

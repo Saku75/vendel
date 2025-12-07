@@ -56,8 +56,15 @@ function customConfig(): Config[] {
       languageOptions: {
         parserOptions: {
           projectService: {
-            allowDefaultProject: ["*.config.ts", "*.config.js"],
+            allowDefaultProject: [
+              "eslint.config.js",
+              "svelte.config.ts",
+              "vitest.config.ts",
+              "tsdown.config.ts",
+              "drizzle.config.ts",
+            ],
           },
+          tsconfigRootDir: process.cwd(),
         },
       },
     },
