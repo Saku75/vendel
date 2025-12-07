@@ -85,7 +85,7 @@ function getCookie(c: ServerContext, name: string): string | undefined {
 }
 
 function deleteCookie(c: ServerContext, name: string): void {
-  honoDeleteCookie(c, buildCookieName(name));
+  honoDeleteCookie(c, buildCookieName(name), getDefaultCookieOptions());
 }
 
 export {
