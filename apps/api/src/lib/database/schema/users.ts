@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import type { AnySQLiteColumn } from "drizzle-orm/sqlite-core";
-import { blob, int, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import { createId } from "@package/crypto-utils/cuid";
 
@@ -16,12 +16,6 @@ const users = sqliteTable("users", {
   firstName: text({ length: 64 }).notNull(),
   middleName: text({ length: 256 }),
   lastName: text({ length: 64 }),
-
-  email: text({ length: 320 }).notNull().unique(),
-  emailVerified: int({ mode: "boolean" }).notNull().default(false),
-  password: blob({ mode: "buffer" }).notNull(),
-  clientSalt: text({ length: 64 }).notNull(),
-  serverSalt: text({ length: 64 }).notNull(),
 
   role: text({
     length: 16,
