@@ -27,4 +27,15 @@ export default defineConfig(
       "@typescript-eslint/no-unsafe-assignment": "off",
     },
   },
+
+  {
+    files: ["eslint.config.js", "svelte.config.js"],
+    languageOptions: {
+      parserOptions: {
+        projectService: {
+          allowDefaultProject: ["eslint.config.js", "svelte.config.ts"],
+        },
+      },
+    },
+  },
 );

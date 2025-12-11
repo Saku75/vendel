@@ -19,6 +19,8 @@
   },
   "include": [
     "${configDir}/src",
+    "${configDir}/*.config.js",
+    "${configDir}/*.config.ts",
     "${configDir}/node_modules/@config/typescript/src/types"
   ],
   "exclude": ["${configDir}/dist"]

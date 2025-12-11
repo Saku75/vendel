@@ -50,24 +50,6 @@ function customConfig(): Config[] {
         "@typescript-eslint/consistent-type-imports": "off",
       },
     },
-    {
-      files: ["*.config.ts", "*.config.js"],
-      ignores: ["vite.config.ts"],
-      languageOptions: {
-        parserOptions: {
-          projectService: {
-            allowDefaultProject: [
-              "eslint.config.js",
-              "svelte.config.ts",
-              "vitest.config.ts",
-              "tsdown.config.ts",
-              "drizzle.config.ts",
-            ],
-          },
-          tsconfigRootDir: process.cwd(),
-        },
-      },
-    },
   );
 }
 
