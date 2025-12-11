@@ -1,3 +1,5 @@
+import { waitUntil } from "cloudflare:workers";
+import { inArray } from "drizzle-orm";
 import { object } from "zod/mini";
 
 import { base64ToBytes } from "@package/crypto-utils/bytes";
@@ -18,6 +20,7 @@ import { db } from "$lib/database";
 import { userEmails } from "$lib/database/schema/user-emails";
 import { userPasswords } from "$lib/database/schema/user-passwords";
 import { users } from "$lib/database/schema/users";
+import { AuthRole } from "$lib/enums/auth/role";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
 import { mailService } from "$lib/services/mail";
@@ -124,12 +127,24 @@ signUpFinishServer.post("/", async (c) => {
       name: session.firstName,
       address: session.email,
     },
-    template: MailTemplate.ConfirmEmail,
+    template: MailTemplate.Welcome,
     data: {
       name: session.firstName,
       token: confirmEmailToken.token,
     },
   });
+
+  const newUserName = [session.firstName, session.middleName, session.lastName]
+    .filter(Boolean)
+    .join(" ");
+
+  waitUntil(
+    sendApprovalRequestEmails({
+      userId: user.id,
+      userName: newUserName,
+      userEmail: session.email,
+    }),
+  );
 
   await signIn(c, { userId: user.id, userRole: user.role });
 
@@ -138,5 +153,52 @@ signUpFinishServer.post("/", async (c) => {
     content: { message: "User signed up" },
   });
 });
+
+async function sendApprovalRequestEmails(newUser: {
+  userId: string;
+  userName: string;
+  userEmail: string;
+}) {
+  const adminUsers = await db
+    .select({ id: users.id, firstName: users.firstName })
+    .from(users)
+    .where(inArray(users.role, [AuthRole.Admin, AuthRole.SuperAdmin]));
+
+  const adminEmails = await db
+    .select({
+      userId: userEmails.userId,
+      email: userEmails.email,
+    })
+    .from(userEmails)
+    .where(
+      inArray(
+        userEmails.userId,
+        adminUsers.map((a) => a.id),
+      ),
+    );
+
+  const emailPromises = adminUsers
+    .map((admin) => {
+      const adminEmail = adminEmails.find((e) => e.userId === admin.id);
+      if (!adminEmail) return null;
+
+      return mailService.send({
+        to: {
+          name: admin.firstName,
+          address: adminEmail.email,
+        },
+        template: MailTemplate.ApprovalRequest,
+        data: {
+          adminName: admin.firstName,
+          userId: newUser.userId,
+          userName: newUser.userName,
+          userEmail: newUser.userEmail,
+        },
+      });
+    })
+    .filter((p) => p !== null);
+
+  await Promise.all(emailPromises);
+}
 
 export { signUpFinishSchema, signUpFinishServer };

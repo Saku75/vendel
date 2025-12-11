@@ -74,7 +74,7 @@ resendConfirmEmailServer.post("/", requireAuth(), async (c) => {
       name: user.firstName,
       address: primaryEmail.email,
     },
-    template: MailTemplate.ConfirmEmail,
+    template: MailTemplate.ConfirmEmailResend,
     data: {
       name: user.firstName,
       token: confirmEmailToken.token,

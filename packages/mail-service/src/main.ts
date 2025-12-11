@@ -1,10 +1,15 @@
 import type { CreateEmailOptions, CreateEmailResponse } from "resend";
 
 import { MailTemplate } from "./enums/template";
-import { templateConfirmEmail } from "./templates/confirm-email";
+import { templateApprovalRequest } from "./templates/approval-request";
+import {
+  templateConfirmEmailNew,
+  templateConfirmEmailResend,
+} from "./templates/confirm-email";
 import { MailTemplatePlaceholder } from "./templates/enums/placeholder";
 import type { MailTemplateBuiltInPlaceholders } from "./templates/types/built-in-placeholders";
 import type { MailTemplateStructure } from "./templates/types/structure";
+import { templateWelcome } from "./templates/welcome";
 import type { MailAddress } from "./types/address";
 import type {
   MailOptions,
@@ -86,8 +91,17 @@ class MailService {
     let templateContent: MailTemplateStructure;
 
     switch (template) {
-      case MailTemplate.ConfirmEmail:
-        templateContent = templateConfirmEmail;
+      case MailTemplate.Welcome:
+        templateContent = templateWelcome;
+        break;
+      case MailTemplate.ConfirmEmailNew:
+        templateContent = templateConfirmEmailNew;
+        break;
+      case MailTemplate.ConfirmEmailResend:
+        templateContent = templateConfirmEmailResend;
+        break;
+      case MailTemplate.ApprovalRequest:
+        templateContent = templateApprovalRequest;
         break;
       default:
         throw new Error(`Mail: Unknown template: ${String(template)}`);
