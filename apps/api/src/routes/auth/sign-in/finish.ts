@@ -10,6 +10,8 @@ import { passwordHashValidator } from "@package/validators/password";
 
 import { signIn } from "$lib/auth/flows/sign-in";
 import { db } from "$lib/database";
+import { userEmails } from "$lib/database/schema/user-emails";
+import { userPasswords } from "$lib/database/schema/user-passwords";
 import { users } from "$lib/database/schema/users";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
@@ -71,32 +73,47 @@ signInFinishServer.post("/", async (c) => {
     });
   }
 
-  const passwordServerHash = await scrypt(
-    base64ToBytes(data.passwordClientHash),
-    session.serverSalt,
-  );
+  const [passwordServerHash, credentials] = await Promise.all([
+    scrypt(base64ToBytes(data.passwordClientHash), session.serverSalt),
+    db
+      .select({
+        userId: users.id,
+        role: users.role,
+        passwordHash: userPasswords.passwordHash,
+      })
+      .from(userEmails)
+      .innerJoin(users, eq(users.id, userEmails.userId))
+      .innerJoin(
+        userPasswords,
+        and(
+          eq(userPasswords.userId, users.id),
+          eq(userPasswords.current, true),
+        ),
+      )
+      .where(eq(userEmails.email, session.email))
+      .get(),
+    signInSessions.delete(data.sessionId),
+  ]);
 
-  const [user] = await db
-    .select({ id: users.id, role: users.role })
-    .from(users)
-    .where(
-      and(
-        eq(users.email, session.email),
-        eq(users.password, Buffer.from(passwordServerHash)),
-      ),
-    )
-    .limit(1);
-
-  await signInSessions.delete(data.sessionId);
-
-  if (!user) {
+  if (!credentials) {
     return response(c, {
       status: 401,
       content: { message: "Invalid email or password" },
     });
   }
 
-  await signIn(c, { userId: user.id, userRole: user.role });
+  const passwordMatches = Buffer.from(passwordServerHash).equals(
+    credentials.passwordHash,
+  );
+
+  if (!passwordMatches) {
+    return response(c, {
+      status: 401,
+      content: { message: "Invalid email or password" },
+    });
+  }
+
+  await signIn(c, { userId: credentials.userId, userRole: credentials.role });
 
   return response<SignInFinishResponse>(c, {
     status: 200,

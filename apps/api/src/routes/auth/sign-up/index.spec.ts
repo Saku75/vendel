@@ -4,6 +4,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { bytesToBase64 } from "@package/crypto-utils/bytes";
 import { scrypt } from "@package/crypto-utils/scrypt";
 
+import { userEmails } from "$lib/database/schema/user-emails";
+import { userPasswords } from "$lib/database/schema/user-passwords";
 import { users } from "$lib/database/schema/users";
 import { AuthRole } from "$lib/enums/auth/role";
 import type { SignUpFinishResponse, SignUpStartResponse } from "$lib/types";
@@ -46,7 +48,7 @@ describe("Sign-up", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...validPayload,
-          email: testUsers.UserOne.email,
+          email: testUsers.UserOne.emails[0].email,
         }),
       });
 
@@ -168,19 +170,36 @@ describe("Sign-up", () => {
       expect(cookies).toContain("access");
       expect(cookies).toContain("refresh");
 
-      const [user] = await testDatabase
+      const email = await testDatabase
+        .select()
+        .from(userEmails)
+        .where(eq(userEmails.email, "test.user@example.com"))
+        .get();
+
+      expect(email).toBeDefined();
+      expect(email!.verified).toBe(false);
+      expect(email!.primary).toBe(true);
+
+      const user = await testDatabase
         .select()
         .from(users)
-        .where(eq(users.email, "test.user@example.com"));
+        .where(eq(users.id, email!.userId))
+        .get();
 
       expect(user).toBeDefined();
-      expect(user.firstName).toBe("Test");
-      expect(user.middleName).toBe("M");
-      expect(user.lastName).toBe("User");
-      expect(user.email).toBe("test.user@example.com");
-      expect(user.role).toBe(AuthRole.Guest);
-      expect(user.emailVerified).toBe(false);
-      expect(user.password).toBeInstanceOf(Buffer);
+      expect(user!.firstName).toBe("Test");
+      expect(user!.middleName).toBe("M");
+      expect(user!.lastName).toBe("User");
+      expect(user!.role).toBe(AuthRole.Guest);
+
+      const userPassword = await testDatabase
+        .select()
+        .from(userPasswords)
+        .where(eq(userPasswords.userId, user!.id))
+        .get();
+
+      expect(userPassword).toBeDefined();
+      expect(userPassword!.passwordHash).toBeInstanceOf(Buffer);
     });
 
     it("should reject with invalid session", async () => {
@@ -302,14 +321,23 @@ describe("Sign-up", () => {
 
       expect(finishResponse.status).toBe(201);
 
-      const [user] = await testDatabase
+      const userEmail = await testDatabase
+        .select()
+        .from(userEmails)
+        .where(eq(userEmails.email, email))
+        .get();
+
+      expect(userEmail).toBeDefined();
+
+      const user = await testDatabase
         .select()
         .from(users)
-        .where(eq(users.email, email));
+        .where(eq(users.id, userEmail!.userId))
+        .get();
 
       expect(user).toBeDefined();
-      expect(user.firstName).toBe("Full");
-      expect(user.lastName).toBe("Flow");
+      expect(user!.firstName).toBe("Full");
+      expect(user!.lastName).toBe("Flow");
 
       const cookies = finishResponse.headers.get("set-cookie");
       expect(cookies).toContain("access");

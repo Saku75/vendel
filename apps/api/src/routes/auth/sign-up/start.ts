@@ -13,7 +13,7 @@ import {
 } from "@package/validators/name";
 
 import { db } from "$lib/database";
-import { users } from "$lib/database/schema/users";
+import { userEmails } from "$lib/database/schema/user-emails";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
 import type { SignUpStartRequest, SignUpStartResponse } from "$lib/types";
@@ -46,13 +46,13 @@ signUpStartServer.post("/", async (c) => {
 
   const { data } = parsedBody;
 
-  const existingUser = await db
-    .select({ id: users.id })
-    .from(users)
-    .where(eq(users.email, data.email))
-    .limit(1);
+  const existingEmail = await db
+    .select({ id: userEmails.id })
+    .from(userEmails)
+    .where(eq(userEmails.email, data.email))
+    .get();
 
-  if (existingUser.length > 0) {
+  if (existingEmail) {
     return response(c, {
       status: 400,
       content: {

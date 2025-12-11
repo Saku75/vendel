@@ -27,7 +27,7 @@ async function signInAndGetTokenInfo(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      email: user.email,
+      email: user.emails[0].email,
       captcha: "test-captcha-token",
     }),
   });
@@ -57,7 +57,7 @@ async function signInAndGetTokenInfo(
     .filter((cookie) => !cookie.endsWith("="))
     .join("; ");
 
-  const [refreshToken] = await testDatabase
+  const refreshToken = await testDatabase
     .select({
       id: refreshTokens.id,
       familyId: refreshTokens.refreshTokenFamilyId,
@@ -69,7 +69,7 @@ async function signInAndGetTokenInfo(
     )
     .where(eq(refreshTokenFamilies.userId, user.id))
     .orderBy(refreshTokens.createdAt)
-    .limit(1);
+    .get();
 
   return {
     cookieHeader,
@@ -81,15 +81,17 @@ async function signInAndGetTokenInfo(
 async function createExpiringTokens(
   user: (typeof testUsers)[keyof typeof testUsers],
 ) {
-  const [family] = await testDatabase
+  const family = await testDatabase
     .insert(refreshTokenFamilies)
     .values({ userId: user.id })
-    .returning({ id: refreshTokenFamilies.id });
+    .returning({ id: refreshTokenFamilies.id })
+    .get();
 
-  const [refreshTokenRecord] = await testDatabase
+  const refreshTokenRecord = await testDatabase
     .insert(refreshTokens)
     .values({ refreshTokenFamilyId: family.id })
-    .returning({ id: refreshTokens.id, expiresAt: refreshTokens.expiresAt });
+    .returning({ id: refreshTokens.id, expiresAt: refreshTokens.expiresAt })
+    .get();
 
   const accessTokenId = createId();
 

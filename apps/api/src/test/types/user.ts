@@ -1,4 +1,10 @@
+import type { userEmails } from "$lib/database/schema/user-emails";
 import type { users } from "$lib/database/schema/users";
+
+type TestUserEmail = Pick<
+  typeof userEmails.$inferSelect,
+  "email" | "verified" | "primary"
+>;
 
 type TestUser = Pick<
   typeof users.$inferSelect,
@@ -6,13 +12,12 @@ type TestUser = Pick<
   | "firstName"
   | "middleName"
   | "lastName"
-  | "email"
-  | "emailVerified"
   | "role"
   | "approved"
   | "approvedBy"
 > & {
+  emails: TestUserEmail[];
   password: string;
 };
 
-export type { TestUser };
+export type { TestUser, TestUserEmail };

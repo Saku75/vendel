@@ -2,14 +2,15 @@ import { AuthRole } from "$lib/enums/auth/role";
 
 import type { TestUser } from "../types/user";
 
-const testUsers: Record<string, TestUser> = {
+const testUsers = {
   SuperAdmin: {
     id: "super_admin-id",
     firstName: "Super",
     middleName: null,
     lastName: "Admin",
-    email: "super_admin@example.com",
-    emailVerified: true,
+    emails: [
+      { email: "super_admin@example.com", verified: true, primary: true },
+    ],
     password: "super_admin-password",
     role: AuthRole.SuperAdmin,
     approved: true,
@@ -20,8 +21,7 @@ const testUsers: Record<string, TestUser> = {
     firstName: "Admin",
     middleName: null,
     lastName: "One",
-    email: "admin_one@example.com",
-    emailVerified: true,
+    emails: [{ email: "admin_one@example.com", verified: true, primary: true }],
     password: "admin_one-password",
     role: AuthRole.Admin,
     approved: true,
@@ -32,8 +32,7 @@ const testUsers: Record<string, TestUser> = {
     firstName: "User",
     middleName: null,
     lastName: "One",
-    email: "user_one@example.com",
-    emailVerified: true,
+    emails: [{ email: "user_one@example.com", verified: true, primary: true }],
     password: "user_one-password",
     role: AuthRole.User,
     approved: true,
@@ -44,13 +43,12 @@ const testUsers: Record<string, TestUser> = {
     firstName: "User",
     middleName: null,
     lastName: "Two",
-    email: "user_two@example.com",
-    emailVerified: false,
+    emails: [{ email: "user_two@example.com", verified: false, primary: true }],
     password: "user_two-password",
     role: AuthRole.Guest,
     approved: false,
     approvedBy: null,
   },
-} as const;
+} as const satisfies Record<string, TestUser>;
 
 export { testUsers };

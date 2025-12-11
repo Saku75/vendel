@@ -20,7 +20,7 @@ describe("Resend Confirm Email", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: testUsers.UserTwo.email,
+          email: testUsers.UserTwo.emails[0].email,
           captcha: "test-captcha-token",
         }),
       });
@@ -73,7 +73,7 @@ describe("Resend Confirm Email", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: testUsers.UserOne.email,
+          email: testUsers.UserOne.emails[0].email,
           captcha: "test-captcha-token",
         }),
       });

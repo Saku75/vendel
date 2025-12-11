@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import { db } from "$lib/database";
+import { userEmails } from "$lib/database/schema/user-emails";
 import { users } from "$lib/database/schema/users";
 import { createServer } from "$lib/server";
 import { getAuth, requireAuth } from "$lib/server/middleware/require-auth";
@@ -12,21 +13,29 @@ const whoAmIServer = createServer();
 whoAmIServer.get("/", requireAuth(), async (c) => {
   const auth = getAuth(c);
 
-  const user = await db
-    .select({
-      id: users.id,
-      firstName: users.firstName,
-      middleName: users.middleName,
-      lastName: users.lastName,
-      email: users.email,
-      emailVerified: users.emailVerified,
-      role: users.role,
-      approved: users.approved,
-      approvedBy: users.approvedBy,
-    })
-    .from(users)
-    .where(eq(users.id, auth.access.user.id))
-    .get();
+  const [user, emails] = await Promise.all([
+    db
+      .select({
+        id: users.id,
+        firstName: users.firstName,
+        middleName: users.middleName,
+        lastName: users.lastName,
+        role: users.role,
+        approved: users.approved,
+        approvedBy: users.approvedBy,
+      })
+      .from(users)
+      .where(eq(users.id, auth.access.user.id))
+      .get(),
+    db
+      .select({
+        email: userEmails.email,
+        verified: userEmails.verified,
+        primary: userEmails.primary,
+      })
+      .from(userEmails)
+      .where(eq(userEmails.userId, auth.access.user.id)),
+  ]);
 
   if (!user) {
     return response(c, {
@@ -38,7 +47,10 @@ whoAmIServer.get("/", requireAuth(), async (c) => {
   return response<WhoAmIResponse>(c, {
     status: 200,
     content: {
-      data: { user, session: { expiresAt: auth.access.expiresAt } },
+      data: {
+        user: { ...user, emails },
+        session: { expiresAt: auth.access.expiresAt },
+      },
     },
   });
 });

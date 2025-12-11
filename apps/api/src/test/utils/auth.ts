@@ -10,11 +10,16 @@ import type { TestUser } from "../types/user";
 import { testFetch } from "./fetch";
 
 async function signInAs(user: TestUser): Promise<string> {
+  const primaryEmail = user.emails.find((e) => e.primary)?.email;
+  if (!primaryEmail) {
+    throw new Error("Test user has no primary email");
+  }
+
   const signInStart = await testFetch("/auth/sign-in/start", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      email: user.email,
+      email: primaryEmail,
       captcha: "test-captcha-token",
     }),
   });

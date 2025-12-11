@@ -8,7 +8,8 @@ import { captchaValidator } from "@package/validators/captcha";
 import { emailValidator } from "@package/validators/email";
 
 import { db } from "$lib/database";
-import { users } from "$lib/database/schema/users";
+import { userEmails } from "$lib/database/schema/user-emails";
+import { userPasswords } from "$lib/database/schema/user-passwords";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
 import type { SignInStartRequest, SignInStartResponse } from "$lib/types";
@@ -52,26 +53,30 @@ signInStartServer.post("/", async (c) => {
     });
   }
 
-  const [user] = await db
+  const credentials = await db
     .select({
-      id: users.id,
-      clientSalt: users.clientSalt,
-      serverSalt: users.serverSalt,
+      clientSalt: userPasswords.clientSalt,
+      serverSalt: userPasswords.serverSalt,
     })
-    .from(users)
-    .where(eq(users.email, data.email))
-    .limit(1);
+    .from(userEmails)
+    .innerJoin(userPasswords, eq(userPasswords.userId, userEmails.userId))
+    .where(eq(userEmails.email, data.email))
+    .get();
 
   const sessionId = createId();
-  const userExists = !!user;
+  const userExists = !!credentials;
 
   const sessionData = {
     email: data.email,
-    serverSalt: userExists ? user.serverSalt : bytesToHex(randomBytes(32)),
+    serverSalt: userExists
+      ? credentials.serverSalt
+      : bytesToHex(randomBytes(32)),
     captchaIdempotencyKey,
   };
 
-  const clientSalt = userExists ? user.clientSalt : bytesToHex(randomBytes(32));
+  const clientSalt = userExists
+    ? credentials.clientSalt
+    : bytesToHex(randomBytes(32));
 
   await signInSessions.set(sessionId, sessionData, { expirationTtl: 60 });
 

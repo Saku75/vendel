@@ -18,15 +18,17 @@ async function signIn(
   c: ServerContext,
   { userId, userRole }: { userId: string; userRole: AuthRole },
 ): Promise<void> {
-  const [refreshTokenFamily] = await db
+  const refreshTokenFamily = await db
     .insert(refreshTokenFamilies)
     .values({ userId })
-    .returning({ id: refreshTokenFamilies.id });
+    .returning({ id: refreshTokenFamilies.id })
+    .get();
 
-  const [refreshToken] = await db
+  const refreshToken = await db
     .insert(refreshTokens)
     .values({ refreshTokenFamilyId: refreshTokenFamily.id })
-    .returning({ id: refreshTokens.id, expiresAt: refreshTokens.expiresAt });
+    .returning({ id: refreshTokens.id, expiresAt: refreshTokens.expiresAt })
+    .get();
 
   const expiresAt = refreshToken.expiresAt.valueOf();
 

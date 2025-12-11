@@ -21,7 +21,7 @@ describe("Sign-out", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: testUsers.UserOne.email,
+          email: testUsers.UserOne.emails[0].email,
           captcha: "test-captcha-token",
         }),
       });
@@ -55,7 +55,7 @@ describe("Sign-out", () => {
         .filter((cookie) => !cookie.endsWith("="))
         .join("; ");
 
-      const [tokenFamily] = await testDatabase
+      const tokenFamily = await testDatabase
         .select({ id: refreshTokenFamilies.id })
         .from(refreshTokenFamilies)
         .innerJoin(
@@ -64,7 +64,7 @@ describe("Sign-out", () => {
         )
         .where(eq(refreshTokenFamilies.userId, testUsers.UserOne.id))
         .orderBy(refreshTokenFamilies.createdAt)
-        .limit(1);
+        .get();
 
       expect(tokenFamily).toBeDefined();
 
@@ -90,7 +90,7 @@ describe("Sign-out", () => {
       const deletedFamily = await testDatabase
         .select()
         .from(refreshTokenFamilies)
-        .where(eq(refreshTokenFamilies.id, tokenFamily.id));
+        .where(eq(refreshTokenFamilies.id, tokenFamily!.id));
 
       expect(deletedFamily.length).toBe(0);
     });

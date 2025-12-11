@@ -17,7 +17,7 @@ describe("Who Am I", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: testUsers.UserOne.email,
+          email: testUsers.UserOne.emails[0].email,
           captcha: "test-captcha-token",
         }),
       });
@@ -68,13 +68,21 @@ describe("Who Am I", () => {
       expect(json.status).toBe(200);
       expect(json.data).toBeDefined();
       expect(json.data.user.id).toBe(testUsers.UserOne.id);
-      expect(json.data.user.email).toBe(testUsers.UserOne.email);
       expect(json.data.user.firstName).toBe(testUsers.UserOne.firstName);
       expect(json.data.user.role).toBe(testUsers.UserOne.role);
-      expect(json.data.user.emailVerified).toBe(
-        testUsers.UserOne.emailVerified,
-      );
       expect(json.data.user.approved).toBe(testUsers.UserOne.approved);
+
+      expect(json.data.user.emails).toBeDefined();
+      expect(json.data.user.emails).toHaveLength(1);
+      expect(json.data.user.emails[0].email).toBe(
+        testUsers.UserOne.emails[0].email,
+      );
+      expect(json.data.user.emails[0].verified).toBe(
+        testUsers.UserOne.emails[0].verified,
+      );
+      expect(json.data.user.emails[0].primary).toBe(
+        testUsers.UserOne.emails[0].primary,
+      );
     });
 
     it("should return 401 if not authenticated", async () => {

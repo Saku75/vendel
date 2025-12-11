@@ -16,7 +16,7 @@ import { testFetch } from "$test/utils/fetch";
 describe("Sign-in", () => {
   describe("POST /auth/sign-in/start", () => {
     const validPayload = {
-      email: testUsers.UserOne.email,
+      email: testUsers.UserOne.emails[0].email,
       captcha: "test-captcha-token",
     };
 
@@ -104,7 +104,7 @@ describe("Sign-in", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: testUsers.UserOne.email,
+          email: testUsers.UserOne.emails[0].email,
           captcha: "test-captcha-token",
         }),
       });
@@ -324,7 +324,7 @@ describe("Sign-in", () => {
 
   describe("Full sign-in flow", () => {
     it("should complete full sign-in flow successfully", async () => {
-      const email = testUsers.UserOne.email;
+      const email = testUsers.UserOne.emails[0].email;
       const password = testUsers.UserOne.password;
 
       const startResponse = await testFetch("/auth/sign-in/start", {

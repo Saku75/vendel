@@ -1,11 +1,11 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { object } from "zod/mini";
 
 import { TokenPurpose } from "@package/token-service";
 import { tokenValidator } from "@package/validators/token";
 
 import { db } from "$lib/database";
-import { users } from "$lib/database/schema/users";
+import { userEmails } from "$lib/database/schema/user-emails";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
 import { tokenService } from "$lib/services/token";
@@ -53,18 +53,19 @@ confirmEmailServer.post("/", async (c) => {
     });
   }
 
-  const { userId } = tokenResult.token.data;
+  const { userId, email } = tokenResult.token.data;
 
-  const [user] = await db
-    .update(users)
-    .set({ emailVerified: true, updatedAt: new Date() })
-    .where(eq(users.id, userId))
-    .returning({ id: users.id });
+  const userEmail = await db
+    .update(userEmails)
+    .set({ verified: true })
+    .where(and(eq(userEmails.userId, userId), eq(userEmails.email, email)))
+    .returning({ id: userEmails.id })
+    .get();
 
-  if (!user) {
+  if (!userEmail) {
     return response(c, {
       status: 404,
-      content: { message: "User not found" },
+      content: { message: "Email not found" },
     });
   }
 

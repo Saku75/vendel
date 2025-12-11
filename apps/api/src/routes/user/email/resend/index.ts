@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { MailTemplate } from "@package/mail-service";
 import {
@@ -8,6 +8,7 @@ import {
 } from "@package/token-service";
 
 import { db } from "$lib/database";
+import { userEmails } from "$lib/database/schema/user-emails";
 import { users } from "$lib/database/schema/users";
 import { createServer } from "$lib/server";
 import { getAuth, requireAuth } from "$lib/server/middleware/require-auth";
@@ -22,24 +23,38 @@ const resendConfirmEmailServer = createServer();
 resendConfirmEmailServer.post("/", requireAuth(), async (c) => {
   const auth = getAuth(c);
 
-  const [user] = await db
-    .select({
-      id: users.id,
-      firstName: users.firstName,
-      email: users.email,
-      emailVerified: users.emailVerified,
-    })
-    .from(users)
-    .where(eq(users.id, auth.access.user.id));
+  const [user, primaryEmail] = await Promise.all([
+    db
+      .select({
+        id: users.id,
+        firstName: users.firstName,
+      })
+      .from(users)
+      .where(eq(users.id, auth.access.user.id))
+      .get(),
+    db
+      .select({
+        email: userEmails.email,
+        verified: userEmails.verified,
+      })
+      .from(userEmails)
+      .where(
+        and(
+          eq(userEmails.userId, auth.access.user.id),
+          eq(userEmails.primary, true),
+        ),
+      )
+      .get(),
+  ]);
 
-  if (!user) {
+  if (!user || !primaryEmail) {
     return response(c, {
       status: 404,
       content: { message: "User not found" },
     });
   }
 
-  if (user.emailVerified) {
+  if (primaryEmail.verified) {
     return response(c, {
       status: 400,
       content: { message: "Email already verified" },
@@ -47,7 +62,7 @@ resendConfirmEmailServer.post("/", requireAuth(), async (c) => {
   }
 
   const confirmEmailToken = await tokenService.create<UserConfirmEmailToken>(
-    { userId: user.id },
+    { userId: user.id, email: primaryEmail.email },
     {
       purpose: TokenPurpose.ConfirmEmail,
       expiresAt: TokenService.getExpiresAt(TokenExpiresIn.OneDay),
@@ -57,7 +72,7 @@ resendConfirmEmailServer.post("/", requireAuth(), async (c) => {
   await mailService.send({
     to: {
       name: user.firstName,
-      address: user.email,
+      address: primaryEmail.email,
     },
     template: MailTemplate.ConfirmEmail,
     data: {

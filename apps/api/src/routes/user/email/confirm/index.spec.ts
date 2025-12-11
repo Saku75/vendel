@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -7,7 +7,7 @@ import {
   TokenService,
 } from "@package/token-service";
 
-import { users } from "$lib/database/schema/users";
+import { userEmails } from "$lib/database/schema/user-emails";
 import { tokenService } from "$lib/services/token";
 import type { ConfirmEmailResponse } from "$lib/types";
 import type { Err, Ok } from "$lib/types/result";
@@ -21,7 +21,10 @@ describe("Confirm Email", () => {
   describe("POST /user/email/confirm", () => {
     it("should confirm email with valid token", async () => {
       const token = await tokenService.create<UserConfirmEmailToken>(
-        { userId: testUsers.UserTwo.id },
+        {
+          userId: testUsers.UserTwo.id,
+          email: testUsers.UserTwo.emails[0].email,
+        },
         {
           purpose: TokenPurpose.ConfirmEmail,
           expiresAt: TokenService.getExpiresAt(TokenExpiresIn.OneDay),
@@ -41,12 +44,18 @@ describe("Confirm Email", () => {
       const json = await response.json<Ok<ConfirmEmailResponse>>();
       expect(json.status).toBe(200);
 
-      const [user] = await testDatabase
-        .select({ emailVerified: users.emailVerified })
-        .from(users)
-        .where(eq(users.id, testUsers.UserTwo.id));
+      const userEmail = await testDatabase
+        .select({ verified: userEmails.verified })
+        .from(userEmails)
+        .where(
+          and(
+            eq(userEmails.userId, testUsers.UserTwo.id),
+            eq(userEmails.email, testUsers.UserTwo.emails[0].email),
+          ),
+        )
+        .get();
 
-      expect(user.emailVerified).toBe(true);
+      expect(userEmail!.verified).toBe(true);
     });
 
     it("should reject invalid token format", async () => {
@@ -67,7 +76,10 @@ describe("Confirm Email", () => {
 
     it("should reject expired token", async () => {
       const token = await tokenService.create<UserConfirmEmailToken>(
-        { userId: testUsers.UserTwo.id },
+        {
+          userId: testUsers.UserTwo.id,
+          email: testUsers.UserTwo.emails[0].email,
+        },
         {
           purpose: TokenPurpose.ConfirmEmail,
           expiresAt: Date.now() - 1000,
@@ -91,7 +103,10 @@ describe("Confirm Email", () => {
 
     it("should reject token with wrong purpose", async () => {
       const token = await tokenService.create<UserConfirmEmailToken>(
-        { userId: testUsers.UserTwo.id },
+        {
+          userId: testUsers.UserTwo.id,
+          email: testUsers.UserTwo.emails[0].email,
+        },
         {
           purpose: "wrong-purpose" as TokenPurpose,
           expiresAt: TokenService.getExpiresAt(TokenExpiresIn.OneDay),
@@ -113,9 +128,12 @@ describe("Confirm Email", () => {
       expect(json.message).toBe("Invalid or expired token");
     });
 
-    it("should return 404 for non-existent user", async () => {
+    it("should return 404 for non-existent email", async () => {
       const token = await tokenService.create<UserConfirmEmailToken>(
-        { userId: "non-existent-user-id" },
+        {
+          userId: "non-existent-user-id",
+          email: "non-existent@example.com",
+        },
         {
           purpose: TokenPurpose.ConfirmEmail,
           expiresAt: TokenService.getExpiresAt(TokenExpiresIn.OneDay),
@@ -134,7 +152,7 @@ describe("Confirm Email", () => {
 
       const json = await response.json<Err>();
       expect(json.status).toBe(404);
-      expect(json.message).toBe("User not found");
+      expect(json.message).toBe("Email not found");
     });
   });
 });

@@ -15,6 +15,8 @@ import { passwordHashValidator } from "@package/validators/password";
 
 import { signIn } from "$lib/auth/flows/sign-in";
 import { db } from "$lib/database";
+import { userEmails } from "$lib/database/schema/user-emails";
+import { userPasswords } from "$lib/database/schema/user-passwords";
 import { users } from "$lib/database/schema/users";
 import { createServer } from "$lib/server";
 import { response } from "$lib/server/response";
@@ -84,23 +86,33 @@ signUpFinishServer.post("/", async (c) => {
     session.serverSalt,
   );
 
-  const [user] = await db
+  const user = await db
     .insert(users)
     .values({
       firstName: session.firstName,
       middleName: session.middleName,
       lastName: session.lastName,
+    })
+    .returning({ id: users.id, role: users.role })
+    .get();
+
+  await Promise.all([
+    db.insert(userEmails).values({
+      userId: user.id,
       email: session.email,
+      primary: true,
+    }),
+    db.insert(userPasswords).values({
+      userId: user.id,
+      passwordHash: Buffer.from(passwordServerHash),
       clientSalt: session.clientSalt,
       serverSalt: session.serverSalt,
-      password: Buffer.from(passwordServerHash),
-    })
-    .returning({ id: users.id, role: users.role });
-
-  await signUpSessions.delete(data.sessionId);
+    }),
+    signUpSessions.delete(data.sessionId),
+  ]);
 
   const confirmEmailToken = await tokenService.create<UserConfirmEmailToken>(
-    { userId: user.id },
+    { userId: user.id, email: session.email },
     {
       purpose: TokenPurpose.ConfirmEmail,
       expiresAt: TokenService.getExpiresAt(TokenExpiresIn.OneDay),
