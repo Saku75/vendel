@@ -6,6 +6,8 @@ import { createId } from "@package/crypto-utils/cuid";
 
 import { AuthRole } from "$lib/enums/auth/role";
 
+import { enumValues } from "../utils";
+
 const users = sqliteTable("users", {
   id: text({ length: 24 })
     .primaryKey()
@@ -23,7 +25,7 @@ const users = sqliteTable("users", {
 
   role: text({
     length: 16,
-    enum: [AuthRole.SuperAdmin, AuthRole.Admin, AuthRole.User, AuthRole.Guest],
+    enum: enumValues(AuthRole),
   })
     .notNull()
     .default(AuthRole.Guest),

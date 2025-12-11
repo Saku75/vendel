@@ -59,11 +59,16 @@
       "cache": false
     },
 
-    "db:apply": {
+    "db:generate": {
       "inputs": [
-        "./src/lib/server/database/migrations/**",
-        "./src/lib/database/migrations/**"
+        "./drizzle.config.ts",
+        "./src/lib/database/**",
+        "!./src/lib/database/migrations/**"
       ],
+      "cache": false
+    },
+    "db:apply": {
+      "inputs": ["./drizzle.config.ts", "./src/lib/database/migrations/**"],
       "cache": false
     }
   }

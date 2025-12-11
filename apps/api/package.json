@@ -21,7 +21,7 @@
     "@package/mail-service": "workspace:*",
     "@package/token-service": "workspace:*",
     "@package/validators": "workspace:*",
-    "drizzle-orm": "^0.44.7",
+    "drizzle-orm": "^0.45.1",
     "hono": "^4.10.7",
     "ky": "^1.14.0",
     "set-cookie-parser": "^2.7.2",
