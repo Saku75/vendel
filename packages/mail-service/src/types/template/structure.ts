@@ -1,4 +1,4 @@
-import type { MailAddress } from "../../types/address";
+import type { MailAddress } from "../address";
 
 type MailTemplateStructure = {
   from: MailAddress;

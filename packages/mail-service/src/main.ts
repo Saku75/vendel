@@ -1,21 +1,15 @@
 import type { CreateEmailOptions, CreateEmailResponse } from "resend";
 
 import { MailTemplate } from "./enums/template";
-import { templateApprovalRequest } from "./templates/approval-request";
-import {
-  templateConfirmEmailNew,
-  templateConfirmEmailResend,
-} from "./templates/confirm-email";
-import { MailTemplatePlaceholder } from "./templates/enums/placeholder";
-import type { MailTemplateBuiltInPlaceholders } from "./templates/types/built-in-placeholders";
-import type { MailTemplateStructure } from "./templates/types/structure";
-import { templateWelcome } from "./templates/welcome";
+import { MailTemplatePlaceholder } from "./enums/template/placeholder";
+import { MailTemplateRegistry } from "./enums/template/registry";
 import type { MailAddress } from "./types/address";
 import type {
   MailOptions,
   MailOptionsWithCustomMail,
   MailOptionsWithTemplateMail,
 } from "./types/options";
+import type { MailTemplateBuiltInPlaceholders } from "./types/template/built-in-placeholders";
 
 class MailService {
   private readonly key: string;
@@ -32,7 +26,7 @@ class MailService {
     this.dev = dev;
   }
 
-  public async send(mail: MailOptions) {
+  public async send<T extends MailTemplate>(mail: MailOptions<T>) {
     if ("template" in mail) {
       return this.handleTemplateMail(mail);
     }
@@ -88,23 +82,10 @@ class MailService {
   private async handleTemplateMail(mail: MailOptionsWithTemplateMail) {
     const { from, to, template, data } = mail;
 
-    let templateContent: MailTemplateStructure;
+    const templateContent = MailTemplateRegistry[template];
 
-    switch (template) {
-      case MailTemplate.Welcome:
-        templateContent = templateWelcome;
-        break;
-      case MailTemplate.ConfirmEmailNew:
-        templateContent = templateConfirmEmailNew;
-        break;
-      case MailTemplate.ConfirmEmailResend:
-        templateContent = templateConfirmEmailResend;
-        break;
-      case MailTemplate.ApprovalRequest:
-        templateContent = templateApprovalRequest;
-        break;
-      default:
-        throw new Error(`Mail: Unknown template: ${String(template)}`);
+    if (!templateContent) {
+      throw new Error(`Mail: Template "${template}" not found in registry`);
     }
 
     const html = this.replacePlaceholders(templateContent.html, data);

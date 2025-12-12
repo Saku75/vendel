@@ -1,11 +1,12 @@
 import type { MailTemplate } from "../enums/template";
 import type { MailAddress } from "./address";
+import type { MailTemplateDataMap } from "./template/data-map";
 
-type MailOptionsWithTemplateMail = {
+type MailOptionsWithTemplateMail<T extends MailTemplate = MailTemplate> = {
   from?: MailAddress;
   to: MailAddress;
-  template: MailTemplate;
-  data: Record<string, string | number | boolean>;
+  template: T;
+  data: MailTemplateDataMap[T];
 };
 
 type MailOptionsWithCustomMail = {
@@ -16,7 +17,9 @@ type MailOptionsWithCustomMail = {
   text: string;
 };
 
-type MailOptions = MailOptionsWithTemplateMail | MailOptionsWithCustomMail;
+type MailOptions<T extends MailTemplate = MailTemplate> =
+  | MailOptionsWithTemplateMail<T>
+  | MailOptionsWithCustomMail;
 
 export type {
   MailOptions,

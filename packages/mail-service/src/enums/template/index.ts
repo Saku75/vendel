@@ -1,8 +1,8 @@
 enum MailTemplate {
-  Welcome = "welcome",
+  ApprovalRequest = "approval-request",
   ConfirmEmailNew = "confirm-email-new",
   ConfirmEmailResend = "confirm-email-resend",
-  ApprovalRequest = "approval-request",
+  Welcome = "welcome",
 }
 
 export { MailTemplate };
