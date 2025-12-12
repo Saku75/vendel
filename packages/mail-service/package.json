@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "resend": "^6.5.2"

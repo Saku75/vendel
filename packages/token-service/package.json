@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "lint": "eslint .",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "lint:fix": "eslint . --fix",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.10.14",

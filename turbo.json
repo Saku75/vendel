@@ -15,7 +15,7 @@
     },
 
     "build": {
-      "dependsOn": ["cf-typegen", "^build"],
+      "dependsOn": ["^build"],
       "inputs": [
         "src/**",
         "static/**",
@@ -41,22 +41,27 @@
     },
 
     "lint": {
-      "dependsOn": ["cf-typegen", "^build"],
+      "dependsOn": ["^build"],
       "inputs": ["src/**", "eslint.config.js", "tsconfig.json"],
       "outputs": []
+    },
+    "lint:fix": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "eslint.config.js", "tsconfig.json"],
+      "outputs": [],
+      "cache": false
     },
 
     "test": {
       "dependsOn": ["^build"],
-      "inputs": ["src/**", "vitest.config.ts", "tsconfig.json"],
-      "outputs": []
-    },
-
-    "test:watch": {
-      "dependsOn": ["^build"],
       "persistent": true,
       "interactive": true,
       "cache": false
+    },
+    "test:run": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "vitest.config.ts", "tsconfig.json"],
+      "outputs": []
     },
 
     "db:generate": {
