@@ -9,13 +9,13 @@
     "test:run": "vitest run"
   },
   "dependencies": {
-    "zod": "^4.1.13"
+    "zod": "^4.2.0"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.10.14",
+    "@cloudflare/vitest-pool-workers": "^0.10.15",
     "@config/eslint": "workspace:*",
     "@config/typescript": "workspace:*",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
