@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import type { Context } from "hono";
 import { Hono } from "hono";
 import type { HonoOptions } from "hono/hono-base";
@@ -28,7 +29,14 @@ function createServer(config?: ServerOptions) {
   );
 
   hono.onError((err, c) => {
-    console.error(err);
+    if (env.MODE === "local") {
+      // Full error details only in local development
+      console.error(err);
+    } else {
+      // In production/dev environments, log only safe error info to prevent
+      // leaking sensitive data like stack traces, tokens, or query details
+      console.error("Server error:", err.message);
+    }
 
     return response(c, {
       status: 500,

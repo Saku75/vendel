@@ -6,6 +6,8 @@ import {
 } from "hono/cookie";
 import type { CookieOptions } from "hono/utils/cookie";
 
+import { safeLogError } from "$lib/utils/safe-log";
+
 import type {
   TokenData,
   TokenPurpose,
@@ -75,7 +77,7 @@ async function getCookieWithToken<T extends TokenData = null>(
   try {
     return await tokenService.read<T>(cookie);
   } catch (error) {
-    console.error("Failed to read token from cookie:", error);
+    safeLogError("Failed to read token from cookie", error);
     return undefined;
   }
 }

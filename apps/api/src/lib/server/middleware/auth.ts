@@ -6,6 +6,7 @@ import type { ServerEnv } from "$lib/server";
 import type { AuthAccessToken } from "$lib/types/auth/tokens/access";
 import type { AuthRefreshToken } from "$lib/types/auth/tokens/refresh";
 import { deleteCookie, getCookieWithToken } from "$lib/utils/cookies";
+import { safeLogError } from "$lib/utils/safe-log";
 
 function clearAuthAndSetUnauthenticated(c: Context<ServerEnv>) {
   deleteCookie(c, "access");
@@ -44,7 +45,7 @@ const authMiddleware = createMiddleware<ServerEnv>(async (c, next) => {
       },
     });
   } catch (error) {
-    console.error("Auth middleware error:", error);
+    safeLogError("Auth middleware error", error);
     clearAuthAndSetUnauthenticated(c);
   }
 
