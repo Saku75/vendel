@@ -10,14 +10,14 @@
   },
   "dependencies": {
     "@noble/hashes": "^2.0.1",
-    "@paralleldrive/cuid2": "^3.0.4"
+    "@paralleldrive/cuid2": "^3.3.0"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.10.15",
-    "@cloudflare/workers-types": "^4.20251213.0",
+    "@cloudflare/workers-types": "^4.20260124.0",
     "@config/eslint": "workspace:*",
     "@config/typescript": "workspace:*",
-    "@types/node": "^24.10.4",
+    "@types/node": "^24.10.9",
     "eslint": "^9.39.2",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
