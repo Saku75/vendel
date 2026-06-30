@@ -47,9 +47,10 @@ async function request<T extends JSONValue | undefined = undefined>(
       // If response was not successful
       return {
         ok: false,
-        status: (response.status >= 400 && response.status < 500
-          ? response.status
-          : 500) as 500,
+        status:
+          response.status >= 400 && response.status < 500
+            ? response.status
+            : 500,
         message: response.statusText || "Request failed",
       };
     }

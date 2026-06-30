@@ -9,7 +9,6 @@ import { TokenPurpose } from "@package/token-service";
 
 import { refreshTokenFamilies } from "$lib/database/schema/refresh-token-families";
 import { refreshTokens } from "$lib/database/schema/refresh-tokens";
-import type { AuthRole } from "$lib/enums/auth/role";
 import { tokenService } from "$lib/services/token";
 import type { RefreshResponse, SignInStartResponse } from "$lib/types";
 import type { AuthAccessToken } from "$lib/types/auth/tokens/access";
@@ -96,7 +95,7 @@ async function createExpiringTokens(
   const accessTokenId = createId();
 
   const accessTokenResult = await tokenService.create<AuthAccessToken>(
-    { id: accessTokenId, user: { id: user.id, role: user.role as AuthRole } },
+    { id: accessTokenId, user: { id: user.id, role: user.role } },
     {
       purpose: TokenPurpose.Auth,
       expiresAt: Date.now() + 60 * 1000,

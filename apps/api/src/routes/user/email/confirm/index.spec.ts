@@ -108,7 +108,7 @@ describe("Confirm Email", () => {
           email: testUsers.UserTwo.emails[0].email,
         },
         {
-          purpose: "wrong-purpose" as TokenPurpose,
+          purpose: "wrong-purpose",
           expiresAt: TokenService.getExpiresAt(TokenExpiresIn.OneDay),
         },
       );
